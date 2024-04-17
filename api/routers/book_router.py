@@ -18,7 +18,7 @@ from models.books import BookRequest, BookResponse
 
 router = APIRouter(tags=["Books"], prefix="/api/books")
 
-@router.post("/book")
+@router.post("/")
 async def create_book(
   new_book: BookRequest,
   request: Request,

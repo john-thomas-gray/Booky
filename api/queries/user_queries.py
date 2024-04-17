@@ -113,3 +113,64 @@ class UserQueries:
                 f"Could not create user with username {username}"
             )
         return user
+
+    def update_user(self, username: str, password: str, email: str, first_name: str, last_name: str, avatar_url: str, bio: str) -> Optional[UserWithPw]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(UserWithPw)) as cur:
+                    cur.execute(
+                        """
+                        UPDATE users (
+                            username,
+                            password,
+                            email,
+                            first_name,
+                            last_name,
+                            avatar_url,
+                            bio
+                        ) VALUES (
+                            %s, %s, %s, %s, %s, %s, %s
+                        )
+                        RETURNING *;
+                        """,
+                        [
+                            username,
+                            password,
+                            email,
+                            first_name,
+                            last_name,
+                            avatar_url,
+                            bio
+                        ],
+                    )
+                    user = cur.fetchone()
+                    if not user:
+                        raise UserDatabaseException(
+                f"Could not update user with username {username}"
+                        )
+        except psycopg.Error:
+            raise UserDatabaseException(
+                f"Could not update user with username {username}"
+            )
+        return user
+
+    def delete_user(self, username: str):
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        DELETE FROM users
+                        WHERE username = %s;
+                        """,
+                        [username],
+                    )
+                    if cur.rowcount == 0:
+                        raise UserDatabaseException(
+                            f"User with username {username} not found"
+                        )
+        except psycopg.Error as e:
+            raise UserDatabaseException(
+                f"Error deleting user with username {username}: {e}"
+            )
+
