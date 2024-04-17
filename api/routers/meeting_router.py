@@ -54,3 +54,15 @@ async def create_meeting(
     meeting_out = MeetingResponse(**meeting.model_dump())
 
     return meeting_out
+
+@router.delete("/meeting/{id}", response_model=bool)
+async def delete_meeting(
+    id: int,
+    request: Request,
+    response: Response,
+    queries: MeetingQueries = Depends(),
+) -> MeetingResponse:
+    meeting = request.get
+    """
+    Creates a new meeting after form is filled out
+    """

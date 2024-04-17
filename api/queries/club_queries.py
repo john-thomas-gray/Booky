@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional
-from models.clubs import ClubResponse
+from models.clubs import ClubResponse, ClubDelete, ClubDeleteResponse
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -25,7 +25,7 @@ class ClubQueries:
       # Here you can call any of the functions to query the DB
   """
 
-  def get_by_id(self, id: int) -> Optional[ClubResponse]:
+  def get_by_id(self, id) -> Optional[ClubResponse]:
     """
     Gets a club from the database by id
 
@@ -78,3 +78,19 @@ class ClubQueries:
         club = cur.fetchone()
 
     return club
+  def delete_club(self, id) -> bool:
+    """
+    Deletes club from the database
+    """
+    with pool.connection() as conn:
+      with conn.cursor() as cur:
+        cur.execute(
+          """
+           DELETE FROM clubs WHERE id = %s;
+
+          """,
+          [
+           id
+          ],
+        )
+        return True

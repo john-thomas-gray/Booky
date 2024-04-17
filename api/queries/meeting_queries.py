@@ -91,3 +91,18 @@ class MeetingQueries:
         meeting = cur.fetchone()
 
     return meeting
+
+  def delete(self, id:int) -> bool:
+    try:
+      with pool.connection() as conn:
+        with conn.cursor() as db:
+          db.execute(
+            """
+            DELETE FROM meetings
+            WHERE id = %s
+            """,
+            [id],
+          )
+          return True
+    except Exception:
+      return False

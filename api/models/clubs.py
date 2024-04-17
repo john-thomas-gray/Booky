@@ -18,8 +18,22 @@ class ClubResponse(BaseModel):
   """
   Represents a club
   """
-
+  id: int
   name: str
   city: str
   state: str
   country: str
+
+
+class ClubDelete(BaseModel):
+  """
+  Represents a club to delete
+  """
+  id: int
+
+class ClubDeleteResponse(BaseModel):
+  """
+  Represents a deleted club
+
+  """
+  id: int
