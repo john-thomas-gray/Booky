@@ -3,7 +3,7 @@ steps = [
         ##create the table
         """
         CREATE TABLE meetings (
-            meeting_id INT PRIMARY KEY NOT NULL,
+            id SERIAL PRIMARY KEY NOT NULL,
             club_id INT NOT NULL,
             club_name VARCHAR(100) NOT NULL,
             club_score INT NOT NULL,
