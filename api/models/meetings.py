@@ -21,7 +21,7 @@ class MeetingResponse(BaseModel):
   """
   Represents a meeting
   """
-
+  id : int
   club_id: int
   club_name: str
   club_score: int

@@ -92,7 +92,7 @@ class MeetingQueries:
 
     return meeting
 
-  def delete(self, id:int) -> bool:
+  def delete_meeting(self, id: int) -> bool:
     try:
       with pool.connection() as conn:
         with conn.cursor() as db:
@@ -101,8 +101,10 @@ class MeetingQueries:
             DELETE FROM meetings
             WHERE id = %s
             """,
-            [id],
+            [id]
           )
           return True
-    except Exception:
+    except Exception as e:
+      print(e)
+      print("error with delete_meeting query")
       return False

@@ -26,10 +26,10 @@ from utils.authentication import (
 
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
-router = APIRouter(tags=["Authentication"], prefix="/api/auth")
+router = APIRouter(tags=["Meeting"], prefix="/api/meeting")
 
-@router.post("/meeting")
-async def create_meeting(
+@router.post("/meetings")
+def create_meeting(
     new_meeting: MeetingRequest,
     request: Request,
     response: Response,
@@ -55,14 +55,28 @@ async def create_meeting(
 
     return meeting_out
 
-@router.delete("/meeting/{id}", response_model=bool)
-async def delete_meeting(
+@router.get("/{id}")
+def get_meeting(
     id: int,
-    request: Request,
     response: Response,
-    queries: MeetingQueries = Depends(),
-) -> MeetingResponse:
-    meeting = request.get
-    """
-    Creates a new meeting after form is filled out
-    """
+    queries: MeetingQueries = Depends() ) -> MeetingResponse:
+    meeting = queries.get_by_id(id)
+    if meeting is None:
+        response.status_code = 404
+    return meeting
+
+@router.delete("/{id}")
+def delete_meeting(
+    id: int,
+    response: Response,
+    queries: MeetingQueries = Depends() ) -> bool:
+
+
+    try:
+        queries.delete_meeting(id)
+        print("success!")
+        return True
+    except Exception as e:
+        print(e)
+        print("could NOT delete meeting")
+        return False
