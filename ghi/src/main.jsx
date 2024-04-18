@@ -9,6 +9,7 @@ import App from './App'
 import AuthProvider from './components/AuthProvider'
 
 import './index.css'
+import UserList from './components/UserList'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -20,15 +21,18 @@ const router = createBrowserRouter(
         {
             path: '/',
             element: <App />,
-            children: [
-                {
-                    path: 'signup',
+            children:[
+                {path: 'signup',
                     element: <SignUpForm />,
                 },
                 {
                     path: 'signin',
                     element: <SignInForm />,
                 },
+                {
+                    path: '/user',
+                    element: <UserList />
+                }
             ],
         },
     ],

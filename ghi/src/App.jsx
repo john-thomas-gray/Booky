@@ -7,6 +7,7 @@ import ErrorNotification from './components/ErrorNotification'
 import Construct from './components/Construct'
 
 import './App.css'
+import Nav from './Nav'
 
 // When using environment variables, you should do a check to see if
 // they are defined or not and throw an appropriate error message
@@ -24,41 +25,12 @@ if (!API_HOST) {
  * @returns {React.ReactNode}
  */
 function App() {
-    // Replace this App component with your own.
-    /** @type {[LaunchInfo | undefined, (info: LaunchInfo) => void]} */
-    const [launchInfo, setLaunchInfo] = useState()
-    const [error, setError] = useState(null)
 
-    useEffect(() => {
-        async function getData() {
-            let url = `${API_HOST}/api/launch-details`
-            console.log('fastapi url: ', url)
-            let response = await fetch(url)
-            /** @type {LaunchData} */
-            let data = await response.json()
-
-            if (response.ok) {
-                if (!data.launch_details) {
-                    console.log('drat! no launch data')
-                    setError('No launch data')
-                    return
-                }
-                console.log('got launch data!')
-                setLaunchInfo(data.launch_details)
-            } else {
-                console.log('drat! something happened')
-                setError(data.message)
-            }
-        }
-        getData()
-    }, [])
 
     return (
         <div className="App">
-            <header className="App-header">{/* <Nav /> */}</header>
+            <header className="App-header"><Nav /></header>
             <Outlet />
-            <ErrorNotification error={error} />
-            <Construct info={launchInfo} />
         </div>
     )
 }
