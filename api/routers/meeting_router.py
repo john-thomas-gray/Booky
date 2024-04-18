@@ -1,6 +1,7 @@
 """
 meeting API Router
 """
+from typing import List;
 
 from fastapi import (
     Depends,
@@ -64,6 +65,16 @@ def get_meeting(
     if meeting is None:
         response.status_code = 404
     return meeting
+
+@router.get("/")
+def list_meetings(
+    response: Response,
+    queries: MeetingQueries = Depends(),
+) -> List[MeetingResponse]:
+    meetings = queries.list_meetings()
+    if meetings is None:
+        response.status_code = 404
+    return meetings
 
 @router.delete("/{id}")
 def delete_meeting(

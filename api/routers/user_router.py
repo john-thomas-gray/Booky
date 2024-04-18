@@ -1,6 +1,7 @@
 """
 User API Router
 """
+from typing import List;
 
 from fastapi import (
     Depends,
@@ -18,6 +19,32 @@ from models.users import UserRequest, UserResponse, UserWithPw
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
+
+
+@router.get("/{id}")
+async def get_user(
+  id: int,
+  response: Response,
+  queries: UserQueries = Depends(),
+) -> UserResponse:
+  """
+  Gets user information
+  """
+  user = queries.get_by_id(id)
+  if user is None:
+        response.status_code = 404
+  return user
+
+@router.get("/")
+async def list_users(
+    response: Response,
+    queries: UserQueries = Depends(),
+) -> List[UserResponse]:
+    users = queries.list_users()
+    if users is None:
+      response.status_code = 404
+    return users
+
 
 @router.patch("/{username}")
 async def update_user(

@@ -5,8 +5,8 @@ import os
 import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
-from typing import Optional
-from models.users import UserWithPw
+from typing import Optional, List
+from models.users import UserWithPw, UserResponse
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -52,7 +52,7 @@ class UserQueries:
             raise UserDatabaseException(f"Error getting user {username}")
         return user
 
-    def get_by_id(self, id: int) -> Optional[UserWithPw]:
+    def get_by_id_pw(self, id: int) -> Optional[UserWithPw]:
         """
         Gets a user from the database by user id
 
@@ -78,6 +78,56 @@ class UserQueries:
             raise UserDatabaseException(f"Error getting user with id {id}")
 
         return user
+
+    def get_by_id(self, id: int) -> Optional[UserResponse]:
+        """
+        Gets a user from the database by user id
+
+        Returns None if the user isn't found
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                    cur.execute(
+                        """
+                            SELECT
+                                *
+                            FROM users
+                            WHERE id = %s
+                            """,
+                        [id],
+                    )
+                    user = cur.fetchone()
+                    if not user:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error getting user with id {id}")
+
+        return user
+
+    def list_users(self) -> Optional[List[UserResponse]]:
+        """
+        Get list of all users
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                    cur.execute(
+                        """
+                            SELECT
+                                *
+                            FROM users
+                            """,
+                    )
+                    users = cur.fetchall()
+                    if not users:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error getting users")
+        return users
+
 
     def create_user(self, username: str, hashed_password: str) -> UserWithPw:
         """
@@ -173,4 +223,3 @@ class UserQueries:
             raise UserDatabaseException(
                 f"Error deleting user with username {username}: {e}"
             )
-

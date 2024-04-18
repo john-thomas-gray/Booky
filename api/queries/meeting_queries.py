@@ -5,7 +5,7 @@ import os
 import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
-from typing import Optional
+from typing import Optional, List
 from models.meetings import MeetingResponse
 from utils.exceptions import UserDatabaseException
 from datetime import datetime
@@ -51,6 +51,40 @@ class MeetingQueries:
       print(e)
       raise UserDatabaseException(f"Error getting meeting with id: {id}")
     return meeting
+
+  def list_meetings(self, club_id: Optional[int] = None) -> Optional[List[MeetingResponse]]:
+    """
+    Lists all meetings or meetings by club if club_id is provided
+    """
+    try:
+      with pool.connection() as conn:
+        with conn.cursor(row_factory=class_row(MeetingResponse)) as cur:
+          if club_id is not None:
+            cur.execute(
+              """
+              SELECT
+                  *
+              FROM meetings
+              WHERE club_id = %s
+              """,
+              (club_id,)
+            )
+          else:
+            cur.execute(
+              """
+              SELECT
+                  *
+              FROM meetings
+              """
+            )
+          meetings = cur.fetchall()
+          if not meetings:
+            return None
+    except psycopg.Error as e:
+      print(e)
+      raise UserDatabaseException(f"Error getting meetings: {e}")
+    return meetings
+
 
   def create_meeting(
       self,
