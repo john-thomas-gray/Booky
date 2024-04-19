@@ -1,7 +1,7 @@
 """
 Club API Router
 """
-
+from typing import List
 from fastapi import (
     Depends,
     Request,
@@ -66,3 +66,13 @@ async def delete_club(
 
     except:
         return False
+
+@router.get("/clubs")
+def list_clubs(
+    response: Response,
+    queries: ClubQueries = Depends(),
+) -> List[ClubResponse]:
+    clubs = queries.list_clubs()
+    if clubs is None:
+        response.status_code = 404
+    return clubs
