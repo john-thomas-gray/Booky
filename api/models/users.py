@@ -2,6 +2,7 @@
 Pydantic Models for Users.
 """
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserRequest(BaseModel):
@@ -12,10 +13,10 @@ class UserRequest(BaseModel):
     username: str
     password: str
     email: str
-    first_name: str
-    last_name: str
-    avatar_url: str
-    bio: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    avatar_url: Optional[str]
+    bio: Optional[str]
 
 
 class UserResponse(BaseModel):
@@ -26,10 +27,10 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: str
-    first_name: str
-    last_name: str
-    avatar_url: str
-    bio: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    avatar_url: Optional[str]
+    bio: Optional[str]
 
 
 class UserWithPw(BaseModel):
@@ -41,7 +42,7 @@ class UserWithPw(BaseModel):
     username: str
     password: str
     email: str
-    first_name: str
-    last_name: str
-    avatar_url: str
-    bio: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    avatar_url: Optional[str]
+    bio: Optional[str]
