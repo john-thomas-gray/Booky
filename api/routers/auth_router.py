@@ -14,7 +14,7 @@ from queries.user_queries import (
 )
 
 from utils.exceptions import UserDatabaseException
-from models.users import UserRequest, UserResponse
+from models.users import UserRequest, UserResponse, UserWithPw
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -34,7 +34,7 @@ async def signup(
     request: Request,
     response: Response,
     queries: UserQueries = Depends(),
-) -> UserResponse:
+) -> UserWithPw:
     """
     Creates a new user when someone submits the signup form
     """
@@ -53,14 +53,13 @@ async def signup(
             new_user.bio,
             )
     except UserDatabaseException as e:
-        print(e)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     # Generate a JWT token
     token = generate_jwt(user)
 
     # Convert the UserWithPW to a UserOut
-    user_out = UserResponse(**user.model_dump())
+    user_out = UserWithPw(**user.model_dump())
 
     # Secure cookies only if running on something besides localhost
     secure = True if request.headers.get("origin") == "localhost" else False
