@@ -13,6 +13,8 @@ import UserList from './components/UserList'
 import Home from './components/Home'
 import CreateClubForm from './components/CreateClubForm'
 
+import ListClubs from './components/ListClubs'
+
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
     throw new Error('BASE_URL is not defined')
@@ -43,6 +45,11 @@ const router = createBrowserRouter(
                 {
                     path:'/clubs',
                     element: <CreateClubForm/>
+
+                },
+                {
+                    path:'/clubs/list',
+                    element: <ListClubs/>
 
                 },
             ],

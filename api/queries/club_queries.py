@@ -5,7 +5,7 @@ import os
 import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
-from typing import Optional
+from typing import Optional, List
 from models.clubs import ClubResponse, ClubDelete, ClubDeleteResponse
 from utils.exceptions import UserDatabaseException
 
@@ -94,3 +94,27 @@ class ClubQueries:
           ],
         )
         return True
+  def list_clubs(self) -> Optional[List[ClubResponse]]:
+    """
+    Gets a club from the database by id
+
+    Returns None if the club isn't found
+    """
+    try:
+      with pool.connection() as conn:
+        with conn.cursor(row_factory=class_row(ClubResponse)) as cur:
+          cur.execute(
+            """
+              SELECT
+                *
+              FROM clubs;
+
+            """,
+          )
+          clubs = cur.fetchall()
+          if not clubs:
+            return None
+    except psycopg.Error as e:
+      print(e)
+      raise UserDatabaseException(f"Error getting clubs")
+    return clubs
