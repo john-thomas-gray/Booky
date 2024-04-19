@@ -10,6 +10,9 @@ export default function Nav() {
                 <NavLink aria-current="page" to="/user" exact>
                     User List
                 </NavLink>
+                <NavLink aria-current="page" to="/clubs" exact>
+                    Create a Club
+                </NavLink>
             </div>
         </nav>
     )
