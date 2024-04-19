@@ -11,6 +11,7 @@ import AuthProvider from './components/AuthProvider'
 import './index.css'
 import UserList from './components/UserList'
 import Home from './components/Home'
+import CreateClubForm from './components/CreateClubForm'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -38,7 +39,12 @@ const router = createBrowserRouter(
                 {
                     path: '/user',
                     element: <UserList />
-                }
+                },
+                {
+                    path:'/clubs',
+                    element: <CreateClubForm/>
+
+                },
             ],
         },
     ],
