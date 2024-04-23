@@ -243,3 +243,33 @@ class UserQueries:
             raise UserDatabaseException(
                 f"Error deleting user with username {username}: {e}"
             )
+
+
+    def list_club_members(self, club_id: int) -> Optional[List[UserResponse]]:
+        """
+        Get all of a club's members by club_id.
+
+        :param club_id: The identifier of the club.
+        :return: A list of UserResponse objects representing the members of the club, or None if no members found.
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                    cur.execute(
+                        """
+                        SELECT u.*
+                        FROM users u
+                        INNER JOIN clubs_have_members chm ON u.id = chm.member_id
+                        WHERE chm.club_id = %s;
+                        """,
+                        (club_id,)
+                    )
+
+                    club_members = cur.fetchall()
+                if not club_members:
+                    return None
+
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error getting club members")
+        return club_members

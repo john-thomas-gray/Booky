@@ -90,3 +90,14 @@ async def delete_user(
         )
 
     return {"message": f"User {username} deleted successfully"}
+
+@router.get("/club/{club_id}")
+async def list_club_members(
+    club_id: int,
+    response: Response,
+    queries: UserQueries = Depends(),
+) -> List[UserResponse]:
+    club_members = queries.list_club_members(club_id)
+    if club_members is None:
+      response.status_code = 404
+    return club_members
