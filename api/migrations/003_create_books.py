@@ -3,7 +3,7 @@ steps = [
         # "Up" SQL statement
         """
         CREATE TABLE books (
-            book_id INT NOT NULL,
+            book_id SERIAL PRIMARY KEY NOT NULL,
             title VARCHAR(100) NOT NULL UNIQUE,
             author VARCHAR(100) NOT NULL UNIQUE,
             page_count INT,

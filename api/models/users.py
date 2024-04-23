@@ -41,8 +41,17 @@ class UserWithPw(BaseModel):
     id: int
     username: str
     password: str
-    email: str
-    first_name: Optional[str]
-    last_name: Optional[str]
-    avatar_url: Optional[str]
-    bio: Optional[str]
+    # email: str
+    # first_name: Optional[str]
+    # last_name: Optional[str]
+    # avatar_url: Optional[str]
+    # bio: Optional[str]
+
+
+class UserSigninRequest(BaseModel):
+    username: str
+    password: str
+
+class UserSigninResponse(BaseModel):
+    id: int
+    username: str

@@ -14,6 +14,7 @@ export {}
  * @typedef {Object} SignInRequest
  * @property {string} username
  * @property {string} password
+ *
  */
 /**
  * @typedef {Object} SignUpRequest

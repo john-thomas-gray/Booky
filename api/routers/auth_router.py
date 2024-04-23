@@ -14,7 +14,7 @@ from queries.user_queries import (
 )
 
 from utils.exceptions import UserDatabaseException
-from models.users import UserRequest, UserResponse, UserWithPw
+from models.users import UserRequest, UserResponse, UserWithPw, UserSigninRequest, UserSigninResponse
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -77,11 +77,11 @@ async def signup(
 
 @router.post("/signin")
 async def signin(
-    user_request: UserRequest,
+    user_request: UserSigninRequest,
     request: Request,
     response: Response,
     queries: UserQueries = Depends(),
-) -> UserResponse:
+) -> UserSigninResponse:
     """
     Signs the user in when they use the Sign In form
     """
@@ -117,7 +117,7 @@ async def signin(
     )
 
     # Convert the UserWithPW to a UserOut
-    return UserResponse(id=user.id, username=user.username)
+    return UserSigninResponse(id=user.id, username=user.username)
 
 
 @router.get("/authenticate")
