@@ -26,10 +26,12 @@ steps = [
             (2, 'John93', '123', 'johnthomasgray1@gmail.com', 'John', 'Gray', null, 'A very old guy.'),
             (3, 'Vinny2010', '123', 'vvitiritto@yahoo.com', 'Vinny', 'Vitiritto', null, 'A very mean guy.'),
             (4, 'Judah44', '123', 'jmlv01@icloud.com', 'Judah', 'Viggers', null, 'A very young guy.');
+        ALTER SEQUENCE users_id_seq RESTART WITH 5;
         """,
         # "Down" SQL statement
         """
-        DROP TABLE users;
+        TRUNCATE TABLE users; -- clear all data from the users table
+        ALTER SEQUENCE users_id_seq RESTART WITH 1; -- reset the sequence to start at 1 again
         """
     ]
 ]

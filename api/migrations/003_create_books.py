@@ -23,6 +23,7 @@ steps = [
             (2, 'Judahs Biography', 'Judah', 112, 'A super sick, dope, jiu jitsu master from the east.'),
             (3, 'Vinnys Biography', 'Vinny', 105, 'A book about a young guy from the Sopranos Family.'),
             (4, 'Johns Biography', 'John', 1001, 'A very nice guy, but kinda old lol.');
+        ALTER SEQUENCE books_book_id_seq RESTART WITH 5;
         """,
         # "Down" SQL statement
         """
