@@ -61,6 +61,7 @@ class ClubQueries:
       with conn.cursor(row_factory=class_row(ClubResponse)) as cur:
         cur.execute(
           """
+
             INSERT INTO clubs (
               owner_id, name, city, state, country
             ) VALUES (

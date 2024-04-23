@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.user_clubs import UserClubRequest,UserClubResponse
+from models.user_clubs import UserClubResponse
 
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -34,7 +34,7 @@ class UserClubQueries:
 
 
 
-        SELECT users.id, users.username, clubs.club_id
+        SELECT users.id, users.username, clubs.club_id, clubs.name
         FROM clubs
         left join
         users on users.id = clubs.owner_id
@@ -62,7 +62,7 @@ class UserClubQueries:
       with conn.cursor(row_factory=class_row(UserClubResponse)) as cur:
         cur.execute(
         """
-        SELECT users.id, users.username, clubs.club_id
+        SELECT users.id, users.username, clubs.club_id, clubs.name
         FROM clubs
         left join
         users on users.id = clubs.owner_id
