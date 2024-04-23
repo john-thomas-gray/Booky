@@ -7,6 +7,8 @@ import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
 import App from './App'
 import AuthProvider from './components/AuthProvider'
+import CreateMeetingForm from './components/CreateMeetingForm'
+import ListMeetings from './components/ListMeetings'
 
 import './index.css'
 import UserList from './components/UserList'
@@ -50,6 +52,16 @@ const router = createBrowserRouter(
                 {
                     path:'/clubs/list',
                     element: <ListClubs/>
+
+                },
+                {
+                    path:'/meetings',
+                    element: <CreateMeetingForm/>
+
+                },
+                  {
+                    path:'/meetings/list',
+                    element: <ListMeetings/>
 
                 },
             ],

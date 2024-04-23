@@ -2,7 +2,7 @@
 Pydantic Models for Meetings.
 """
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import date
 
 
 class MeetingRequest(BaseModel):
@@ -15,7 +15,7 @@ class MeetingRequest(BaseModel):
   book_title: str
   total_pages: int
   current_page: int
-  active: datetime
+  active: date
 
 class MeetingResponse(BaseModel):
   """
@@ -28,4 +28,8 @@ class MeetingResponse(BaseModel):
   book_title: str
   total_pages: int
   current_page: int
-  active: datetime
+  active: date
+
+class MeetingClubResponse(BaseModel):
+  active: date
+  book_title: str

@@ -1,13 +1,15 @@
 // This makes VSCode check types as if you are using TypeScript
 //@ts-check
 import { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import ErrorNotification from './components/ErrorNotification'
 import Construct from './components/Construct'
+import SignUpForm from './components/SignUpForm'
+import Nav from './components/Nav'
 
 import './App.css'
-import Nav from './Nav'
+
 
 // When using environment variables, you should do a check to see if
 // they are defined or not and throw an appropriate error message
@@ -17,13 +19,13 @@ if (!API_HOST) {
     throw new Error('VITE_API_HOST is not defined')
 }
 
-/**
- * This is an example of using JSDOC to define types for your component
- * @typedef {{module: number, week: number, day: number, min: number, hour: number}} LaunchInfo
- * @typedef {{launch_details: LaunchInfo, message?: string}} LaunchData
- *
- * @returns {React.ReactNode}
- */
+// /**
+//  * This is an example of using JSDOC to define types for your component
+//  * @typedef {{module: number, week: number, day: number, min: number, hour: number}} LaunchInfo
+//  * @typedef {{launch_details: LaunchInfo, message?: string}} LaunchData
+//  *
+//  * @returns {React.ReactNode}
+
 function App() {
 
 

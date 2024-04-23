@@ -14,9 +14,10 @@ from fastapi import (
 from queries.meeting_queries import (
   MeetingQueries,
 )
+from typing import Optional, List
 
 # from utils.exceptions import ClubDatabaseException
-from models.meetings import MeetingRequest, MeetingResponse
+from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -29,7 +30,7 @@ from utils.authentication import (
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Meeting"], prefix="/api/meeting")
 
-@router.post("/meetings")
+@router.post("/create")
 def create_meeting(
     new_meeting: MeetingRequest,
     request: Request,
@@ -56,15 +57,29 @@ def create_meeting(
 
     return meeting_out
 
-@router.get("/{id}")
-def get_meeting(
-    id: int,
+
+
+
+@router.get("/")
+def list_meetings(
     response: Response,
-    queries: MeetingQueries = Depends() ) -> MeetingResponse:
-    meeting = queries.get_by_id(id)
-    if meeting is None:
+    queries: MeetingQueries = Depends(),
+) -> List[MeetingResponse]:
+    meetings = queries.list_meetings()
+    if meetings is None:
         response.status_code = 404
-    return meeting
+    return meetings
+
+@router.get("/club/{club_id}")
+def list_meetings_by_club(
+    club_id: int,
+    response: Response,
+    queries: MeetingQueries = Depends(),
+) -> List[MeetingClubResponse]:
+    meetings = queries.list_meetings_by_club(club_id)
+    if meetings is None:
+        response.status_code = 404
+    return meetings
 
 @router.get("/")
 def list_meetings(
@@ -81,8 +96,6 @@ def delete_meeting(
     id: int,
     response: Response,
     queries: MeetingQueries = Depends() ) -> bool:
-
-
     try:
         queries.delete_meeting(id)
         print("success!")
@@ -91,3 +104,13 @@ def delete_meeting(
         print(e)
         print("could NOT delete meeting")
         return False
+
+@router.get("/{id}")
+def get_meeting(
+    id: int,
+    response: Response,
+    queries: MeetingQueries = Depends() ) -> MeetingClubResponse:
+    meeting = queries.get_by_id(id)
+    if meeting is None:
+        response.status_code = 404
+    return meeting
