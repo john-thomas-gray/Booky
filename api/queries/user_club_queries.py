@@ -15,9 +15,6 @@ if not DATABASE_URL:
 
 pool = ConnectionPool(DATABASE_URL)
 
-
-
-
 class UserClubQueries:
 
   def clubs_by_owner_id(self, owner_id: int) -> Optional[List[UserClubResponse]]:
@@ -30,17 +27,11 @@ class UserClubQueries:
       with conn.cursor(row_factory=class_row(UserClubResponse)) as cur:
         cur.execute(
           """
-
-
-
-
-        SELECT users.id, users.username, clubs.club_id, clubs.name
-        FROM clubs
-        left join
-        users on users.id = clubs.owner_id
-
-        WHERE users.id = %s;
-
+          SELECT users.id, users.username, clubs.club_id, clubs.name
+          FROM clubs
+          left join
+          users on users.id = clubs.owner_id
+          WHERE users.id = %s;
           """,
           [
             owner_id,

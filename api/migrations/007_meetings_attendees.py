@@ -2,21 +2,21 @@ steps = [
   [
       # "Up" SQL statement
       """
-      CREATE TABLE clubs_have_members (
-          club_id INT NOT NULL,
-          member_id INT NOT NULL,
-          PRIMARY KEY (club_id, member_id)
+      CREATE TABLE meetings_attendees (
+          meeting_id INT NOT NULL,
+          attendee_id INT NOT NULL,
+          PRIMARY KEY (meeting_id, attendee_id)
       );
       """,
       # "Down" SQL statement
       """
-      DROP TABLE clubs_have_members;
+      DROP TABLE meetings_attendees;
       """
   ],
   [
       # "Up" SQL statement
       """
-      INSERT INTO clubs_have_members (club_id, member_id) VALUES
+      INSERT INTO meetings_attendees (meeting_id, attendee_id) VALUES
           (1, 1),
           (1, 2),
           (2, 1),
@@ -30,7 +30,7 @@ steps = [
       """,
       # "Down" SQL statement
       """
-      DELETE FROM clubs_have_members WHERE club_id IN (1, 2, 3, 4);
+      DELETE FROM meetings_attendees WHERE meeting_id IN (1, 2, 3, 4);
       """
   ]
 ]

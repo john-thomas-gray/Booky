@@ -35,7 +35,6 @@ export default function UserList() {
                                 <td>{club.name}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
-
                             </tr>
                         )
                     })}
