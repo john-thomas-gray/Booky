@@ -15,7 +15,7 @@ from queries.club_queries import (
 )
 
 # from utils.exceptions import ClubDatabaseException
-from models.clubs import ClubRequest, ClubResponse, ClubDelete, ClubDeleteResponse
+from models.clubs import ClubRequest, ClubResponse
 
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
@@ -31,7 +31,7 @@ async def create_club(
     """
     Creates a new club when someone submits the signup form
     """
-    club = queries.create_club(new_club.name, new_club.city, new_club.state, new_club.country)
+    club = queries.create_club(new_club.owner_id,new_club.name, new_club.city, new_club.state, new_club.country)
     club_out = ClubResponse(**club.model_dump())
 
     return club_out
@@ -39,28 +39,28 @@ async def create_club(
 
 
 
-@router.get("/clubs/{id}")
+@router.get("/clubs/{club_id}")
 def get_club(
-    id: int,
+    club_id: int,
     response: Response,
     queries: ClubQueries = Depends()
 ) -> ClubResponse:
-    club = queries.get_by_id(id)
+    club = queries.get_by_id(club_id)
     if club is None:
         response.status_code = 404
     print(club)
     return club
 
 
-@router.delete("/clubs/{id}")
+@router.delete("/clubs/{club_id}")
 async def delete_club(
-    id: int,
+    club_id: int,
     queries: ClubQueries = Depends(),) -> bool:
 
 
     try:
 
-        queries.delete_club(id)
+        queries.delete_club(club_id)
         return True
 
 

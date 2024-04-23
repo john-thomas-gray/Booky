@@ -8,7 +8,7 @@ class ClubRequest(BaseModel):
   """
   Represents a the parameters needed to create a new club
   """
-
+  owner_id: int
   name: str
   city: str
   state: str
@@ -18,7 +18,8 @@ class ClubResponse(BaseModel):
   """
   Represents a club
   """
-  id: int
+  owner_id: int
+  club_id: int
   name: str
   city: str
   state: str
@@ -29,11 +30,11 @@ class ClubDelete(BaseModel):
   """
   Represents a club to delete
   """
-  id: int
+  club_id: int
 
 class ClubDeleteResponse(BaseModel):
   """
   Represents a deleted club
 
   """
-  id: int
+  club_id: int

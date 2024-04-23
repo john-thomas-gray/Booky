@@ -14,7 +14,7 @@ export default function UserList() {
 
     useEffect(() => {
         fetchData()
-    })
+    }, []);
 
     return (
         <>

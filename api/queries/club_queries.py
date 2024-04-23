@@ -25,7 +25,7 @@ class ClubQueries:
       # Here you can call any of the functions to query the DB
   """
 
-  def get_by_id(self, id) -> Optional[ClubResponse]:
+  def get_by_id(self, club_id) -> Optional[ClubResponse]:
     """
     Gets a club from the database by id
 
@@ -39,19 +39,19 @@ class ClubQueries:
               SELECT
                 *
               FROM clubs
-              WHERE id = %s
+              WHERE club_id = %s
             """,
-            [id],
+            [club_id],
           )
           club = cur.fetchone()
           if not club:
             return None
     except psycopg.Error as e:
       print(e)
-      raise UserDatabaseException(f"Error getting club with id: {id}")
+      raise UserDatabaseException(f"Error getting club with id: {club_id}")
     return club
 
-  def create_club(self, name: str, city: str, state: str, country: str):
+  def create_club(self, owner_id:int, name: str, city: str, state: str, country: str):
     """
     Creates a new club in the database
 
@@ -62,13 +62,14 @@ class ClubQueries:
         cur.execute(
           """
             INSERT INTO clubs (
-              name, city, state, country
+              owner_id, name, city, state, country
             ) VALUES (
-              %s, %s, %s, %s
+              %s, %s, %s, %s, %s
             )
             RETURNING *;
           """,
           [
+            owner_id,
             name,
             city,
             state,
@@ -78,7 +79,7 @@ class ClubQueries:
         club = cur.fetchone()
 
     return club
-  def delete_club(self, id) -> bool:
+  def delete_club(self, club_id) -> bool:
     """
     Deletes club from the database
     """
@@ -86,11 +87,11 @@ class ClubQueries:
       with conn.cursor() as cur:
         cur.execute(
           """
-           DELETE FROM clubs WHERE id = %s;
+           DELETE FROM clubs WHERE club_id = %s;
 
           """,
           [
-           id
+           club_id
           ],
         )
         return True

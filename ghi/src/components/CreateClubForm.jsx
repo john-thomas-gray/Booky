@@ -1,34 +1,40 @@
 // @ts-check
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function CreateClubForm() {
-    const [clubName, setClubName] = useState('')
-    const [clubCity, setClubCity] = useState('')
-    const [clubState, setClubState] = useState('')
-    const [clubCountry, setClubCountry] = useState('')
+  const [users, setUsers] = useState([])
+  const [formData, setFormData] = useState({
+    owner_id: '',
+    name: '',
+    city: '',
+    state: '',
+    country: '',
 
-
+  })
+    const fetchData = async () => {
+        const url = 'http://localhost:8000/api/users/'
+        const response = await fetch(url)
+        if (response.ok) {
+            const data = await response.json()
+            setUsers(data)
+        }
+    }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
      */
     async function handleFormSubmit(e) {
         e.preventDefault()
-        const data = {};
-        data.name = clubName;
-        data.city = clubCity;
 
-        data.state = clubState;
-        data.country = clubCountry;
-
-
-
-
+        console.log(formData)
 
         const clubUrl = `http://localhost:8000/api/clubs/`;
         const fetchOptions = {
           method: 'post',
-          body: JSON.stringify(data),
+          body: JSON.stringify(formData),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -37,45 +43,88 @@ export default function CreateClubForm() {
         console.log(clubResponse);
 
         if (clubResponse.ok) {
-          setClubName('');
-          setClubCity('');
-          setClubState('');
-          setClubCountry('');
+            setFormData ({
+                owner_id: '',
+                name: '',
+                city: '',
+                state: '',
+                country: '',
+
+            });
         }
 
     }
 
+    const handleFormChange = (e) => {
+    const value = e.target.value;
+    const inputName = e.target.name;
+
+    setFormData({
+      ...formData,
+
+      [inputName]: value
+    });
+  }
+
     return (
         <form onSubmit={handleFormSubmit}>
 
+
+            <select onChange={handleFormChange} required name="owner_id" id="owner_id" className="form-select">
+            <option value="">Select Your Username</option>
+                {users.map(user => {
+                  return (
+                    <option key={user.id} value={user.id}>{user.username}</option>
+                  )
+                })}
+            </select>
+
+            <div className="form-floating mb-3">
             <input
-                type="text"
-                // name="username"
-                value={clubName}
-                onChange={(e) => setClubName(e.target.value)}
+                name='name'
+                id='name'
+                required type="text"
+                onChange={handleFormChange}
                 placeholder="Enter A Club Name"
             />
+
+            </div>
+
+
+            <div className="form-floating mb-3">
             <input
-                type="text"
-                name="password"
-                value={clubCity}
-                onChange={(e) => setClubCity(e.target.value)}
+                name='city'
+                id='city'
+                required type="text"
+                onChange={handleFormChange}
                 placeholder="Enter Your City"
             />
+
+            </div>
+
+
+            <div className="form-floating mb-3">
             <input
-                type="text"
-                // name="username"
-                value={clubState}
-                onChange={(e) => setClubState(e.target.value)}
+                name='state'
+                id = 'state'
+                required type="text"
+                onChange={handleFormChange}
                 placeholder="Enter Your State"
             />
+
+            </div>
+
+
+            <div className="form-floating mb-3">
             <input
-                type="text"
-                // name="username"
-                value={clubCountry}
-                onChange={(e) => setClubCountry(e.target.value)}
+                name='country'
+                id = 'country'
+                required type="text"
+                onChange={handleFormChange}
                 placeholder="Enter Your Country"
             />
+
+            </div>
             <button type="submit">Create Club</button>
         </form>
     )
