@@ -25,5 +25,5 @@ export {}
  * @typedef {Object} UserDataResponse
  * @property {number} id
  * @property {string} username
- * @property {string} email
+ *
  */

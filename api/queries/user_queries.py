@@ -133,11 +133,11 @@ class UserQueries:
             self,
             username: str,
             hashed_password: str,
-            email: str,
-            first_name: Optional[str],
-            last_name: Optional[str],
-            avatar_url: Optional[str],
-            bio: Optional[str]
+            # email: str,
+            # first_name: Optional[str],
+            # last_name: Optional[str],
+            # avatar_url: Optional[str],
+            # bio: Optional[str]
             ) -> UserWithPw:
         """
         Creates a new user in the database
@@ -151,26 +151,22 @@ class UserQueries:
                         """
                         INSERT INTO users (
                             username,
-                            password,
-                            email,
-                            first_name,
-                            last_name,
-                            avatar_url,
-                            bio
+                            password
+
 
                         ) VALUES (
-                            %s, %s, %s, %s, %s, %s, %s
+                            %s, %s
                         )
                         RETURNING *;
                         """,
                         [
                             username,
                             hashed_password,
-                            email,
-                            first_name,
-                            last_name,
-                            avatar_url,
-                            bio
+                            # email,
+                            # first_name,
+                            # last_name,
+                            # avatar_url,
+                            # bio
                         ],
                     )
                     user = cur.fetchone()

@@ -46,11 +46,11 @@ async def signup(
         user = queries.create_user(
             new_user.username,
             hashed_password,
-            new_user.email,
-            new_user.first_name,
-            new_user.last_name,
-            new_user.avatar_url,
-            new_user.bio,
+            # new_user.email,
+            # new_user.first_name,
+            # new_user.last_name,
+            # new_user.avatar_url,
+            # new_user.bio,
             )
     except UserDatabaseException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

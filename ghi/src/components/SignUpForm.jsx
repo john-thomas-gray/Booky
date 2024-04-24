@@ -38,13 +38,6 @@ export default function SignUpForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
             />
-            <input
-                type="text"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter Password"
-            />
             <button type="submit">Sign Up</button>
         </form>
     )
