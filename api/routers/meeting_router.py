@@ -18,7 +18,7 @@ from typing import Optional, List
 
 # from utils.exceptions import ClubDatabaseException
 from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse
-
+from models.users import UserResponse
 from utils.authentication import (
     try_get_jwt_user_data,
     hash_password,
@@ -35,27 +35,32 @@ def create_meeting(
     new_meeting: MeetingRequest,
     request: Request,
     response: Response,
+    user: UserResponse = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> MeetingResponse:
     """
     Creates a new meeting after form is filled out
     """
 
-
-    # Create the club in the database
-    meeting = queries.create_meeting(
-        new_meeting.club_id,
-        new_meeting.club_name,
-        new_meeting.club_score,
-        new_meeting.book_title,
-        new_meeting.total_pages,
-        new_meeting.current_page,
-        new_meeting.active
+    if not user:
+            raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
         )
+    else:
+    # Create the club in the database
+        meeting = queries.create_meeting(
+            new_meeting.club_id,
+            new_meeting.club_name,
+            new_meeting.club_score,
+            new_meeting.book_title,
+            new_meeting.total_pages,
+            new_meeting.current_page,
+            new_meeting.active
+            )
 
-    meeting_out = MeetingResponse(**meeting.model_dump())
+        meeting_out = MeetingResponse(**meeting.model_dump())
 
-    return meeting_out
+        return meeting_out
 
 
 

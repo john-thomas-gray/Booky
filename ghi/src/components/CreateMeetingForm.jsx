@@ -1,15 +1,18 @@
 
 import React, {useState, useEffect } from 'react';
+import useAuthService from '../hooks/useAuthService';
+
 
 function CreateMeetingForm() {
   const [clubId, setClubId] = useState('')
-  const [clubName, setClubName] = useState([])
+  const [clubName, setClubName] = useState('')
   const [clubScore, setClubScore] = useState('')
   const [bookTitle, setBookTitle] = useState('')
   const [totalPages, setTotalPages] = useState('')
   const [currentPage, setCurrentPage] = useState('')
   const [active, setActive] = useState('')
   const [data, setData] = useState([])
+  const {user} = useAuthService()
 
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
@@ -17,7 +20,7 @@ function CreateMeetingForm() {
 
   const getData = async () => {
     const url = 'http://localhost:8000/api/clubs';
-    const response = await fetch(url);
+    const response = await fetch(url, {credentials: "include"});
 
     if (response.ok){
       const data = await response.json();
@@ -52,9 +55,10 @@ function CreateMeetingForm() {
           body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json',
+
           },
         };
-      const response = await fetch(meetingUrl, fetchConfig);
+      const response = await fetch(meetingUrl,{credentials: "include"}, fetchConfig);
 
 
       if (response.ok) {
@@ -70,21 +74,15 @@ function CreateMeetingForm() {
   }
 
 
-
+if (user){
 return (
   <form onSubmit={handleFormSubmit}>
 
     <div>this is CreateMeetingForm.jsx</div>
 
-    <input
-    type="text"
-    value={clubName}
-    onChange={(event) => setClubName(event.target.value)}
-    placeholder="club name"
-    />
 
     <select
-    value={clubName} onChange={handleClubChange}>
+    value={clubName} onChange={handleClubChange} required name="club_name" id="club_name" className="form-select">
       <option value="">select a club</option>
       {data.map(club => (
         <option key={club.name} value={club.name}>{club.name}</option>
@@ -142,5 +140,15 @@ return (
 
 
 )
+}
+else {
+  return (
+    <>
+
+    <p> You are not signed in</p>
+    </>
+  )
+}
+
 }
 export default CreateMeetingForm;
