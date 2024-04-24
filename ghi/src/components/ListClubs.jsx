@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import useAuthService from '../hooks/useAuthService'
 
-export default function UserList() {
+export default function ListClubs() {
     const [clubs, setClubs] = useState([])
+    const { user } = useAuthService()
+
 
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/clubs/'
-        const response = await fetch(url)
+        const response = await fetch(url, {credentials: "include"})
         if (response.ok) {
             const data = await response.json()
             setClubs(data)
@@ -15,7 +18,7 @@ export default function UserList() {
     useEffect(() => {
         fetchData()
     }, []);
-
+if (user) {
     return (
         <>
             <h1 className="m3 mt-3">Clubs</h1>
@@ -42,4 +45,11 @@ export default function UserList() {
             </table>
         </>
     )
+}
+else{
+    return(
+<>
+<h1 className="m3 mt-3">You are not signed in!</h1>
+</>)}
+
 }

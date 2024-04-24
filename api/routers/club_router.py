@@ -14,9 +14,10 @@ from queries.club_queries import (
   ClubQueries,
 )
 
+from models.users import UserResponse
 # from utils.exceptions import ClubDatabaseException
 from models.clubs import ClubRequest, ClubResponse
-
+from utils.authentication import try_get_jwt_user_data
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Clubs"], prefix="/api")
@@ -70,9 +71,17 @@ async def delete_club(
 @router.get("/clubs")
 def list_clubs(
     response: Response,
-    queries: ClubQueries = Depends(),
-) -> List[ClubResponse]:
-    clubs = queries.list_clubs()
-    if clubs is None:
-        response.status_code = 404
-    return clubs
+    user: UserResponse = Depends(try_get_jwt_user_data),
+    queries: ClubQueries = Depends()):
+
+
+    if not user:
+            raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
+        )
+
+    else:
+        clubs = queries.list_clubs()
+        if clubs is None:
+            response.status_code = 404
+        return clubs
