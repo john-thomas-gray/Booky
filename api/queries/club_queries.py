@@ -80,6 +80,7 @@ class ClubQueries:
         club = cur.fetchone()
 
     return club
+  
   def delete_club(self, club_id) -> bool:
     """
     Deletes club from the database

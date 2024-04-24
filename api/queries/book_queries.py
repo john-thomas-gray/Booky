@@ -4,6 +4,7 @@ Database Queries for books
 import os
 import psycopg
 from psycopg_pool import ConnectionPool
+from psycopg.rows import class_row
 from typing import Optional
 from datetime import datetime
 from models.books import BookResponse
@@ -32,41 +33,33 @@ class BookQueries:
         except psycopg.Error as e:
             print(e)
 
-    def create_book(self, title: str, author: str, page_count: int, genre: str, publisher: str, publication_date: datetime, synopsis: str, cover_img_url: str):  # Added missing colon
-        try:
-            with pool.getconn() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        """
-                        INSERT INTO books (
-                        title, author, page_count, genre, publisher, publication_date, synopsis, cover_img_url
-                        ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s
-                        )
-                        RETURNING *;
-                        """,
-                        [
-                            title,
-                            author,
-                            page_count,
-                            genre,
-                            publisher,
-                            publication_date,
-                            synopsis,
-                            cover_img_url,
-                        ],
+    def create_book(self, title: str, author: str, page_count: int, synopsis: str):
+        """
+        Creates a new book in the database
+
+        """
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=class_row(BookResponse)) as cur:
+                cur.execute(
+                """
+
+                    INSERT INTO books (
+                    title, author, page_count, synopsis
+                    ) VALUES (
+                    %s, %s, %s, %s
                     )
-                    book = cur.fetchone()
-                    return BookResponse(*book)
-        except psycopg.Error as e:
-            print(e)
+                    RETURNING *;
+                """,
+                [
+                    title,
+                    author,
+                    page_count,
+                    synopsis
+                ],
+                )
+                book = cur.fetchone()
 
-
-"""
-Deletes Book from Database
-"""
-
-class BookQueries:
+        return book
 
     def delete_book(self, id: int) -> None:
         try:

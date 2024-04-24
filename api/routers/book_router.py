@@ -18,11 +18,11 @@ async def create_book(
         new_book.title,
         new_book.author,
         new_book.page_count,
-        new_book.genre,
-        new_book.publisher,
-        new_book.publication_date,
+        # new_book.genre,
+        # new_book.publisher,
+        # new_book.publication_date,
         new_book.synopsis,
-        new_book.cover_img_url,
+        # new_book.cover_img_url,
     )
     book_out = BookResponse(**book)
     return book_out
