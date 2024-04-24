@@ -7,6 +7,7 @@ from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
 from models.clubs import ClubResponse, ClubDelete, ClubDeleteResponse
+from models.associative_tables import ClubMembersResponse, ClubMeetingsResponse
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -80,7 +81,7 @@ class ClubQueries:
         club = cur.fetchone()
 
     return club
-  
+
   def delete_club(self, club_id) -> bool:
     """
     Deletes club from the database
@@ -121,3 +122,27 @@ class ClubQueries:
       print(e)
       raise UserDatabaseException(f"Error getting clubs")
     return clubs
+
+def join_club(self, user_id: int, club_id: int) -> Optional[ClubMembersResponse]:
+  """
+  Pairs a user with a club in the club_members associative table
+  """
+  try:
+      with pool.connection() as conn:
+          with conn.cursor(row_factory=class_row(ClubMembersResponse)) as cur:
+              cur.execute(
+                  """
+                  INSERT INTO clubs_members (club_id, member_id)
+                  VALUES (%s, %s)
+                  RETURNING club_id, member_id;
+                  """,
+                  (club_id, user_id,)
+              )
+              club_member_pair = cur.fetchone()
+      if not club_member_pair:
+          return None
+  except psycopg.Error as e:
+      print(e)
+      raise UserDatabaseException(f"Error joining club")
+  return club_member_pair
+

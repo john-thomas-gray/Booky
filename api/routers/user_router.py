@@ -15,7 +15,7 @@ from queries.user_queries import (
   UserQueries,
 )
 
-from models.users import UserRequest, UserResponse, UserWithPw
+from models.users import UserRequest, UserResponse, UserWithPw, UserIn
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -49,9 +49,9 @@ async def list_users(
 @router.patch("/{username}")
 async def update_user(
   username: str,
-  updated_user: UserWithPw,
+  updated_user: UserIn,
   queries: UserQueries = Depends(),
-) -> UserWithPw:
+) -> UserIn:
   """
   Updates user information.
   """
@@ -71,7 +71,7 @@ async def update_user(
           detail="Failed to update user",
       )
 
-  return UserWithPw(**updated_user.dict())
+  return UserIn(**updated_user.dict())
 
 @router.delete("/{username}")
 async def delete_user(

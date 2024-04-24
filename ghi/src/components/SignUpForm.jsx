@@ -14,7 +14,7 @@ export default function SignUpForm() {
      */
     async function handleFormSubmit(e) {
         e.preventDefault()
-        await signup({ username, password })
+        await signup({ username, password, email })
     }
 
     if (user) {
@@ -37,6 +37,13 @@ export default function SignUpForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
+            />
+            <input
+                type="text"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email"
             />
             <button type="submit">Sign Up</button>
         </form>

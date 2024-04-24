@@ -12,12 +12,6 @@ class UserRequest(BaseModel):
 
     username: str
     password: str
-    # email: str
-    # first_name: Optional[str]
-    # last_name: Optional[str]
-    # avatar_url: Optional[str]
-    # bio: Optional[str]
-
 
 class UserResponse(BaseModel):
     """
@@ -26,12 +20,6 @@ class UserResponse(BaseModel):
 
     id: int
     username: str
-    # email: str
-    # first_name: Optional[str]
-    # last_name: Optional[str]
-    # avatar_url: Optional[str]
-    # bio: Optional[str]
-
 
 class UserWithPw(BaseModel):
     """
@@ -41,17 +29,27 @@ class UserWithPw(BaseModel):
     id: int
     username: str
     password: str
-    # email: str
-    # first_name: Optional[str]
-    # last_name: Optional[str]
-    # avatar_url: Optional[str]
-    # bio: Optional[str]
+    email: str
+    score: int
+    picture_url: str
 
+class UserIn(BaseModel):
+    username: Optional[str]
+    password: Optional[str]
+    email: Optional[str]
+    score: Optional[int]
+    picture_url: Optional[str]
 
-class UserSigninRequest(BaseModel):
-    username: str
-    password: str
-
-class UserSigninResponse(BaseModel):
+class UserOut(BaseModel):
     id: int
     username: str
+    email: Optional[str]
+    score: int
+    picture_url: str
+
+class UserNew(BaseModel):
+    username: str
+    password: str
+    email: str
+    score: int
+    picture_url: str

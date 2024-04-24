@@ -14,7 +14,7 @@ from queries.user_queries import (
 )
 
 from utils.exceptions import UserDatabaseException
-from models.users import UserRequest, UserResponse, UserWithPw, UserSigninRequest, UserSigninResponse
+from models.users import UserRequest, UserResponse, UserWithPw, UserNew
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -30,7 +30,7 @@ router = APIRouter(tags=["Authentication"], prefix="/api/auth")
 
 @router.post("/signup")
 async def signup(
-    new_user: UserRequest,
+    new_user: UserNew,
     request: Request,
     response: Response,
     queries: UserQueries = Depends(),
@@ -46,11 +46,9 @@ async def signup(
         user = queries.create_user(
             new_user.username,
             hashed_password,
-            # new_user.email,
-            # new_user.first_name,
-            # new_user.last_name,
-            # new_user.avatar_url,
-            # new_user.bio,
+            new_user.email,
+            new_user.score,
+            new_user.picture_url
             )
     except UserDatabaseException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -77,11 +75,11 @@ async def signup(
 
 @router.post("/signin")
 async def signin(
-    user_request: UserSigninRequest,
+    user_request: UserRequest,
     request: Request,
     response: Response,
     queries: UserQueries = Depends(),
-) -> UserSigninResponse:
+) -> UserResponse:
     """
     Signs the user in when they use the Sign In form
     """
@@ -117,7 +115,7 @@ async def signin(
     )
 
     # Convert the UserWithPW to a UserOut
-    return UserSigninResponse(id=user.id, username=user.username)
+    return UserResponse(id=user.id, username=user.username)
 
 
 @router.get("/authenticate")

@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.users import UserWithPw, UserResponse
+from models.users import UserWithPw, UserResponse, UserOut, UserIn
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -32,6 +32,7 @@ class UserQueries:
 
         Returns None if the user isn't found
         """
+
         try:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(UserWithPw)) as cur:
@@ -50,33 +51,6 @@ class UserQueries:
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting user {username}")
-        return user
-
-    def get_by_id_pw(self, id: int) -> Optional[UserWithPw]:
-        """
-        Gets a user from the database by user id
-
-        Returns None if the user isn't found
-        """
-        try:
-            with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserWithPw)) as cur:
-                    cur.execute(
-                        """
-                            SELECT
-                                *
-                            FROM users
-                            WHERE id = %s
-                            """,
-                        [id],
-                    )
-                    user = cur.fetchone()
-                    if not user:
-                        return None
-        except psycopg.Error as e:
-            print(e)
-            raise UserDatabaseException(f"Error getting user with id {id}")
-
         return user
 
     def get_by_id(self, id: int) -> Optional[UserResponse]:
@@ -106,13 +80,13 @@ class UserQueries:
 
         return user
 
-    def list_users(self) -> Optional[List[UserResponse]]:
+    def list_users(self) -> Optional[List[UserOut]]:
         """
         Get list of all users
         """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                with conn.cursor(row_factory=class_row(UserOut)) as cur:
                     cur.execute(
                         """
                             SELECT
@@ -132,12 +106,10 @@ class UserQueries:
     def create_user(
             self,
             username: str,
-            hashed_password: str,
-            # email: str,
-            # first_name: Optional[str],
-            # last_name: Optional[str],
-            # avatar_url: Optional[str],
-            # bio: Optional[str]
+            password: str,
+            email: Optional[str] = None,
+            score: Optional[str] = 0,
+            picture_url: Optional[str] = 'https://files.slack.com/files-pri/T068GF0EERK-F06T5UESNNS/image.png'
             ) -> UserWithPw:
         """
         Creates a new user in the database
@@ -151,22 +123,21 @@ class UserQueries:
                         """
                         INSERT INTO users (
                             username,
-                            password
-
-
+                            password,
+                            email,
+                            score,
+                            picture_url
                         ) VALUES (
-                            %s, %s
+                            %s, %s, %s, %s, %s
                         )
                         RETURNING *;
                         """,
                         [
                             username,
-                            hashed_password,
-                            # email,
-                            # first_name,
-                            # last_name,
-                            # avatar_url,
-                            # bio
+                            password,
+                            email,
+                            score,
+                            picture_url
                         ],
                     )
                     user = cur.fetchone()
@@ -175,27 +146,27 @@ class UserQueries:
                             f"Could not create user with username {username}"
                         )
         except psycopg.Error:
+
             raise UserDatabaseException(
                 f"Could not create user with username {username}"
             )
         return user
 
-    def update_user(self, username: str, password: str, email: str, first_name: str, last_name: str, avatar_url: str, bio: str) -> Optional[UserWithPw]:
+    def update_user(self, username: str, password: str, email: str, score: int, picture_url: str) -> Optional[UserIn]:
+
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserWithPw)) as cur:
+                with conn.cursor(row_factory=class_row(UserIn)) as cur:
                     cur.execute(
                         """
                         UPDATE users (
                             username,
                             password,
                             email,
-                            first_name,
-                            last_name,
-                            avatar_url,
-                            bio
+                            score,
+                            picture_url
                         ) VALUES (
-                            %s, %s, %s, %s, %s, %s, %s
+                            %s, %s, %s, %s, %s
                         )
                         RETURNING *;
                         """,
@@ -203,16 +174,14 @@ class UserQueries:
                             username,
                             password,
                             email,
-                            first_name,
-                            last_name,
-                            avatar_url,
-                            bio
+                            score,
+                            picture_url
                         ],
                     )
                     user = cur.fetchone()
                     if not user:
                         raise UserDatabaseException(
-                f"Could not update user with username {username}"
+                f"Could not update user with username {username} pooled"
                         )
         except psycopg.Error:
             raise UserDatabaseException(
@@ -241,7 +210,7 @@ class UserQueries:
             )
 
 
-    def list_club_members(self, club_id: int) -> Optional[List[UserResponse]]:
+    def list_club_members(self, club_id: int) -> Optional[List[UserOut]]:
         """
         Get all of a club's members by club_id.
 
@@ -250,7 +219,7 @@ class UserQueries:
         """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                with conn.cursor(row_factory=class_row(UserOut)) as cur:
                     cur.execute(
                         """
                         SELECT u.*

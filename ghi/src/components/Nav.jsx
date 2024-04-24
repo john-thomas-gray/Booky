@@ -1,30 +1,31 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
-function Nav() {
-  return (
-    <>
-    <p>Tell me your deepest, darkest secrets</p>
-    <nav className="navbar navbar-expand-lg navbar-light bg-info">
-      <div className="container-fluid">
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <NavLink className="nav-link active" aria-current="page" to="/clubs">Create Club</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link active" aria-current="page" to="/meetings">Create Meeting</NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink className="nav-link active" aria-current="page" to="/meetings/list">All Meetings</NavLink>
-            </li>
-
-          </ul>
-        </div>
-      </div>
-    </nav>
-    </>
-  )
+export default function Nav() {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-dark bg-success">
+            <div className="container-fluid">
+                <NavLink aria-current="page" to="/" exact>
+                    Home
+                </NavLink>
+                <NavLink aria-current="page" to="/user" exact>
+                    User List
+                </NavLink>
+                <NavLink aria-current="page" to="/clubs" exact>
+                    Create a Club
+                </NavLink>
+                <NavLink aria-current="page" to="/clubs/list" exact>
+                    List Clubs
+                </NavLink>
+                <NavLink aria-current="page" to="/meetings" exact>
+                    Create Meeting
+                </NavLink>
+                <NavLink aria-current="page" to="/meetings/list" exact>
+                    All Meetings
+                </NavLink>
+                <NavLink aria-current="page" to="/signup" exact>
+                    Sign Up
+                </NavLink>
+            </div>
+        </nav>
+    )
 }
-
-export default Nav;

@@ -41,7 +41,7 @@ const router = createBrowserRouter(
                     element: <SignInForm />,
                 },
                 {
-                    path: '/user',
+                    path: 'user',
                     element: <UserList />
                 },
                 {
