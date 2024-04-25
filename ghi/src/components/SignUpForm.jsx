@@ -7,6 +7,8 @@ export default function SignUpForm() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
+    const [score, setScore] = useState(0)
+    const [picture_url, setPicture_url] = useState('')
     const { signup, user, error } = useAuthService()
 
     /**
@@ -14,7 +16,7 @@ export default function SignUpForm() {
      */
     async function handleFormSubmit(e) {
         e.preventDefault()
-        await signup({ username, password, email })
+        await signup({ username, password, email, score, picture_url })
     }
 
     if (user) {
@@ -44,6 +46,20 @@ export default function SignUpForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email"
+            />
+            <input
+                type="int"
+                name="score"
+                value={score}
+                onChange={(e) => setScore(e.target.value)}
+                placeholder="Enter score"
+            />
+            <input
+                type="text"
+                name="picture_url"
+                value={picture_url}
+                onChange={(e) => setPicture_url(e.target.value)}
+                placeholder="Enter picture url"
             />
             <button type="submit">Sign Up</button>
         </form>
