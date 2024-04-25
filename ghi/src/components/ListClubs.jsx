@@ -25,6 +25,7 @@ if (user) {
             <table className="table table-striped">
                 <thead>
                     <tr>
+                        <th>{user.username}</th>
                         <th>Club Name</th>
                         <th>State</th>
                         <th>Country</th>

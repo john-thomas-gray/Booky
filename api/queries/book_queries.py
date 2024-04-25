@@ -28,7 +28,7 @@ class BookQueries:
 
 
     """
-    def get_by_id(self, id: int) -> Optional[BookResponse]:
+    def get_by_id(self, book_id: int) -> Optional[BookResponse]:
 
         """
         Gets a meeting from the database by id
@@ -49,10 +49,10 @@ class BookQueries:
                         return None
         except psycopg.Error as e:
             print(e)
-            raise BookDatabaseException(f"Error getting book {book_id}")
+
         return book
 
-    def create_book(self, title: str, author: str, page_count: int, genre: str, publisher: str, publication_date: datetime, synopsis: str, cover_img_url: str):
+    def create_book(self, title: str, author: str, page_count: int, genre: str, publisher: str, synopsis: str, cover_img_url: str):
         """
         Creates a new book in the database
 
@@ -65,9 +65,9 @@ class BookQueries:
                     """
 
                         INSERT INTO books (
-                        title, author, page_count, genre, publisher, publication_date, synopsis, cover_img_url
+                        title, author, page_count, genre, publisher,  synopsis, cover_img_url
                         ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s
+                        %s, %s, %s, %s, %s, %s, %s
                         )
                         RETURNING *;
                     """,
@@ -78,7 +78,7 @@ class BookQueries:
                         page_count,
                         genre,
                         publisher,
-                        publication_date,
+
                         synopsis,
                         cover_img_url,
                     ],
@@ -89,7 +89,6 @@ class BookQueries:
                         raise UserDatabaseException(
                             f"Could not create book with book_id {book_id}"
                         )
-                        print("starting create book function")
         except psycopg.Error:
             raise UserDatabaseException(
                 f"Count not create book with book_id {book_id}"
@@ -98,27 +97,6 @@ class BookQueries:
         return book
 
     def delete_book(self, book_id: int):
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        """
-                        DELETE FROM books WHERE book_id = %s
-                        """,
-                        [book_id],
-                    )
-                    if cur.rowcount == 0:
-                        raise UserDatabaseException(
-                            f"Book with book_id {book_id} not found"
-                        )
-        except:
-            pass
-        # except psycopg.Error as e:
-        #     raist BookDatabaseException(
-        #         f"Error deleting book with book_id {book_id}: {e}"
-        #     )
-
-    def delete_book(self, id: int) -> None:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:

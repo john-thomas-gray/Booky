@@ -12,11 +12,11 @@ class BookRequest(BaseModel):
   title: str
   author: str
   page_count: int
-  # genre: str
-  # publisher: str
+  genre: str
+  publisher: str
   # publication_date: datetime
   synopsis: str
-  # cover_img_url: str
+  cover_img_url: str
 
 class BookResponse(BaseModel):
   """
@@ -27,8 +27,8 @@ class BookResponse(BaseModel):
   title: str
   author: str
   page_count: int
-  # genre: str
-  # publisher: str
+  genre: str
+  publisher: str
   # publication_date: datetime
   synopsis: str
-  # cover_img_url: str
+  cover_img_url: str

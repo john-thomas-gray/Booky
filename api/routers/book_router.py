@@ -24,9 +24,9 @@ def create_book(
         new_book.title,
         new_book.author,
         new_book.page_count,
-        # new_book.genre,
-        # new_book.publisher,
-        # new_book.publication_date,
+        new_book.genre,
+        new_book.publisher,
+
         new_book.synopsis,
         new_book.cover_img_url
     )
@@ -40,17 +40,17 @@ async def delete_book(
     queries: BookQueries = Depends(),) -> bool:
 
     try:
-        queries.delete_books(id)
+        queries.delete_books(book_id)
         return True
     except:
         return False
 
-@router.get("/books/{id}")
+@router.get("/books/{book_id}")
 def get_book(
-    id: int,
+    book_id: int,
     response: Response,
     queries: BookQueries = Depends(),) -> BookResponse:
-    book = queries.get_by_id(id)
+    book = queries.get_by_id(book_id)
     if book is None:
         response.status_code = 404
     print(book)
