@@ -15,4 +15,3 @@ CMD /wait && python -m migrations up && uvicorn main:app --reload --host 0.0.0.0
 
 # Option B
 # CMD /wait && uvicorn main:app --reload --host 0.0.0.0
-

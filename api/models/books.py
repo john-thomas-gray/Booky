@@ -23,7 +23,7 @@ class BookResponse(BaseModel):
   Represents a book
   """
 
-  id: int
+  book_id: int
   title: str
   author: str
   page_count: int
