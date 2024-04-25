@@ -224,14 +224,14 @@ class UserQueries:
                         """
                         SELECT u.*
                         FROM users u
-                        INNER JOIN clubs_members chm ON u.id = chm.member_id
-                        WHERE chm.club_id = %s;
+                        INNER JOIN clubs_members cm ON u.id = cm.member_id
+                        WHERE cm.club_id = %s;
                         """,
                         (club_id,)
                     )
                     club_members = cur.fetchall()
-                if not club_members:
-                    return None
+                    if not club_members:
+                        return None
 
         except psycopg.Error as e:
             print(e)

@@ -123,26 +123,52 @@ class ClubQueries:
       raise UserDatabaseException(f"Error getting clubs")
     return clubs
 
-def join_club(self, user_id: int, club_id: int) -> Optional[ClubMembersResponse]:
-  """
-  Pairs a user with a club in the club_members associative table
-  """
-  try:
-      with pool.connection() as conn:
-          with conn.cursor(row_factory=class_row(ClubMembersResponse)) as cur:
-              cur.execute(
-                  """
-                  INSERT INTO clubs_members (club_id, member_id)
-                  VALUES (%s, %s)
-                  RETURNING club_id, member_id;
-                  """,
-                  (club_id, user_id,)
-              )
-              club_member_pair = cur.fetchone()
-      if not club_member_pair:
-          return None
-  except psycopg.Error as e:
-      print(e)
-      raise UserDatabaseException(f"Error joining club")
-  return club_member_pair
+  def list_clubs_by_user(self, user_id: int) -> Optional[List[ClubResponse]]:
+    """
+    Lists all of the clubs the passed in user belongs to.
+    The user id that's passed in is the id of the current logged in user.
+    """
+    try:
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=class_row(ClubResponse)) as cur:
+                cur.execute(
+                    """
+                    SELECT c.*
+                    FROM clubs c
+                    INNER JOIN clubs_members cm ON c.club_id = cm.club_id
+                    WHERE cm.member_id = %s;
+                    """,
+                    (user_id,)
+                )
+                clubs = cur.fetchall()
+                if not clubs:
+                    return None
+    except psycopg.Error as e:
+        print(e)
+        raise UserDatabaseException(f"Error getting user's clubs: {e}")
+    return clubs
 
+
+
+  # def join_club(self, user_id: int, club_id: int) -> Optional[ClubMembersResponse]:
+  #   """
+  #   Pairs a user with a club in the club_members associative table
+  #   """
+  #   try:
+  #       with pool.connection() as conn:
+  #           with conn.cursor(row_factory=class_row(ClubMembersResponse)) as cur:
+  #               cur.execute(
+  #                   """
+  #                   INSERT INTO clubs_members (club_id, member_id)
+  #                   VALUES (%s, %s)
+  #                   RETURNING club_id, member_id;
+  #                   """,
+  #                   (club_id, user_id,)
+  #               )
+  #               club_member_pair = cur.fetchone()
+  #       if not club_member_pair:
+  #           return None
+  #   except psycopg.Error as e:
+  #       print(e)
+  #       raise UserDatabaseException(f"Error joining club")
+  #   return club_member_pair

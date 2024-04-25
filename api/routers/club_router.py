@@ -37,9 +37,6 @@ async def create_club(
 
     return club_out
 
-
-
-
 @router.get("/clubs/{club_id}")
 def get_club(
     club_id: int,
@@ -85,3 +82,39 @@ def list_clubs(
         if clubs is None:
             response.status_code = 404
         return clubs
+
+@router.get("/clubs")
+def list_clubs(
+    response: Response,
+    user: UserResponse = Depends(try_get_jwt_user_data),
+    queries: ClubQueries = Depends()):
+
+
+    if not user:
+            raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
+        )
+
+    else:
+        clubs = queries.list_clubs()
+        if clubs is None:
+            response.status_code = 404
+        return clubs
+
+from fastapi import Depends
+@router.get("/clubs/user/{user_id}")
+def list_clubs_by_user(
+    response: Response,
+    user: UserResponse = Depends(try_get_jwt_user_data),
+    queries: ClubQueries = Depends()
+) -> List[ClubResponse]:
+    if user is None:
+        response.status_code = 401  # Unauthorized
+        return []  # Return an empty list
+
+    clubs_by_user = queries.list_clubs_by_user(user.id)
+    if clubs_by_user is None:
+        response.status_code = 404  # Not Found
+        return []  # Return an empty list
+
+    return clubs_by_user
