@@ -15,6 +15,8 @@ import UserList from './components/UserList'
 import Home from './components/Home'
 import CreateClubForm from './components/CreateClubForm'
 
+import UserPage from './components/UserPage'
+
 import ListClubs from './components/ListClubs'
 
 const BASE_URL = import.meta.env.BASE_URL
@@ -27,7 +29,7 @@ const router = createBrowserRouter(
         {
             path: '/',
             element: <App />,
-            children:[
+            children: [
                 {
                     path: '/',
                     element: <Home />,
@@ -42,27 +44,27 @@ const router = createBrowserRouter(
                 },
                 {
                     path: 'user',
-                    element: <UserList />
+                    element: <UserList />,
                 },
                 {
-                    path:'/clubs',
-                    element: <CreateClubForm/>
-
+                    path: '/clubs',
+                    element: <CreateClubForm />,
                 },
                 {
-                    path:'/clubs/list',
-                    element: <ListClubs/>
-
+                    path: '/clubs/list',
+                    element: <ListClubs />,
                 },
                 {
-                    path:'/meetings',
-                    element: <CreateMeetingForm/>
-
+                    path: '/meetings',
+                    element: <CreateMeetingForm />,
                 },
-                  {
-                    path:'/meetings/list',
-                    element: <ListMeetings/>
-
+                {
+                    path: '/meetings/list',
+                    element: <ListMeetings />,
+                },
+                {
+                    path: '/user/:pageOwnerID',
+                    element: <UserPage />,
                 },
             ],
         },

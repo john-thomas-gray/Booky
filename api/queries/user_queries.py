@@ -53,7 +53,7 @@ class UserQueries:
             raise UserDatabaseException(f"Error getting user {username}")
         return user
 
-    def get_by_id(self, id: int) -> Optional[UserResponse]:
+    def get_by_id(self, id: int) -> Optional[UserOut]:
         """
         Gets a user from the database by user id
 
@@ -61,7 +61,7 @@ class UserQueries:
         """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserResponse)) as cur:
+                with conn.cursor(row_factory=class_row(UserOut)) as cur:
                     cur.execute(
                         """
                             SELECT

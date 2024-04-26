@@ -104,14 +104,14 @@ def list_clubs(
 @router.get("/clubs/user/{user_id}")
 def list_clubs_by_user(
     response: Response,
-    user: UserResponse = Depends(try_get_jwt_user_data),
+    user_id: int,
     queries: ClubQueries = Depends()
 ) -> List[ClubResponse]:
-    if user is None:
+    if user_id is None:
         response.status_code = 401  # Unauthorized
         return []  # Return an empty list
 
-    clubs_by_user = queries.list_clubs_by_user(user.id)
+    clubs_by_user = queries.list_clubs_by_user(user_id)
     if clubs_by_user is None:
         response.status_code = 404  # Not Found
         return []  # Return an empty list

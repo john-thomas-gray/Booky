@@ -24,10 +24,8 @@ export default function UserList() {
                     <tr>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Avatar</th>
-                        <th>Bio</th>
+                        <th>Score</th>
+                        <th>Profile Picture</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,12 +34,11 @@ export default function UserList() {
                             <tr key={user.id}>
                                 <td>{user.username}</td>
                                 <td>{user.email}</td>
-                                <td>{user.first_name}</td>
-                                <td>{user.last_name}</td>
+                                <td>{user.score}</td>
                                 <td>
                                     {
                                         <img
-                                            src={user.avatar_url}
+                                            src={user.picture_url}
                                             alt="User avatar"
                                             style={{
                                                 maxWidth: '100px',
@@ -50,7 +47,6 @@ export default function UserList() {
                                         />
                                     }
                                 </td>
-                                <td>{user.bio}</td>
                             </tr>
                         )
                     })}

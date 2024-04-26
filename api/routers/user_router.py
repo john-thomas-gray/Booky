@@ -14,8 +14,8 @@ from fastapi import (
 from queries.user_queries import (
   UserQueries,
 )
-from utils.authentication import try_get_jwt_user_data
-from models.users import UserRequest, UserResponse, UserWithPw, UserIn, MemberResponse, MemberRequest
+from utils.authentication import try_get_jwt_user_datafrom utils.authentication import try_get_jwt_user_data
+from models.users import UserRequest, UserResponse, UserWithPw, UserIn, MemberResponse, MemberRequest, UserOut
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -26,7 +26,7 @@ async def get_user(
   id: int,
   response: Response,
   queries: UserQueries = Depends(),
-) -> UserResponse:
+) -> UserOut:
   """
   Gets user information
   """

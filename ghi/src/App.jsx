@@ -27,11 +27,11 @@ if (!API_HOST) {
 //  * @returns {React.ReactNode}
 
 function App() {
-
-
     return (
-        <div className="App">
-            <header className="App-header"><Nav /></header>
+        <div className="App" style={{ backgroundColor: '#F0EAD6' }}>
+            <header className="App-header">
+                <Nav />
+            </header>
             <Outlet />
         </div>
     )

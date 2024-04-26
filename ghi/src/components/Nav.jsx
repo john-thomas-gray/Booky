@@ -1,12 +1,17 @@
 import { NavLink } from 'react-router-dom'
+import useAuthService from '../hooks/useAuthService'
 
 export default function Nav() {
+    const { user } = useAuthService()
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-success">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 <NavLink aria-current="page" to="/" exact>
                     Home
                 </NavLink>
+                {/* <NavLink aria-current="page" to={`/user/${user}`} exact>
+                    Userpage
+                </NavLink> */}
                 <NavLink aria-current="page" to="/user" exact>
                     User List
                 </NavLink>
