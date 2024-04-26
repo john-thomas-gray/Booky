@@ -2,10 +2,13 @@ import useAuthService from '../hooks/useAuthService'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
+
 export default function UserPage() {
-    const { pageOwnerID } = useParams()
-    const [pageOwner, setPageOwner] = useState([])
-    const [clubs, setClubs] = useState([])
+    const { pageOwnerID } = useParams();
+    const [pageOwner, setPageOwner] = useState([]);
+    const [clubs, setClubs] = useState([]);
+    const [meetings, setMeetings] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const fetchPageOwnerData = async () => {
         const url = `http://localhost:8000/api/users/${pageOwnerID}`
@@ -14,7 +17,7 @@ export default function UserPage() {
             const data = await response.json()
             setPageOwner(data)
         }
-    }
+    };
 
     const fetchClubData = async () => {
         const url = `http://localhost:8000/api/clubs/user/${pageOwnerID}`
@@ -24,12 +27,36 @@ export default function UserPage() {
             setClubs(data)
         }
         console.log(clubs);
-    }
+    };
+
+    const fetchMeetingData = async() => {
+      const url = 'http://localhost:8000/api/meeting'
+      const response = await fetch(url)
+      if (response.ok) {
+        const data = await response.json()
+        setMeetings(data)
+      }
+    };
 
     useEffect(() => {
         fetchPageOwnerData()
         fetchClubData()
-    }, [])
+        fetchMeetingData()
+    }, [pageOwnerID]);
+
+    const currentMeetings = meetings.filter(
+            (meeting) => new Date(meeting.active) > new Date()
+        )
+
+    const handleNextMeeting = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % currentMeetings.length)
+    };
+
+
+    const handlePrevMeeting = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + currentMeetings.length) % currentMeetings.length);
+    };
+
 
     return (
         <>
@@ -61,6 +88,36 @@ export default function UserPage() {
                         )
                     })}
                 </list>
+            </div>
+            <div class="pastMeetings">
+                <h2>Past Meetings</h2>
+                <list>
+                    {meetings.map((meeting) => {
+                        // Check if the meeting was on a past date
+                        if (new Date(meeting.active) < new Date()) {
+                            return (
+                                <div>
+                                    <div>
+                                        {meeting.book_title} {meeting.active}
+                                    </div>
+                                </div>
+                            )
+                        }
+                    })}
+                </list>
+            </div>
+            <div className="currentMeetings">
+                <h2>Current Meetings</h2>
+                {currentMeetings.length > 0 && (
+                    <div>
+                        <div>{currentMeetings[currentIndex].book_title}</div>
+                        <div>{currentMeetings[currentIndex].active}</div>
+                    </div>
+                )}
+                <div>
+                    <button onClick={handlePrevMeeting}>Previous</button>
+                    <button onClick={handleNextMeeting}>Next</button>
+                </div>
             </div>
         </>
     )
