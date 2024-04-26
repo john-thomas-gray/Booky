@@ -3,8 +3,29 @@ import useAuthService from '../hooks/useAuthService'
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([])
+    const [clubId, setClubId] = useState('')
     const { user } = useAuthService()
+    /**
+     * @param {React.FormEvent<HTMLFormElement>} e
+     */
+    const joinClub = async () => {
+        const data = {};
+        data.member_id = user.id
+        data.club_id = clubId
+        const membersUrl = `http://localhost:8000/api/users/club/${clubId}/`
+        const fetchConfig = {
+          method: "post",
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
 
+          },
+        };
+      const response = await fetch(membersUrl,  fetchConfig);
+      if (response.ok){
+        console.log("response went through")
+      }
+    }
 
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/clubs/'
@@ -25,7 +46,7 @@ if (user) {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>{user.username}</th>
+
                         <th>Club Name</th>
                         <th>State</th>
                         <th>Country</th>
@@ -35,10 +56,11 @@ if (user) {
                 <tbody>
                     {clubs.map((club) => {
                         return (
-                            <tr key={club.id}>
+                            <tr key={club.club_id} value={club.club_id}>
                                 <td>{club.name}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
+                                <td><button className="btn btn-info" onClick={joinClub} >Join Club</button></td>
                             </tr>
                         )
                     })}

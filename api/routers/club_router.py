@@ -101,7 +101,6 @@ def list_clubs(
             response.status_code = 404
         return clubs
 
-from fastapi import Depends
 @router.get("/clubs/user/{user_id}")
 def list_clubs_by_user(
     response: Response,

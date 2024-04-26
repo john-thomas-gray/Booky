@@ -53,3 +53,21 @@ class UserNew(BaseModel):
     email: str
     score: int
     picture_url: str
+
+class MemberRequest(BaseModel):
+  """
+  Represents the parameters to join a club
+
+  """
+  club_id: int
+  member_id: int
+
+
+
+class MemberResponse(BaseModel):
+  """
+  Represents a member of a club
+
+  """
+  club_id: int
+  member_id: int

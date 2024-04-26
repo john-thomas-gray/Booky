@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.users import UserWithPw, UserResponse, UserOut, UserIn
+from models.users import UserWithPw, UserResponse, UserOut, UserIn, MemberResponse
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -230,6 +230,38 @@ class UserQueries:
                         (club_id,)
                     )
                     club_members = cur.fetchall()
+                    if not club_members:
+                        return None
+
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error getting club members")
+        return club_members
+
+
+    def join_club(self, club_id: int, member_id:int) -> Optional[List[MemberResponse]]:
+        """
+        Get all of a club's members by club_id.
+
+        :param club_id: The identifier of the club.
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(MemberResponse)) as cur:
+                    cur.execute(
+                        """
+                        INSERT INTO clubs_members(
+                        club_id, member_id
+                        )
+                        VALUES(
+                        %s, %s
+                        )
+
+                        RETURNING *;
+                        """,
+                        [club_id, member_id]
+                    )
+                    club_members = cur.fetchone()
                     if not club_members:
                         return None
 

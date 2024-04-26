@@ -14,8 +14,8 @@ from fastapi import (
 from queries.user_queries import (
   UserQueries,
 )
-
-from models.users import UserRequest, UserResponse, UserWithPw, UserIn
+from utils.authentication import try_get_jwt_user_data
+from models.users import UserRequest, UserResponse, UserWithPw, UserIn, MemberResponse, MemberRequest
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -98,6 +98,20 @@ async def list_club_members(
     queries: UserQueries = Depends(),
 ) -> List[UserResponse]:
     club_members = queries.list_club_members(club_id)
+    if club_members is None:
+      response.status_code = 404
+    return club_members
+
+
+@router.post("/club/{club_id}")
+async def join_club(
+    club_id:int,
+    response: Response,
+    user: UserResponse = Depends(try_get_jwt_user_data),
+    queries: UserQueries = Depends(),
+) -> List[MemberResponse]:
+    club_members = queries.join_club(club_id, user.id)
+    club_member_out = MemberResponse
     if club_members is None:
       response.status_code = 404
     return club_members

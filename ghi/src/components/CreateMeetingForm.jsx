@@ -58,7 +58,7 @@ function CreateMeetingForm() {
 
           },
         };
-      const response = await fetch(meetingUrl,{credentials: "include"}, fetchConfig);
+      const response = await fetch(meetingUrl, {credentials: "include"}, fetchConfig);
 
 
       if (response.ok) {
