@@ -1,29 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 
+
 export default function ListClubs() {
     const [clubs, setClubs] = useState([])
-    const [clubId, setClubId] = useState('')
     const { user } = useAuthService()
-    /**
-     * @param {React.FormEvent<HTMLFormElement>} e
-     */
-    const joinClub = async () => {
+
+    const getID = (val) => (e) => {
+        joinClub(val)
+    };
+
+    const joinClub = async (val) => {
+
         const data = {};
         data.member_id = user.id
-        data.club_id = clubId
-        const membersUrl = `http://localhost:8000/api/users/club/${clubId}/`
+        data.club_id = val
+        const membersUrl = `http://localhost:8000/api/users/club/${val}/`
         const fetchConfig = {
           method: "post",
           body: JSON.stringify(data),
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
 
+
           },
+
         };
       const response = await fetch(membersUrl,  fetchConfig);
       if (response.ok){
-        console.log("response went through")
+        console.log("request went through")
       }
     }
 
@@ -56,11 +62,11 @@ if (user) {
                 <tbody>
                     {clubs.map((club) => {
                         return (
-                            <tr key={club.club_id} value={club.club_id}>
+                            <tr key={club.club_id} value={club.club_id} >
                                 <td>{club.name}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
-                                <td><button className="btn btn-info" onClick={joinClub} >Join Club</button></td>
+                                <td><button className="btn btn-info" onClick={getID(club.club_id)} value={club.club_id}>Join Club</button></td>
                             </tr>
                         )
                     })}
@@ -73,6 +79,4 @@ else{
     return(
 <>
 <h1 className="m3 mt-3">You are not signed in!</h1>
-</>)}
-
-}
+</>)}}

@@ -14,7 +14,7 @@ from fastapi import (
 from queries.user_queries import (
   UserQueries,
 )
-from utils.authentication import try_get_jwt_user_datafrom utils.authentication import try_get_jwt_user_data
+from utils.authentication import try_get_jwt_user_data
 from models.users import UserRequest, UserResponse, UserWithPw, UserIn, MemberResponse, MemberRequest, UserOut
 from utils.exceptions import UserDatabaseException
 
@@ -109,9 +109,11 @@ async def join_club(
     response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
     queries: UserQueries = Depends(),
-) -> List[MemberResponse]:
-    club_members = queries.join_club(club_id, user.id)
-    club_member_out = MemberResponse
-    if club_members is None:
-      response.status_code = 404
-    return club_members
+) -> MemberResponse:
+    print("!!!!!!!!!!!!!!!!!")
+    print(user)
+    club_members = queries.join_club(club_id = club_id, member_id=user.id)
+    club_member_out = MemberResponse(**club_members.model_dump())
+    # if club_members is None:
+    #   response.status_code = 404
+    return club_member_out

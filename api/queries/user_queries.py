@@ -239,9 +239,8 @@ class UserQueries:
         return club_members
 
 
-    def join_club(self, club_id: int, member_id:int) -> Optional[List[MemberResponse]]:
+    def join_club(self, club_id: int, member_id: int):
         """
-        Get all of a club's members by club_id.
 
         :param club_id: The identifier of the club.
         """
@@ -250,10 +249,10 @@ class UserQueries:
                 with conn.cursor(row_factory=class_row(MemberResponse)) as cur:
                     cur.execute(
                         """
-                        INSERT INTO clubs_members(
+                        INSERT INTO clubs_members (
                         club_id, member_id
                         )
-                        VALUES(
+                        VALUES (
                         %s, %s
                         )
 
@@ -262,10 +261,7 @@ class UserQueries:
                         [club_id, member_id]
                     )
                     club_members = cur.fetchone()
-                    if not club_members:
-                        return None
-
+            return club_members
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting club members")
-        return club_members

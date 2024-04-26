@@ -4,7 +4,7 @@ import useAuthService from '../hooks/useAuthService'
 export default function Nav() {
     const { user } = useAuthService()
     return (
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 <NavLink aria-current="page" to="/" exact>
                     Home
