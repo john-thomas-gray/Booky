@@ -11,7 +11,6 @@ export default function ListClubs() {
     };
 
     const joinClub = async (val) => {
-
         const data = {};
         data.member_id = user.id
         data.club_id = val
@@ -66,7 +65,7 @@ if (user) {
                                 <td>{club.name}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
-                                <td><button className="btn btn-info" onClick={getID(club.club_id)} value={club.club_id}>Join Club</button></td>
+                                <td><button className="btn btn-info" onClick={getID(club.club_id)} value={club.club_id} >Join Club</button></td>
                             </tr>
                         )
                     })}

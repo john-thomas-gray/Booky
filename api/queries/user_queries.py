@@ -239,7 +239,7 @@ class UserQueries:
         return club_members
 
 
-    def join_club(self, club_id: int, member_id: int):
+    def join_club(self, club_id: int, member_id:int) -> Optional[MemberResponse]:
         """
 
         :param club_id: The identifier of the club.
@@ -261,6 +261,8 @@ class UserQueries:
                         [club_id, member_id]
                     )
                     club_members = cur.fetchone()
+                    if not club_members:
+                        return None
             return club_members
         except psycopg.Error as e:
             print(e)
