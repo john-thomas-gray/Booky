@@ -5,6 +5,9 @@ import useAuthService from '../hooks/useAuthService'
 export default function ListClubs() {
     const [clubs, setClubs] = useState([])
     const { user } = useAuthService()
+    const [error, setError] = useState(null)
+    const [hideComponent, setHideComponent] = useState(true);
+
 
     const getID = (val) => (e) => {
         joinClub(val)
@@ -26,10 +29,12 @@ export default function ListClubs() {
           },
 
         };
-      const response = await fetch(membersUrl,  fetchConfig);
+
+      const response = await fetch(membersUrl,  fetchConfig).catch(error => setError(error))
       if (response.ok){
         console.log("request went through")
-      }
+      };
+
     }
 
     const fetchData = async () => {
@@ -43,10 +48,15 @@ export default function ListClubs() {
 
     useEffect(() => {
         fetchData()
+        setInterval(() => {
+            setHideComponent(!hideComponent);
+        }, 3000);
+
     }, []);
 if (user) {
     return (
         <>
+            {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>}
             <h1 className="m3 mt-3">Clubs</h1>
             <table className="table table-striped">
                 <thead>
@@ -66,6 +76,7 @@ if (user) {
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
                                 <td><button className="btn btn-info" onClick={getID(club.club_id)} value={club.club_id} >Join Club</button></td>
+
                             </tr>
                         )
                     })}
