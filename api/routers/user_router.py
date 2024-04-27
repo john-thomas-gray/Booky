@@ -45,6 +45,17 @@ async def list_users(
       response.status_code = 404
     return users
 
+@router.post("/")
+async def create_user(
+  new_user: UserWithPw,
+  request: Request,
+  response: Response,
+  queries: UserQueries = Depends(),
+) -> UserWithPw:
+   user = queries.create_user(new_user.username, new_user.password, new_user.email, new_user.score, new_user.picture_url)
+   user_out = UserWithPw(**user.model_dump())
+   return user_out
+
 
 @router.patch("/{username}")
 async def update_user(

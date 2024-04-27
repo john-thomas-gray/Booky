@@ -2,6 +2,7 @@ from main import app
 from fastapi.testclient import TestClient
 from queries.club_queries import ClubQueries
 from pydantic import BaseModel
+from models.clubs import ClubResponse
 from utils.authentication import try_get_jwt_user_data
 
 
@@ -18,17 +19,15 @@ class EmptyClubQueries:
 
 class PostClubQueries:
     def create_club(self, owner_id:int, name: str, city: str, state: str, country: str ):
-        result = {
-        "owner_id": 1,
-        "club_id": 1,
-        "name": "Read This",
-        "city": "Phoenix",
-        "state": "AZ",
-        "country": "US"
-        }
-
-        result.update()
-        return result
+        club = ClubResponse(
+            owner_id=1,
+            club_id=1,
+            name=name,
+            city=city,
+            state=state,
+            country=country
+        )
+        return club
 
 class UserOut(BaseModel):
     username : str
