@@ -7,9 +7,10 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.meetings import MeetingResponse, MeetingClubResponse
+from models.meetings import MeetingResponse, MeetingClubResponse, MeetingAttendeeResponse, AttendeeRequest, AttendeeResponse
 from utils.exceptions import UserDatabaseException
 from datetime import datetime
+from models.users import UserOut
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
@@ -120,12 +121,12 @@ class MeetingQueries:
           with conn.cursor(row_factory=class_row(MeetingClubResponse)) as cur:
             cur.execute(
               """
-              SELECT clubs.id, meetings.active, meetings.id, meetings.book_title
+              SELECT clubs.club_id, meetings.active, meetings.id, meetings.book_title
               FROM meetings
               LEFT JOIN clubs
-              ON clubs.id = meetings.club_id
+              ON clubs.club_id = meetings.club_id
 
-              WHERE clubs.id = %s;
+              WHERE clubs.club_id = %s;
               """,
               [ club_id ],
             )
@@ -168,3 +169,62 @@ class MeetingQueries:
       print(e)
       raise UserDatabaseException(f"Error getting meetings: {e}")
     return meetings
+
+  def list_attendees_by_meeting(self, id: int) -> Optional[List[AttendeeResponse]]:
+    """
+    gets all meetings given a club id
+    """
+    try:
+        with pool.connection() as conn:
+          with conn.cursor(row_factory=class_row(AttendeeResponse)) as cur:
+            cur.execute(
+              """
+              SELECT meetings_attendees.meeting_id, meetings_attendees.attendee_id, users.username
+              FROM meetings_attendees
+              LEFT JOIN meetings
+              ON meetings.id = meetings_attendees.meeting_id
+
+              LEFT JOIN users
+              ON users.id = meetings_attendees.attendee_id
+
+              WHERE meetings_attendees.meeting_id = %s;
+              """,
+              [ id ],
+            )
+            attendees_by_meeting = cur.fetchall()
+    except psycopg.Error as e:
+      print(e)
+      raise UserDatabaseException(f"Error getting attendees: {e}")
+
+    return attendees_by_meeting
+
+  def join_meeting(
+      self, meeting_id: int, attendee_id: int
+      )-> Optional[AttendeeResponse]:
+    """
+    allows user to join meeting as an attendee
+    """
+    try:
+      with pool.connection() as conn:
+        with conn.cursor(row_factory=class_row(AttendeeResponse)) as cur:
+          cur.execute(
+            """
+            INSERT INTO meetings_attendees (
+              meeting_id,
+              attendee_id
+            )
+            VALUES (
+            %s, %s
+            )
+
+            RETURNING *;
+            """,
+            [meeting_id, attendee_id]
+          )
+          attendee = cur.fetchone()
+          if not attendee:
+            return None
+      return attendee
+    except psycopg.Error as e:
+      print(e)
+      raise UserDatabaseException(f"Error joining meeting")

@@ -40,25 +40,26 @@ function CreateMeetingForm() {
   async function handleFormSubmit(event){
     event.preventDefault()
     const data = {};
-    data.club_id = Number(clubId);
+    data.club_id = clubId;
     data.club_name = clubName;
-    data.club_score = Number(clubScore);
+    data.club_score = clubScore;
     data.book_title = bookTitle;
-    data.total_pages = Number(totalPages);
-    data.current_page = Number(currentPage);
+    data.total_pages = totalPages;
+    data.current_page = currentPage;
     data.active = active;
-    console.log("data", data)
+
 
     const meetingUrl = 'http://localhost:8000/api/meeting/create/'
     const fetchConfig = {
           method: "post",
           body: JSON.stringify(data),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+
           },
-          credentials: "include"
         };
-      const response = await fetch(meetingUrl, fetchConfig);
+      const response = await fetch(meetingUrl,{credentials: "include"}, fetchConfig);
+      console.log("response", response)
 
 
       if (response.ok) {
@@ -94,14 +95,14 @@ return (
 
 
     <input
-    type="number"
+    type="int"
     value={clubId}
     onChange={(event) => setClubId(event.target.value)}
     placeholder="club id"
     />
 
     <input
-    type="number"
+    type="int"
     value={clubScore}
     onChange={(event) => setClubScore(event.target.value)}
     placeholder="club score"
@@ -115,14 +116,14 @@ return (
     />
 
     <input
-    type="number"
+    type="text"
     value={totalPages}
     onChange={(event) => setTotalPages(event.target.value)}
     placeholder="total pages"
     />
 
     <input
-    type="number"
+    type="text"
     value={currentPage}
     onChange={(event) => setCurrentPage(event.target.value)}
     placeholder="current page"
@@ -144,6 +145,7 @@ return (
 else {
   return (
     <>
+
     <p> You are not signed in</p>
     </>
   )

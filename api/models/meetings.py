@@ -33,3 +33,17 @@ class MeetingResponse(BaseModel):
 class MeetingClubResponse(BaseModel):
   active: date
   book_title: str
+
+class MeetingAttendeeResponse(BaseModel):
+  meeting_id: int
+  attendee_id: int
+
+class AttendeeRequest(BaseModel):
+  meeting_id: int
+  attendee_id: int
+
+
+class AttendeeResponse(BaseModel):
+  meeting_id: int
+  attendee_id: int
+  username: str

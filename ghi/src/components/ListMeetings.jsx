@@ -5,12 +5,35 @@ const [meetings, setMeetings] = useState([])
 
 const fetchData = async () => {
     const url = 'http://localhost:8000/api/meeting/'
+
     const response = await fetch(url)
     if (response.ok) {
         const data = await response.json()
         setMeetings(data)
     }
 }
+
+const deleteMeeting = async (id) => {
+    const url = `http://localhost:8000/api/meeting/${id}`;
+    const fetchConfig = {
+        method: 'delete',
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+    };
+
+
+        const response = await fetch(url,fetchConfig );
+    if (response.ok) {
+      fetchData();
+    } else {
+      console.error('http error:', response.status);
+    }
+
+    };
+
 
 useEffect(() => {
     fetchData()
@@ -29,7 +52,7 @@ useEffect(() => {
                         <th>Total Pages</th>
                         <th>Current Page</th>
                         <th>Active Date</th>
-                        <th>Percentage of Book Done</th>
+                        <th>Delete Meeting</th>
 
                     </tr>
                 </thead>
@@ -44,7 +67,9 @@ useEffect(() => {
                                 <td>{meeting.total_pages}</td>
                                 <td>{meeting.current_page}</td>
                                 <td>{meeting.active}</td>
-                                <td>{meeting.current_page}/{meeting.total_pages}</td>
+                                <td>
+                                    <button onClick={() => deleteMeeting(meeting.id)}>Delete</button>
+                                </td>
 
                             </tr>
                         )
@@ -52,7 +77,5 @@ useEffect(() => {
                 </tbody>
             </table>
         </>
-    )
-
-
+    );
 }

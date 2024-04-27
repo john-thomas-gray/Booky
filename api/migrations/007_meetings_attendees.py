@@ -6,6 +6,7 @@ steps = [
           meeting_id INT NOT NULL,
           attendee_id INT NOT NULL,
           PRIMARY KEY (meeting_id, attendee_id)
+
       );
       """,
       # "Down" SQL statement
@@ -21,12 +22,8 @@ steps = [
           (1, 2),
           (2, 1),
           (2, 2),
-          (2, 3),
-          (2, 4),
-          (3, 1),
-          (3, 3),
-          (4, 1),
-          (4, 4);
+          (2, 3)
+
       """,
       # "Down" SQL statement
       """
