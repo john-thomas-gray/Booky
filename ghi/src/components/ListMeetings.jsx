@@ -45,12 +45,12 @@ useEffect(() => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Meeting ID</th>
+                        {/* <th>Meeting ID</th> */}
                         <th>Club Name</th>
                         <th>Club Score</th>
                         <th>Book Title</th>
-                        <th>Total Pages</th>
-                        <th>Current Page</th>
+                        {/* <th>Total Pages</th> */}
+                        {/* <th>Current Page</th> */}
                         <th>Active Date</th>
                         <th>Delete Meeting</th>
 
@@ -60,12 +60,12 @@ useEffect(() => {
                     {meetings.map((meeting) => {
                         return (
                             <tr key={meeting.id}>
-                                <td>{meeting.club_id}</td>
+                                {/* <td>{meeting.club_id}</td> */}
                                 <td>{meeting.club_name}</td>
                                 <td>{meeting.club_score}</td>
                                 <td>{meeting.book_title}</td>
-                                <td>{meeting.total_pages}</td>
-                                <td>{meeting.current_page}</td>
+                                {/* <td>{meeting.total_pages}</td> */}
+                                {/* <td>{meeting.current_page}</td> */}
                                 <td>{meeting.active}</td>
                                 <td>
                                     <button onClick={() => deleteMeeting(meeting.id)}>Delete</button>

@@ -18,6 +18,8 @@ from typing import Optional, List
 
 from models.users import UserResponse
 
+from models.users import UserResponse
+
 # from utils.exceptions import ClubDatabaseException
 from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, MeetingAttendeeResponse, AttendeeResponse
 from models.users import UserResponse
@@ -116,11 +118,11 @@ def delete_meeting(
             return False
 
 @router.get("/{id}")
-def get_meeting(
+def get_meeting_details(
     id: int,
     response: Response,
     user: UserResponse=Depends(try_get_jwt_user_data),
-    queries: MeetingQueries = Depends() ) -> MeetingClubResponse:
+    queries: MeetingQueries = Depends() ) -> MeetingResponse:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
