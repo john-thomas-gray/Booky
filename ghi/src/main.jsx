@@ -16,6 +16,7 @@ import Home from './components/Home'
 import CreateClubForm from './components/CreateClubForm'
 
 import UserPage from './components/UserPage'
+import MeetingPage from './components/MeetingPage'
 
 import ListClubs from './components/ListClubs'
 
@@ -65,6 +66,10 @@ const router = createBrowserRouter(
                 {
                     path: '/user/:pageOwnerID',
                     element: <UserPage />,
+                },
+                {
+                    path: '/meetings/:meetingID',
+                    element: <MeetingPage />
                 },
             ],
         },
