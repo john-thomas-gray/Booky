@@ -1,7 +1,7 @@
 """
 User API Router
 """
-from typing import List;
+from typing import List
 
 from fastapi import (
     Depends,
@@ -15,7 +15,7 @@ from queries.user_queries import (
   UserQueries,
 )
 from utils.authentication import try_get_jwt_user_data
-from models.users import UserRequest, UserResponse, UserWithPw, UserIn, MemberResponse, MemberRequest, UserOut
+from models.users import UserResponse, UserWithPw, UserIn, MemberResponse, UserOut
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -27,13 +27,14 @@ async def get_user(
   response: Response,
   queries: UserQueries = Depends(),
 ) -> UserOut:
-  """
-  Gets user information
-  """
-  user = queries.get_by_id(id)
-  if user is None:
+    """
+    Gets user information
+    """
+    user = queries.get_by_id(id)
+    if user is None:
         response.status_code = 404
-  return user
+    return user
+
 
 @router.get("/")
 async def list_users(
@@ -42,8 +43,9 @@ async def list_users(
 ) -> List[UserResponse]:
     users = queries.list_users()
     if users is None:
-      response.status_code = 404
+        response.status_code = 404
     return users
+
 
 @router.post("/")
 async def create_user(
@@ -52,9 +54,9 @@ async def create_user(
   response: Response,
   queries: UserQueries = Depends(),
 ) -> UserWithPw:
-   user = queries.create_user(new_user.username, new_user.password, new_user.email, new_user.score, new_user.picture_url)
-   user_out = UserWithPw(**user.model_dump())
-   return user_out
+    user = queries.create_user(new_user.username, new_user.password, new_user.email, new_user.score, new_user.picture_url)
+    user_out = UserWithPw(**user.model_dump())
+    return user_out
 
 
 @router.patch("/{username}")
@@ -63,26 +65,27 @@ async def update_user(
   updated_user: UserIn,
   queries: UserQueries = Depends(),
 ) -> UserIn:
-  """
-  Updates user information.
-  """
-  user = queries.get_by_username(username)
-  if not user:
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="User not found",
-    )
-  updated_user_data = updated_user.dict(exclude_unset=True)
-  updated_user_data["username"] = username
-  updated_user = queries.update_user(**updated_user_data)
+    """
+    Updates user information.
+    """
+    user = queries.get_by_username(username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    updated_user_data = updated_user.dict(exclude_unset=True)
+    updated_user_data["username"] = username
+    updated_user = queries.update_user(**updated_user_data)
 
-  if not updated_user:
-      raise HTTPException(
-          status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-          detail="Failed to update user",
-      )
+    if not updated_user:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user",
+        )
 
-  return UserIn(**updated_user.dict())
+    return UserIn(**updated_user.dict())
+
 
 @router.delete("/{username}")
 async def delete_user(
@@ -102,6 +105,7 @@ async def delete_user(
 
     return {"message": f"User {username} deleted successfully"}
 
+
 @router.get("/club/{club_id}")
 async def list_club_members(
     club_id: int,
@@ -110,18 +114,18 @@ async def list_club_members(
 ) -> List[UserResponse]:
     club_members = queries.list_club_members(club_id)
     if club_members is None:
-      response.status_code = 404
+        response.status_code = 404
     return club_members
 
 
 @router.post("/club/{club_id}")
 async def join_club(
-    club_id:int,
+    club_id: int,
     response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
     queries: UserQueries = Depends(),
 ) -> MemberResponse:
-    club_members = queries.join_club(club_id = club_id, member_id = user.id)
+    club_members = queries.join_club(club_id=club_id, member_id=user.id)
     club_member_out = MemberResponse(**club_members.model_dump())
     # if club_members is None:
     #   response.status_code = 404

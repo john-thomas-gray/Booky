@@ -1,6 +1,7 @@
 """
 Club API Router
 """
+from utils.exceptions import UserDatabaseException
 from typing import List
 from fastapi import (
     Depends,
@@ -22,6 +23,7 @@ from utils.authentication import try_get_jwt_user_data
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Clubs"], prefix="/api")
 
+
 @router.post("/clubs")
 async def create_club(
     new_club: ClubRequest,
@@ -32,10 +34,11 @@ async def create_club(
     """
     Creates a new club when someone submits the signup form
     """
-    club = queries.create_club(new_club.owner_id,new_club.name, new_club.city, new_club.state, new_club.country)
+    club = queries.create_club(new_club.owner_id, new_club.name, new_club.city, new_club.state, new_club.country)
     club_out = ClubResponse(**club.model_dump())
 
     return club_out
+
 
 @router.get("/clubs/{club_id}")
 def get_club(
@@ -53,27 +56,24 @@ def get_club(
 @router.delete("/clubs/{club_id}")
 async def delete_club(
     club_id: int,
-    queries: ClubQueries = Depends(),) -> bool:
-
+        queries: ClubQueries = Depends(),) -> bool:
 
     try:
-
         queries.delete_club(club_id)
         return True
 
-
-    except:
+    except UserDatabaseException:
         return False
 
+
 @router.get("/clubs")
 def list_clubs(
     response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
-    queries: ClubQueries = Depends()):
-
+        queries: ClubQueries = Depends()):
 
     if not user:
-            raise HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
         )
 
@@ -83,23 +83,6 @@ def list_clubs(
             response.status_code = 404
         return clubs
 
-@router.get("/clubs")
-def list_clubs(
-    response: Response,
-    user: UserResponse = Depends(try_get_jwt_user_data),
-    queries: ClubQueries = Depends()):
-
-
-    if not user:
-            raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
-        )
-
-    else:
-        clubs = queries.list_clubs()
-        if clubs is None:
-            response.status_code = 404
-        return clubs
 
 @router.get("/clubs/user/{user_id}")
 def list_clubs_by_user(

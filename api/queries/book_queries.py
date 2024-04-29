@@ -7,9 +7,8 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional
-from datetime import datetime
-from datetime import datetime
 from models.books import BookResponse
+from utils.exceptions import UserDatabaseException
 
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -18,6 +17,7 @@ if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set")
 
 pool = ConnectionPool(DATABASE_URL)
+
 
 class BookQueries:
 
@@ -52,7 +52,8 @@ class BookQueries:
 
         return book
 
-    def create_book(self, title: str, author: str, page_count: int, genre: str, publisher: str, synopsis: str, cover_img_url: str):
+    def create_book(self, title: str, author: str, page_count: int, genre: str,
+                    publisher: str, synopsis: str, cover_img_url: str):
         """
         Creates a new book in the database
 
@@ -62,7 +63,7 @@ class BookQueries:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(BookResponse)) as cur:
                     cur.execute(
-                    """
+                        """
 
                         INSERT INTO books (
                         title, author, page_count, genre, publisher,  synopsis, cover_img_url
@@ -70,28 +71,28 @@ class BookQueries:
                         %s, %s, %s, %s, %s, %s, %s
                         )
                         RETURNING *;
-                    """,
+                        """,
 
-                    [
-                        title,
-                        author,
-                        page_count,
-                        genre,
-                        publisher,
+                        [
+                            title,
+                            author,
+                            page_count,
+                            genre,
+                            publisher,
 
-                        synopsis,
-                        cover_img_url,
-                    ],
+                            synopsis,
+                            cover_img_url,
+                        ],
                     )
 
                     book = cur.fetchone()
                     if not book:
                         raise UserDatabaseException(
-                            f"Could not create book with book_id {book_id}"
+                            f"Could not create book with book_id {id}"
                         )
         except psycopg.Error:
             raise UserDatabaseException(
-                f"Count not create book with book_id {book_id}"
+                f"Count not create book with book_id {id}"
             )
 
         return book
@@ -110,9 +111,7 @@ class BookQueries:
                         raise UserDatabaseException(
                             f"Book with book_id {book_id} not found"
                         )
-        except:
-            pass
-        # except psycopg.Error as e:
-        #     raist BookDatabaseException(
-        #         f"Error deleting book with book_id {book_id}: {e}"
-        #     )
+        except psycopg.Error:
+            raise UserDatabaseException(
+                f"Count not delete book with book_id {id}"
+            )

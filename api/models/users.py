@@ -13,6 +13,7 @@ class UserRequest(BaseModel):
     username: str
     password: str
 
+
 class UserResponse(BaseModel):
     """
     Represents a user, with the password not included
@@ -20,6 +21,7 @@ class UserResponse(BaseModel):
 
     id: int
     username: str
+
 
 class UserWithPw(BaseModel):
     """
@@ -33,12 +35,14 @@ class UserWithPw(BaseModel):
     score: int
     picture_url: str
 
+
 class UserIn(BaseModel):
     username: Optional[str]
     password: Optional[str]
     email: Optional[str]
     score: Optional[int]
     picture_url: Optional[str]
+
 
 class UserOut(BaseModel):
     id: int
@@ -47,6 +51,7 @@ class UserOut(BaseModel):
     score: int
     picture_url: str
 
+
 class UserNew(BaseModel):
     username: str
     password: str
@@ -54,20 +59,20 @@ class UserNew(BaseModel):
     score: int
     picture_url: str
 
+
 class MemberRequest(BaseModel):
-  """
-  Represents the parameters to join a club
+    """
+    Represents the parameters to join a club
 
-  """
-  club_id: int
-  member_id: int
-
+    """
+    club_id: int
+    member_id: int
 
 
 class MemberResponse(BaseModel):
-  """
-  Represents a member of a club
+    """
+    Represents a member of a club
 
-  """
-  club_id: int
-  member_id: int
+    """
+    club_id: int
+    member_id: int

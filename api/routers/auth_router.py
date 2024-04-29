@@ -50,7 +50,7 @@ async def signup(
             new_user.score,
             new_user.picture_url
             )
-    except UserDatabaseException as e:
+    except UserDatabaseException:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     # Generate a JWT token

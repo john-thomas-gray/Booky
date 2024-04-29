@@ -4,10 +4,7 @@ Club API Router
 from typing import List
 from fastapi import (
     Depends,
-    Request,
     Response,
-    HTTPException,
-    status,
     APIRouter,
 )
 from queries.user_club_queries import (
@@ -18,7 +15,6 @@ from queries.user_club_queries import (
 from models.user_clubs import UserClubResponse
 
 
-
 router = APIRouter(tags=["User Clubs"], prefix="/api")
 
 
@@ -26,7 +22,7 @@ router = APIRouter(tags=["User Clubs"], prefix="/api")
 async def list_user_clubs_by_id(
     owner_id: int,
     response: Response,
-    queries: UserClubQueries = Depends(), ) -> List[UserClubResponse]:
+        queries: UserClubQueries = Depends(), ) -> List[UserClubResponse]:
     """
     List clubs by owner id
     """
@@ -39,7 +35,7 @@ async def list_user_clubs_by_id(
 @router.get("/users/clubs/")
 async def list_user_clubs(
     response: Response,
-    queries: UserClubQueries = Depends(), ) -> List[UserClubResponse]:
+        queries: UserClubQueries = Depends(), ) -> List[UserClubResponse]:
     """
     List all user to club owner associations
     """

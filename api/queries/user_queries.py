@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.users import UserWithPw, UserResponse, UserOut, UserIn, MemberResponse
+from models.users import UserWithPw, UserOut, UserIn, MemberResponse
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -99,9 +99,8 @@ class UserQueries:
                         return None
         except psycopg.Error as e:
             print(e)
-            raise UserDatabaseException(f"Error getting users")
+            raise UserDatabaseException(f'{"Error getting users"}')
         return users
-
 
     def create_user(
             self,
@@ -182,7 +181,7 @@ class UserQueries:
                     user = cur.fetchone()
                     if not user:
                         raise UserDatabaseException(
-                f"Could not update user with username {username} pooled"
+                            f'{"Could not update user with username {username} pooled"}'
                         )
         except psycopg.Error:
             raise UserDatabaseException(
@@ -210,7 +209,6 @@ class UserQueries:
                 f"Error deleting user with username {username}: {e}"
             )
 
-
     def list_club_members(self, club_id: int) -> Optional[List[UserOut]]:
         """
         Get all of a club's members by club_id.
@@ -236,11 +234,10 @@ class UserQueries:
 
         except psycopg.Error as e:
             print(e)
-            raise UserDatabaseException(f"Error getting club members")
+            raise UserDatabaseException(f'{"Error getting club members"}')
         return club_members
 
-
-    def join_club(self, club_id: int, member_id:int) -> Optional[MemberResponse]:
+    def join_club(self, club_id: int, member_id: int) -> Optional[MemberResponse]:
         """
 
         :param club_id: The identifier of the club.
@@ -267,4 +264,4 @@ class UserQueries:
             return club_members
         except psycopg.Error as e:
             print(e)
-            raise UserDatabaseException(f"Error getting club members")
+            raise UserDatabaseException(f'{"Error getting club members"}')

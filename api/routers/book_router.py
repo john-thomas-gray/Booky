@@ -2,11 +2,13 @@
 Book API Router
 """
 
-from fastapi import APIRouter, Depends, Request, Response, HTTPException
+from fastapi import APIRouter, Depends, Request, Response
 from queries.book_queries import BookQueries
 from models.books import BookRequest, BookResponse
+from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Book"])
+
 
 @router.post("/book")
 def create_book(
@@ -34,22 +36,24 @@ def create_book(
 
     return book_out
 
+
 @router.delete("/book/{book_id}")
 async def delete_book(
     book_id: int,
-    queries: BookQueries = Depends(),) -> bool:
+        queries: BookQueries = Depends(),) -> bool:
 
     try:
         queries.delete_books(book_id)
         return True
-    except:
+    except UserDatabaseException:
         return False
+
 
 @router.get("/books/{book_id}")
 def get_book(
     book_id: int,
     response: Response,
-    queries: BookQueries = Depends(),) -> BookResponse:
+        queries: BookQueries = Depends(),) -> BookResponse:
     book = queries.get_by_id(book_id)
     if book is None:
         response.status_code = 404

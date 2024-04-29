@@ -17,8 +17,9 @@ class EmptyClubQueries:
     def list_clubs(self):
         return []
 
+
 class PostClubQueries:
-    def create_club(self, owner_id:int, name: str, city: str, state: str, country: str ):
+    def create_club(self, name: str, city: str, state: str, country: str):
         club = ClubResponse(
             owner_id=1,
             club_id=1,
@@ -29,27 +30,25 @@ class PostClubQueries:
         )
         return club
 
-class UserOut(BaseModel):
-    username : str
-    password : str
-    email : str
-    score : int
-    picture_url : str
 
+class UserOut(BaseModel):
+    username: str
+    password: str
+    email: str
+    score: int
+    picture_url: str
 
 
 def fake_get_account_data():
     return UserOut(username="John", password="hello", email="youngmula@youngmoney.com", score=0, picture_url="asdfadsf@google.com")
 
+
 def test_get_all_clubs():
     app.dependency_overrides[try_get_jwt_user_data] = fake_get_account_data
     app.dependency_overrides[ClubQueries] = EmptyClubQueries
 
-
-
     response = client.get("/api/clubs")
     app.dependency_overrides = {}
-
 
     assert response.status_code == 200
     assert response.json() == []
@@ -75,7 +74,6 @@ def test_create_new_club():
 
     response = client.post("/api/clubs", json=club)
     app.dependency_overrides = {}
-
 
     assert response.status_code == 200
     assert response.json() == expected
