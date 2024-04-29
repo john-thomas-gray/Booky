@@ -1,11 +1,10 @@
 """
 meeting API Router
 """
-from typing import List;
+from typing import List
 
 from fastapi import (
     Depends,
-    Request,
     Response,
     HTTPException,
     status,
@@ -14,30 +13,23 @@ from fastapi import (
 from queries.meeting_queries import (
   MeetingQueries,
 )
-from typing import Optional, List
-
-from models.users import UserResponse
-
 from models.users import UserResponse
 
 # from utils.exceptions import ClubDatabaseException
-from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, MeetingAttendeeResponse, AttendeeResponse
-from models.users import UserResponse
+from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse
 from utils.authentication import (
     try_get_jwt_user_data,
-    hash_password,
-    generate_jwt,
-    verify_password,
 )
 
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Meeting"], prefix="/api/meeting")
 
+
 @router.post("/create")
 def create_meeting(
     new_meeting: MeetingRequest,
-    user: UserResponse=Depends(try_get_jwt_user_data),
+    user: UserResponse = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> MeetingResponse:
     """
@@ -62,29 +54,23 @@ def create_meeting(
         return meeting_out
 
 
-
-
 @router.get("/")
 def list_meetings(
     response: Response,
     # user: UserResponse=Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> List[MeetingResponse]:
-#   if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
-#         )
-#   else:
     meetings = queries.list_meetings()
     if meetings is None:
         response.status_code = 404
     return meetings
 
+
 @router.get("/club/{club_id}")
 def list_meetings_by_club(
     club_id: int,
     response: Response,
-    user: UserResponse=Depends(try_get_jwt_user_data),
+    user: UserResponse = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> List[MeetingClubResponse]:
     if not user:
@@ -97,12 +83,13 @@ def list_meetings_by_club(
             response.status_code = 404
         return meetings
 
+
 @router.delete("/{id}")
 def delete_meeting(
     id: int,
     response: Response,
-    user: UserResponse=Depends(try_get_jwt_user_data),
-    queries: MeetingQueries = Depends() ) -> bool:
+    user: UserResponse = Depends(try_get_jwt_user_data),
+        queries: MeetingQueries = Depends()) -> bool:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
@@ -117,12 +104,13 @@ def delete_meeting(
             print("could NOT delete meeting")
             return False
 
+
 @router.get("/{id}")
 def get_meeting_details(
     id: int,
     response: Response,
-    user: UserResponse=Depends(try_get_jwt_user_data),
-    queries: MeetingQueries = Depends() ) -> MeetingResponse:
+    user: UserResponse = Depends(try_get_jwt_user_data),
+        queries: MeetingQueries = Depends()) -> MeetingResponse:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
@@ -133,11 +121,12 @@ def get_meeting_details(
             response.status_code = 404
         return meeting
 
+
 @router.get("/{id}/attendees")
 def list_attendees_by_meeting(
     id: int,
     response: Response,
-    user: AttendeeResponse=Depends(try_get_jwt_user_data),
+    user: AttendeeResponse = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> List[AttendeeResponse]:
     if not user:
@@ -150,6 +139,7 @@ def list_attendees_by_meeting(
             response.status_code = 404
         return meetings
 
+
 @router.post("/{meeting_id}")
 async def join_meeting(
     meeting_id: int,
@@ -157,6 +147,6 @@ async def join_meeting(
     user: UserResponse = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> AttendeeResponse:
-    attendee = queries.join_meeting(meeting_id = meeting_id, attendee_id = user.id)
+    attendee = queries.join_meeting(meeting_id=meeting_id, attendee_id=user.id)
     attendee_out = AttendeeResponse(**attendee.model_dump())
     return attendee_out
