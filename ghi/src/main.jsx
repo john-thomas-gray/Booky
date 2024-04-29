@@ -14,7 +14,7 @@ import './index.css'
 import UserList from './components/UserList'
 import Home from './components/Home'
 import CreateClubForm from './components/CreateClubForm'
-
+import ClubDetailPage from './components/ClubDetailPage'
 import UserPage from './components/UserPage'
 import MeetingPage from './components/MeetingPage'
 
@@ -70,6 +70,10 @@ const router = createBrowserRouter(
                 {
                     path: '/meetings/:meetingID',
                     element: <MeetingPage />
+                },
+                {
+                    path: '/clubs/:clubID',
+                    element: <ClubDetailPage />
                 },
             ],
         },

@@ -8,35 +8,6 @@ export default function ListClubs() {
     const [error, setError] = useState(null)
     const [hideComponent, setHideComponent] = useState(true);
 
-
-    const getID = (val) => (e) => {
-        joinClub(val)
-    };
-
-    const joinClub = async (val) => {
-        const data = {};
-        data.member_id = user.id
-        data.club_id = val
-        const membersUrl = `http://localhost:8000/api/users/club/${val}/`
-        const fetchConfig = {
-          method: "post",
-          body: JSON.stringify(data),
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-
-
-          },
-
-        };
-
-      const response = await fetch(membersUrl,  fetchConfig).catch(error => setError(error))
-      if (response.ok){
-        console.log("request went through")
-      };
-
-    }
-
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/clubs/'
         const response = await fetch(url, {credentials: "include"})
@@ -75,7 +46,6 @@ if (user) {
                                 <td>{club.name}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
-                                <td><button className="btn btn-info" onClick={getID(club.club_id)} value={club.club_id} >Join Club</button></td>
 
                             </tr>
                         )

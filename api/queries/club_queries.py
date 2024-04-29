@@ -26,7 +26,7 @@ class ClubQueries:
         # Here you can call any of the functions to query the DB
     """
 
-    def get_by_id(self, club_id) -> Optional[ClubResponse]:
+    def get_by_id(self, club_id: int) -> Optional[ClubResponse]:
         """
         Gets a club from the database by id
 
@@ -44,9 +44,9 @@ class ClubQueries:
                       """,
                       [club_id],
                     )
-                club = cur.fetchone()
-                if not club:
-                    return None
+                    club = cur.fetchone()
+                    if not club:
+                        return None
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting club with id: {club_id}")
