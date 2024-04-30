@@ -14,7 +14,6 @@ class BookRequest(BaseModel):
     page_count: int
     genre: str
     publisher: str
-    # publication_date: datetime
     synopsis: str
     cover_img_url: str
 
@@ -30,6 +29,5 @@ class BookResponse(BaseModel):
     page_count: int
     genre: str
     publisher: str
-    # publication_date: datetime
     synopsis: str
     cover_img_url: str

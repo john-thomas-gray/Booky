@@ -15,7 +15,7 @@ def create_book(
     new_book: BookRequest,
     request: Request,
     response: Response,
-    queries: BookQueries = Depends()
+    queries: BookQueries = Depends(),
 ) -> BookResponse:
     """
     Creates a new book after form is filled out
@@ -28,7 +28,6 @@ def create_book(
         new_book.page_count,
         new_book.genre,
         new_book.publisher,
-
         new_book.synopsis,
         new_book.cover_img_url
     )

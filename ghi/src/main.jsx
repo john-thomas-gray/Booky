@@ -9,6 +9,7 @@ import App from './App'
 import AuthProvider from './components/AuthProvider'
 import CreateMeetingForm from './components/CreateMeetingForm'
 import ListMeetings from './components/ListMeetings'
+import CreateBookForm from './components/CreateBookForm'
 
 import './index.css'
 import UserList from './components/UserList'
@@ -74,6 +75,10 @@ const router = createBrowserRouter(
                 {
                     path: '/clubs/:clubID',
                     element: <ClubDetailPage />
+                },
+                {
+                    path: '/book/bookform',
+                    element: <CreateBookForm />
                 },
                 {
                     path: '/auth',

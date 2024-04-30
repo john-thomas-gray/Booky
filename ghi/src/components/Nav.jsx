@@ -49,6 +49,12 @@ export default function Nav() {
                 <NavLink aria-current="page" to="/meetings/list" exact>
                     All Meetings
                 </NavLink>
+                <NavLink aria-current="page" to="/signup" exact="true">
+                    Sign Up
+                </NavLink>
+                <NavLink aria-current="page" to="/book" exact="true">
+                    Create Book
+                </NavLink>
                 {!isLoggedIn && !user && (
                     <NavLink aria-current="page" to="/auth" exact>
                         Log In

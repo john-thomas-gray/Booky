@@ -5,14 +5,15 @@ Database Queries for books
 import os
 import psycopg
 from psycopg_pool import ConnectionPool
-from psycopg.rows import class_row
 from typing import Optional
 from models.books import BookResponse
+from psycopg.rows import class_row
 from utils.exceptions import UserDatabaseException
 
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set")
     raise ValueError("DATABASE_URL environment variable is not set")
     raise ValueError("DATABASE_URL environment variable is not set")
 
@@ -79,7 +80,6 @@ class BookQueries:
                             page_count,
                             genre,
                             publisher,
-
                             synopsis,
                             cover_img_url,
                         ],
@@ -94,7 +94,6 @@ class BookQueries:
             raise UserDatabaseException(
                 f"Count not create book with book_id {id}"
             )
-
         return book
 
     def delete_book(self, book_id: int):
