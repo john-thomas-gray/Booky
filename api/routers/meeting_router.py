@@ -13,7 +13,7 @@ from fastapi import (
 from queries.meeting_queries import (
   MeetingQueries,
 )
-from models.users import UserResponse
+from models.users import UserResponse, UserOut
 
 # from utils.exceptions import ClubDatabaseException
 from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse
@@ -126,9 +126,9 @@ def get_meeting_details(
 def list_attendees_by_meeting(
     id: int,
     response: Response,
-    user: AttendeeResponse = Depends(try_get_jwt_user_data),
+    user: UserOut = Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
-) -> List[AttendeeResponse]:
+) -> List[UserOut]:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"

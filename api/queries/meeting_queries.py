@@ -8,6 +8,7 @@ from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
 from models.meetings import MeetingResponse, MeetingClubResponse, AttendeeResponse
+from models.users import UserOut
 from utils.exceptions import UserDatabaseException
 from datetime import datetime
 
@@ -169,26 +170,21 @@ class MeetingQueries:
             raise UserDatabaseException(f"Error getting meetings: {e}")
         return meetings
 
-    def list_attendees_by_meeting(self, id: int) -> Optional[List[AttendeeResponse]]:
+    def list_attendees_by_meeting(self, meeting_id: int) -> Optional[List[UserOut]]:
         """
         gets all meetings given a club id
         """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(AttendeeResponse)) as cur:
+                with conn.cursor(row_factory=class_row(UserOut)) as cur:
                     cur.execute(
                       """
-                      SELECT meetings_attendees.meeting_id, meetings_attendees.attendee_id, users.username
-                      FROM meetings_attendees
-                      LEFT JOIN meetings
-                      ON meetings.id = meetings_attendees.meeting_id
-
-                      LEFT JOIN users
-                      ON users.id = meetings_attendees.attendee_id
-
-                      WHERE meetings_attendees.meeting_id = %s;
+                      SELECT u.*
+                      FROM users u
+                      INNER JOIN meetings_attendees ma ON u.id = ma.attendee_id
+                      WHERE ma.meeting_id = %s;
                       """,
-                      [id],
+                      [meeting_id],
                     )
                     attendees_by_meeting = cur.fetchall()
         except psycopg.Error as e:

@@ -26,7 +26,7 @@ export default function Nav() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <NavLink aria-current="page" to="/" exact={true}>
+                <NavLink aria-current="page" to="/" exact>
                     Home
                 </NavLink>
                 {isLoggedIn && user && (
@@ -37,24 +37,24 @@ export default function Nav() {
                 <NavLink aria-current="page" to="/user" exact>
                     User List
                 </NavLink>
-                <NavLink aria-current="page" to="/clubs" exact={true}>
+                <NavLink aria-current="page" to="/clubs" exact>
                     Create a Club
                 </NavLink>
-                <NavLink aria-current="page" to="/clubs/list" exact={true}>
+                <NavLink aria-current="page" to="/clubs/list" exact>
                     List Clubs
                 </NavLink>
-                <NavLink aria-current="page" to="/meetings" exact={true}>
+                <NavLink aria-current="page" to="/meetings" exact>
                     Create Meeting
                 </NavLink>
-                <NavLink aria-current="page" to="/meetings/list" exact={true}>
+                <NavLink aria-current="page" to="/meetings/list" exact>
                     All Meetings
                 </NavLink>
-                <NavLink aria-current="page" to="/signup" exact={true}>
-                    Sign Up
-                </NavLink>
-                <NavLink aria-current="page" to="/signin" exact={true}>
-                    Sign In
-                </NavLink>
+                {!isLoggedIn && !user && (
+                    <NavLink aria-current="page" to="/auth" exact>
+                        Log In
+                    </NavLink>
+                )}
+                {isLoggedIn && <button onClick={signOut}>Sign Out</button>}
             </div>
         </nav>
     )
