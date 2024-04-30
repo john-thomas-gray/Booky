@@ -40,7 +40,7 @@ async def get_user(
 async def list_users(
     response: Response,
     queries: UserQueries = Depends(),
-) -> List[UserResponse]:
+) -> List[UserOut]:
     users = queries.list_users()
     if users is None:
         response.status_code = 404
