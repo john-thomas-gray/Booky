@@ -1,10 +1,13 @@
 // @ts-check
 import { useState, useEffect } from 'react'
+import useAuthService from '../hooks/useAuthService'
+
 
 export default function CreateClubForm() {
   const [users, setUsers] = useState([])
+  const { user } = useAuthService()
   const [formData, setFormData] = useState({
-    owner_id: '',
+    owner_id: user.id,
     name: '',
     city: '',
     state: '',
@@ -44,7 +47,7 @@ export default function CreateClubForm() {
 
         if (clubResponse.ok) {
             setFormData ({
-                owner_id: '',
+                owner_id: user.id,
                 name: '',
                 city: '',
                 state: '',
@@ -65,19 +68,10 @@ export default function CreateClubForm() {
       [inputName]: value
     });
   }
-
+if (user) {
     return (
         <form onSubmit={handleFormSubmit}>
 
-
-            <select onChange={handleFormChange} required name="owner_id" id="owner_id" className="form-select">
-            <option value="">Select Your Username</option>
-                {users.map(user => {
-                  return (
-                    <option key={user.id} value={user.id}>{user.username}</option>
-                  )
-                })}
-            </select>
 
             <div className="form-floating mb-3">
             <input
@@ -129,3 +123,8 @@ export default function CreateClubForm() {
         </form>
     )
 }
+else{
+    return(
+<>
+<h1 className="m3 mt-3">You are not signed in!</h1>
+</>)}}

@@ -40,3 +40,23 @@ class ClubDeleteResponse(BaseModel):
 
     """
     club_id: int
+
+
+class ClubEditRequest(BaseModel):
+    """
+    Represents a club
+    """
+    name: str
+    city: str
+    state: str
+    country: str
+
+
+class ClubEditResponse(BaseModel):
+    """
+    Represents a club
+    """
+    name: str
+    city: str
+    state: str
+    country: str

@@ -9,9 +9,7 @@ export default function SignUpForm() {
     const [email, setEmail] = useState('')
     const { signup, user, error } = useAuthService()
 
-    /**
-     * @param {React.FormEvent<HTMLFormElement>} e
-     */
+
     async function handleFormSubmit(e) {
         e.preventDefault()
         await signup({

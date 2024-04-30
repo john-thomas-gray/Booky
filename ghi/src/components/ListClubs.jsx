@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
+import { NavLink, useParams } from 'react-router-dom'
 
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([])
     const { user } = useAuthService()
-    const [error, setError] = useState(null)
-    const [hideComponent, setHideComponent] = useState(true);
+    const {clubID} = useParams();
+
 
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/clubs/'
@@ -19,15 +20,13 @@ export default function ListClubs() {
 
     useEffect(() => {
         fetchData()
-        setInterval(() => {
-            setHideComponent(!hideComponent);
-        }, 3000);
+
 
     }, []);
 if (user) {
     return (
         <>
-            {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>}
+            {/* {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>} */}
             <h1 className="m3 mt-3">Clubs</h1>
             <table className="table table-striped">
                 <thead>
@@ -43,7 +42,10 @@ if (user) {
                     {clubs.map((club) => {
                         return (
                             <tr key={club.club_id} value={club.club_id} >
-                                <td>{club.name}</td>
+                                <td>
+                <NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true">
+                    {club.name}
+                </NavLink></td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
 

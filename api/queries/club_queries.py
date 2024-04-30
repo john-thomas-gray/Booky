@@ -148,3 +148,29 @@ class ClubQueries:
             print(e)
             raise UserDatabaseException(f"Error getting user's clubs: {e}")
         return clubs
+
+    def edit_club(self, name: str, city: str, state: str, country: str, club_id: int) -> Optional[ClubResponse]:
+        """
+        Edits club by id
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(ClubResponse)) as cur:
+                    cur.execute(
+                        """
+                        UPDATE clubs
+                        SET name=%s, city=%s, state=%s, country=%s
+                        WHERE club_id = %s
+                        RETURNING *;
+                        """,
+                        (name, city, state, country, club_id)
+
+                    )
+
+                    club = cur.fetchone()
+                    if not club:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error updating club: {e}")
+        return club

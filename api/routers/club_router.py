@@ -17,7 +17,7 @@ from queries.club_queries import (
 
 from models.users import UserResponse
 # from utils.exceptions import ClubDatabaseException
-from models.clubs import ClubRequest, ClubResponse
+from models.clubs import ClubRequest, ClubResponse, ClubEditRequest
 from utils.authentication import try_get_jwt_user_data
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
@@ -100,3 +100,15 @@ def list_clubs_by_user(
         return []  # Return an empty list
 
     return clubs_by_user
+
+
+@router.patch("/clubs/{club_id}")
+def update_club(
+    response: Response,
+    club_id: int,
+    club: ClubEditRequest,
+    queries: ClubQueries = Depends(),
+) -> ClubResponse:
+
+    updated_club = queries.edit_club(club.name, club.city, club.state, club.country, club_id=club_id)
+    return updated_club
