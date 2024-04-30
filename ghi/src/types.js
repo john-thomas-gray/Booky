@@ -20,6 +20,9 @@ export {}
  * @typedef {Object} SignUpRequest
  * @property {string} username
  * @property {string} password
+ * @property {string} email
+ * @property {number} score
+ * @property {string} picture_url
  */
 /**
  * @typedef {Object} UserDataResponse

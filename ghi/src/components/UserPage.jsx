@@ -28,7 +28,7 @@ export default function UserPage() {
         }
         console.log(clubs);
     };
-
+    // NEEDS TO BE LIST MEETINGS BY USER
     const fetchMeetingData = async() => {
       const url = 'http://localhost:8000/api/meeting'
       const response = await fetch(url)
@@ -75,16 +75,14 @@ export default function UserPage() {
                 </div>
             </div>
             <div class="scoreDisplay">
-                <div>{pageOwner.score}</div>
+                <div>SCORE: {pageOwner.score}</div>
             </div>
             <div class="clubList">
                 <h2>{pageOwner.username}'s Clubs</h2>
                 <list>
                     {clubs.map((club) => {
                         return (
-                            <tr key={club.club_id}>
-                                <td>{club.name}</td>
-                            </tr>
+                            <a href={`/clubs/${club.club_id}`}>{club.name}</a>
                         )
                     })}
                 </list>
@@ -97,9 +95,9 @@ export default function UserPage() {
                         if (new Date(meeting.active) < new Date()) {
                             return (
                                 <div>
-                                    <div>
+                                    <a href={`/meetings/${meeting.meeting_id}`}>
                                         {meeting.book_title} {meeting.active}
-                                    </div>
+                                    </a>
                                 </div>
                             )
                         }

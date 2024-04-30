@@ -7,8 +7,6 @@ export default function SignUpForm() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
-    const [score, setScore] = useState(0)
-    const [picture_url, setPicture_url] = useState('')
     const { signup, user, error } = useAuthService()
 
     /**
@@ -16,7 +14,14 @@ export default function SignUpForm() {
      */
     async function handleFormSubmit(e) {
         e.preventDefault()
-        await signup({ username, password, email, score, picture_url })
+        await signup({
+            username,
+            password,
+            email,
+            score: 0,
+            picture_url:
+                'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
+        })
     }
 
     if (user) {
@@ -28,7 +33,7 @@ export default function SignUpForm() {
             {error && <div className="error">{error.message}</div>}
             <input
                 type="text"
-                // name="username"
+                name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter Username"
@@ -46,20 +51,6 @@ export default function SignUpForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email"
-            />
-            <input
-                type="int"
-                name="score"
-                value={score}
-                onChange={(e) => setScore(e.target.value)}
-                placeholder="Enter score"
-            />
-            <input
-                type="text"
-                name="picture_url"
-                value={picture_url}
-                onChange={(e) => setPicture_url(e.target.value)}
-                placeholder="Enter picture url"
             />
             <button type="submit">Sign Up</button>
         </form>

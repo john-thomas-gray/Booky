@@ -3,15 +3,16 @@ import useAuthService from '../hooks/useAuthService'
 
 export default function Nav() {
     const { user } = useAuthService()
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 <NavLink aria-current="page" to="/" exact="true">
                     Home
                 </NavLink>
-                {/* <NavLink aria-current="page" to={`/user/${user}`} exact>
+                <NavLink aria-current="page" to={`/user/${user.id}`} exact>
                     Userpage
-                </NavLink> */}
+                </NavLink>
                 <NavLink aria-current="page" to="/user" exact="true">
                     User List
                 </NavLink>
@@ -29,6 +30,9 @@ export default function Nav() {
                 </NavLink>
                 <NavLink aria-current="page" to="/signup" exact="true">
                     Sign Up
+                </NavLink>
+                <NavLink aria-current="page" to="/signin" exact="true">
+                    Sign In
                 </NavLink>
             </div>
         </nav>
