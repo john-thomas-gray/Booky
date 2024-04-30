@@ -1,5 +1,5 @@
 // @ts-check
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import useAuthService from '../hooks/useAuthService'
 
@@ -29,6 +29,8 @@ export default function SignUpForm() {
     }
 
     return (
+        <>
+        Sign Up
         <form onSubmit={handleFormSubmit}>
             {error && <div className="error">{error.message}</div>}
             <input
@@ -37,22 +39,30 @@ export default function SignUpForm() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter Username"
+                required
             />
             <input
-                type="text"
+                type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
+                required
             />
             <input
-                type="text"
+                type="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email"
+                placeholder="Enter Email"
+                required
+                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                title="Please enter a valid email address."
             />
-            <button type="submit">Sign Up</button>
+            <button type="submit" disabled={!username || !password || !email}>
+                Sign Up
+            </button>
         </form>
+        </>
     )
 }

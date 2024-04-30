@@ -19,10 +19,12 @@ export default function SignInForm() {
 
     if (user) {
         console.log('user', user)
-        return <Navigate to="/" />
+        return <Navigate to={`/user/${user.id}`} />
     }
 
     return (
+        <>
+        Log In
         <form onSubmit={handleFormSubmit}>
             {error && <div className="error">{error.message}</div>}
 
@@ -42,5 +44,6 @@ export default function SignInForm() {
             />
             <button type="submit">Sign In</button>
         </form>
+        </>
     )
 }
