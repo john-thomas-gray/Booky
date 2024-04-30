@@ -158,7 +158,7 @@ if (user) {
                     {meetings.map((meeting) => {
                         return (
                             <tr key={meeting.book_title}>
-                                <td><NavLink aria-current="page" to={"/meetings/" + meeting.meeting_id} exact="true">{meeting.book_title}</NavLink></td>
+                                <td><NavLink aria-current="page" to={"/meetings/" + meeting.id} exact="true">{meeting.book_title}</NavLink></td>
                                 <td>{meeting.active}</td>
                                 <td><button onClick={getMeetingId(meeting.id)}>Join Meeting</button></td>
                             </tr>
