@@ -5,7 +5,7 @@ Database Queries for books
 import os
 import psycopg
 from psycopg_pool import ConnectionPool
-from typing import Optional
+from typing import Optional, List
 from models.books import BookResponse
 from psycopg.rows import class_row
 from utils.exceptions import UserDatabaseException
@@ -114,3 +114,25 @@ class BookQueries:
             raise UserDatabaseException(
                 f"Count not delete book with book_id {id}"
             )
+
+    def list_books(self) -> Optional[List[BookResponse]]:
+        """
+        Get list of all books
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(BookResponse)) as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                            *
+                        FROM books;
+                        """,
+                    )
+                    books = cur.fetchall()
+                    if not books:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f'Error getting books: {e}')
+        return books

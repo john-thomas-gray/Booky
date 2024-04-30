@@ -55,6 +55,9 @@ export default function Nav() {
                 <NavLink aria-current="page" to="/book" exact="true">
                     Create Book
                 </NavLink>
+                <NavLink aria-current="page" to="/book/book" exact="true">
+                    Book List
+                </NavLink>
                 {!isLoggedIn && !user && (
                     <NavLink aria-current="page" to="/auth" exact>
                         Log In

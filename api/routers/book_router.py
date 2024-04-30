@@ -6,7 +6,6 @@ from fastapi import APIRouter, Depends, Request, Response
 from queries.book_queries import BookQueries
 from models.books import BookRequest, BookResponse
 from utils.exceptions import UserDatabaseException
-
 router = APIRouter(tags=["Book"])
 
 
@@ -58,3 +57,19 @@ def get_book(
         response.status_code = 404
     print(book)
     return book
+
+
+@router.get("/books")
+def list_books(
+    response: Response,
+        queries: BookQueries = Depends()):
+
+    """
+    Endpoint to list all books available in the library.
+    """
+
+    books = queries.list_books()
+    if books is None:
+        response.status_code = 404
+        return []
+    return books
