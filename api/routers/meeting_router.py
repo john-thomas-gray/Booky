@@ -16,7 +16,7 @@ from queries.meeting_queries import (
 from models.users import UserResponse, UserOut
 
 # from utils.exceptions import ClubDatabaseException
-from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse
+from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeePageUpdate
 from utils.authentication import (
     try_get_jwt_user_data,
 )
@@ -168,3 +168,31 @@ def list_meetings_by_user(
         if meetings is None:
             response.status_code = 404
         return meetings
+
+
+@router.patch("/page")
+def update_attendee_page(
+    response: Response,
+    attendee_page: AttendeePageUpdate,
+    queries: MeetingQueries = Depends(),
+) -> AttendeePageUpdate:
+    updated_page = queries.update_attendee_page(
+        attendee_page.attendee_page,
+        attendee_page.meeting_id,
+        attendee_page.attendee_id
+    )
+    return updated_page
+
+
+@router.get("/page/{meeting_id}/{attendee_id}")
+def get_attendee(
+    response: Response,
+    meeting_id: int,
+    attendee_id: int,
+    queries: MeetingQueries = Depends(),
+) -> AttendeeResponse:
+    attendee_response = queries.get_attendee(
+        meeting_id,
+        attendee_id
+    )
+    return attendee_response

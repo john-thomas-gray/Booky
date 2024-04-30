@@ -60,6 +60,13 @@ class UserNew(BaseModel):
     picture_url: str
 
 
+class UserUpdate(BaseModel):
+    username: str
+    email: str
+    score: int
+    picture_url: str
+
+
 class MemberRequest(BaseModel):
     """
     Represents the parameters to join a club

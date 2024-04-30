@@ -7,7 +7,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.meetings import MeetingResponse, MeetingClubResponse, AttendeeResponse
+from models.meetings import MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeePageUpdate
 from models.users import UserOut
 from utils.exceptions import UserDatabaseException
 from datetime import datetime
@@ -243,3 +243,51 @@ class MeetingQueries:
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f'{"Error joining meeting"}')
+
+    def update_attendee_page(self, attendee_page: int, meeting_id: int, user_id: int) -> Optional[AttendeePageUpdate]:
+        """
+        Updates attendee score in the meetings_attendees table, allowing the score users
+        have accrued in individual meetings to be tracked.
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(AttendeePageUpdate)) as cur:
+                    cur.execute(
+                        """
+                        UPDATE meetings_attendees
+                        SET attendee_page=%s
+                        WHERE meeting_id = %s AND attendee_id = %s
+                        RETURNING attendee_page, meeting_id, attendee_id;
+                        """,
+                        (attendee_page, meeting_id, user_id),
+                    )
+                    updated_attendee_page = cur.fetchone()
+                    if not updated_attendee_page:
+                        return None
+        except psycopg.Error as e:
+            raise UserDatabaseException(f"Error updating user attendee_page in meeting: {e}")
+        return updated_attendee_page
+
+    def get_attendee(self, meeting_id: int, user_id: int) -> Optional[AttendeeResponse]:
+        """
+        Gets the page of the book for a specific user in a specific meeting
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(AttendeeResponse)) as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                        *
+                        FROM meetings_attendees
+                        WHERE meeting_id = %s AND attendee_id = %s
+                        """,
+                        [meeting_id, user_id]
+                    )
+                    page = cur.fetchone()
+                    if not page:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException("Error getting attendee page")
+        return page

@@ -51,3 +51,10 @@ class AttendeeRequest(BaseModel):
 class AttendeeResponse(BaseModel):
     meeting_id: int
     attendee_id: int
+    attendee_page: int
+
+
+class AttendeePageUpdate(BaseModel):
+    meeting_id: int
+    attendee_id: int
+    attendee_page: int

@@ -15,7 +15,7 @@ from queries.user_queries import (
   UserQueries,
 )
 from utils.authentication import try_get_jwt_user_data
-from models.users import UserResponse, UserWithPw, UserIn, MemberResponse, UserOut
+from models.users import UserResponse, UserWithPw, MemberResponse, UserOut, UserUpdate
 from utils.exceptions import UserDatabaseException
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -59,32 +59,22 @@ async def create_user(
     return user_out
 
 
-@router.patch("/{username}")
-async def update_user(
-  username: str,
-  updated_user: UserIn,
-  queries: UserQueries = Depends(),
-) -> UserIn:
-    """
-    Updates user information.
-    """
-    user = queries.get_by_username(username)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    updated_user_data = updated_user.dict(exclude_unset=True)
-    updated_user_data["username"] = username
-    updated_user = queries.update_user(**updated_user_data)
+@router.patch("/{user_id}")
+def update_user(
+    response: Response,
+    user_id: int,
+    user: UserUpdate,
+    queries: UserQueries = Depends(),
+) -> UserUpdate:
 
-    if not updated_user:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update user",
-        )
-
-    return UserIn(**updated_user.dict())
+    updated_user = queries.update_user(
+        user.username,
+        user.email,
+        user.score,
+        user.picture_url,
+        user_id=user_id
+    )
+    return updated_user
 
 
 @router.delete("/{username}")

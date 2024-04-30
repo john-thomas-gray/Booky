@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.users import UserWithPw, UserOut, UserIn, MemberResponse
+from models.users import UserWithPw, UserOut, MemberResponse, UserUpdate
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -152,41 +152,27 @@ class UserQueries:
             )
         return user
 
-    def update_user(self, username: str, password: str, email: str, score: int, picture_url: str) -> Optional[UserIn]:
-
+    def update_user(self, username: str, email: str, score: int, picture_url: str, user_id: int) -> Optional[UserUpdate]:
+        """
+        Update a user
+        """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(UserIn)) as cur:
+                with conn.cursor(row_factory=class_row(UserUpdate)) as cur:
                     cur.execute(
                         """
-                        UPDATE users (
-                            username,
-                            password,
-                            email,
-                            score,
-                            picture_url
-                        ) VALUES (
-                            %s, %s, %s, %s, %s
-                        )
+                        UPDATE users
+                        SET username=%s, email=%s, score=%s, picture_url=%s
+                        WHERE id = %s
                         RETURNING *;
                         """,
-                        [
-                            username,
-                            password,
-                            email,
-                            score,
-                            picture_url
-                        ],
+                        (username, email, score, picture_url, user_id),
                     )
                     user = cur.fetchone()
                     if not user:
-                        raise UserDatabaseException(
-                            f'{"Could not update user with username {username} pooled"}'
-                        )
-        except psycopg.Error:
-            raise UserDatabaseException(
-                f"Could not update user with username {username}"
-            )
+                        return None
+        except psycopg.Error as e:
+            raise UserDatabaseException(f"Error updating club: {e}")
         return user
 
     def delete_user(self, username: str):
@@ -239,7 +225,6 @@ class UserQueries:
 
     def join_club(self, club_id: int, member_id: int) -> Optional[MemberResponse]:
         """
-
         :param club_id: The identifier of the club.
         """
         try:
