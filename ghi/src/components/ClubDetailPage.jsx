@@ -50,7 +50,9 @@ export default function ClubDetailPage() {
 
     const joinMeeting = async (meetingId) => {
         const data = {};
-        data.id = meetingId
+        data.meeting_id = meetingId
+        data.attendee_id = user.id
+        console.log(data)
         const membersUrl = `http://localhost:8000/api/meeting/${meetingId}/`
         const fetchConfig = {
           method: "post",
@@ -108,16 +110,17 @@ export default function ClubDetailPage() {
     }, []);
 
 
-
 if (user) {
     return (
         <>
+
             <h1>{club.name}</h1>
             <button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button>
 
             <table className="table table-striped">
                 <thead>
                     <tr>
+
                         <th>Members</th>
                     </tr>
                 </thead>
@@ -155,7 +158,7 @@ if (user) {
                     {meetings.map((meeting) => {
                         return (
                             <tr key={meeting.book_title}>
-                                <td>{meeting.book_title}</td>
+                                <td><NavLink aria-current="page" to={"/meetings/" + meeting.meeting_id} exact="true">{meeting.book_title}</NavLink></td>
                                 <td>{meeting.active}</td>
                                 <td><button onClick={getMeetingId(meeting.id)}>Join Meeting</button></td>
                             </tr>
@@ -163,8 +166,6 @@ if (user) {
                     })}
                 </tbody>
             </table>
-
-
 
         </>
     )

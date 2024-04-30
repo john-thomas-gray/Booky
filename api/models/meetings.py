@@ -33,6 +33,7 @@ class MeetingResponse(BaseModel):
 
 
 class MeetingClubResponse(BaseModel):
+    id: int
     active: date
     book_title: str
 
@@ -50,4 +51,3 @@ class AttendeeRequest(BaseModel):
 class AttendeeResponse(BaseModel):
     meeting_id: int
     attendee_id: int
-    username: str

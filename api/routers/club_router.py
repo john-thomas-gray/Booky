@@ -104,7 +104,6 @@ def list_clubs_by_user(
 
 @router.patch("/clubs/{club_id}")
 def update_club(
-    response: Response,
     club_id: int,
     club: ClubEditRequest,
     queries: ClubQueries = Depends(),

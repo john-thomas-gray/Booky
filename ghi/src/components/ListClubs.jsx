@@ -42,10 +42,9 @@ if (user) {
                     {clubs.map((club) => {
                         return (
                             <tr key={club.club_id} value={club.club_id} >
-                                <td>
-                <NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true">
-                    {club.name}
-                </NavLink></td>
+                                <td><NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true">
+                                        {club.name}
+                                    </NavLink></td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
 
