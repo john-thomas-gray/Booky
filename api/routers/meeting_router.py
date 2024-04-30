@@ -150,3 +150,21 @@ async def join_meeting(
     attendee = queries.join_meeting(meeting_id=meeting_id, attendee_id=user.id)
     attendee_out = AttendeeResponse(**attendee.model_dump())
     return attendee_out
+
+
+@router.get("/{user_id}/user")
+def list_meetings_by_user(
+    user_id: int,
+    response: Response,
+    user: MeetingResponse = Depends(try_get_jwt_user_data),
+    queries: MeetingQueries = Depends(),
+) -> List[MeetingResponse]:
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+        )
+    else:
+        meetings = queries.list_meetings_by_user(user_id)
+        if meetings is None:
+            response.status_code = 404
+        return meetings

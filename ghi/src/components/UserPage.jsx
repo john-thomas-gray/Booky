@@ -26,12 +26,11 @@ export default function UserPage() {
             const data = await response.json()
             setClubs(data)
         }
-        console.log(clubs);
     };
-    // NEEDS TO BE LIST MEETINGS BY USER
+
     const fetchMeetingData = async() => {
-      const url = 'http://localhost:8000/api/meeting'
-      const response = await fetch(url)
+      const url = `http://localhost:8000/api/meeting/${pageOwnerID}/user`
+      const response = await fetch(url, {credentials: "include"})
       if (response.ok) {
         const data = await response.json()
         setMeetings(data)
