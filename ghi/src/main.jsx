@@ -108,9 +108,8 @@ console.table(import.meta.env)
 
 const root = ReactDOM.createRoot(rootElement)
 root.render(
-    <React.StrictMode>
-        <AuthProvider>
-            <RouterProvider router={router} />
-        </AuthProvider>
-    </React.StrictMode>
+
+    <AuthProvider>
+        <RouterProvider router={router} />
+    </AuthProvider>
 )

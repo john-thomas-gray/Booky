@@ -14,8 +14,6 @@ from utils.exceptions import UserDatabaseException
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set")
-    raise ValueError("DATABASE_URL environment variable is not set")
-    raise ValueError("DATABASE_URL environment variable is not set")
 
 pool = ConnectionPool(DATABASE_URL)
 
@@ -37,7 +35,7 @@ class BookQueries:
         Returns None if the Book is not found
         """
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(BookResponse)) as cur:
                     cur.execute(
                         """
@@ -48,10 +46,34 @@ class BookQueries:
                     book = cur.fetchone()
                     if not book:
                         return None
+                    return book
         except psycopg.Error as e:
             print(e)
 
-        return book
+    def get_by_title(self, title: str) -> Optional[BookResponse]:
+
+        """
+        Gets a meeting from the database by id
+
+        Returns None if the Book is not found
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(BookResponse)) as cur:
+                    cur.execute(
+                        """
+                        SELECT book_id, title, author, page_count, genre, publisher, synopsis, cover_img_url
+                        FROM books
+                        WHERE title = %s
+                        """,
+                        [title],
+                    )
+                    book = cur.fetchone()
+                    if not book:
+                        return None
+                    return book
+        except psycopg.Error as e:
+            print(e)
 
     def create_book(self, title: str, author: str, page_count: int, genre: str,
                     publisher: str, synopsis: str, cover_img_url: str):

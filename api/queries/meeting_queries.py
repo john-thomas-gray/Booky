@@ -50,10 +50,10 @@ class MeetingQueries:
                     meeting = cur.fetchone()
                     if not meeting:
                         return None
+                return meeting
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting meeting with id: {id}")
-        return meeting
 
     def create_meeting(
         self,
@@ -123,11 +123,10 @@ class MeetingQueries:
                       [club_id],
                     )
                     meetings_by_club = cur.fetchall()
+            return meetings_by_club
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting meetings: {e}")
-
-        return meetings_by_club
 
     def list_meetings(self, club_id: Optional[int] = None) -> Optional[List[MeetingResponse]]:
         """
@@ -157,10 +156,10 @@ class MeetingQueries:
                     meetings = cur.fetchall()
                     if not meetings:
                         return None
+                    return meetings
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting meetings: {e}")
-        return meetings
 
     def list_attendees_by_meeting(self, meeting_id: int) -> Optional[List[UserOut]]:
         """
@@ -179,10 +178,10 @@ class MeetingQueries:
                       [meeting_id],
                     )
                     attendees_by_meeting = cur.fetchall()
+                return attendees_by_meeting
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting attendees: {e}")
-        return attendees_by_meeting
 
     def list_meetings_by_user(self, user_id: int) -> Optional[List[MeetingResponse]]:
         """
@@ -201,11 +200,10 @@ class MeetingQueries:
                       [user_id],
                     )
                     meetings_by_user = cur.fetchall()
+                return meetings_by_user
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f"Error getting attendees: {e}")
-
-        return meetings_by_user
 
     def join_meeting(self, meeting_id: int, attendee_id: int) -> Optional[AttendeeResponse]:
         """
@@ -277,9 +275,9 @@ class MeetingQueries:
                     updated_attendee_page = cur.fetchone()
                     if not updated_attendee_page:
                         return None
+                    return updated_attendee_page
         except psycopg.Error as e:
             raise UserDatabaseException(f"Error updating user attendee_page in meeting: {e}")
-        return updated_attendee_page
 
     def get_attendee(self, meeting_id: int, user_id: int) -> Optional[AttendeeResponse]:
         """
@@ -300,7 +298,7 @@ class MeetingQueries:
                     page = cur.fetchone()
                     if not page:
                         return None
+                    return page
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException("Error getting attendee page")
-        return page

@@ -26,7 +26,7 @@ async def get_user(
   id: int,
   response: Response,
   queries: UserQueries = Depends(),
-) -> UserOut:
+):
     """
     Gets user information
     """

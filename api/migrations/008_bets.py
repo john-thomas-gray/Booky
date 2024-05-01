@@ -3,10 +3,11 @@ steps = [
       # "Up" SQL statement
       """
       CREATE TABLE bets (
+            meeting_id INT NOT NULL,
             better_id INT NOT NULL,
             horse_id INT NOT NULL,
             point_amount INT NOT NULL,
-          PRIMARY KEY (better_id, horse_id, point_amount)
+          PRIMARY KEY (meeting_id, better_id)
       );
       """,
       # "Down" SQL statement
