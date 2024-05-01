@@ -10,36 +10,45 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    display: flex;
+
 }
 
 
 div {
     margin-right: 10px;
+
 }
 
 
 .flexbox-container{
     display: flex;
     flex-direction: row;
+    text-decoration: none;
+
 }
 
 nav {
 
     vertical-align: text-top;
     display: flex;
+    flex-direction: row;
+    font-size: calc(5px + 2vmin);
+    align-items: center;
+    text-decoration: none;
 
 }
 
-
-#container {
-  background-color: red;
-  overflow: hidden;
-  width: 200px;
-  display: flex;
+.active{
+    color:rgb(24, 165, 130) !important;
+    text-decoration: none;
 }
 
-#inner {
-  overflow: hidden;
-  width: 2000px;
+.navbar-nav {
+  color: rgb(0, 122, 61) !important;
+  align-items: center;
+  text-decoration: none;
+}
+
+.underline {
+  text-decoration: none;
 }

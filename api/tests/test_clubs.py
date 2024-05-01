@@ -19,14 +19,15 @@ class EmptyClubQueries:
 
 
 class PostClubQueries:
-    def create_club(self, name: str, city: str, state: str, country: str):
+    def create_club(self, owner_id: int, name: str, city: str, state: str, country: str):
         club = ClubResponse(
             owner_id=1,
             club_id=1,
             name=name,
             city=city,
             state=state,
-            country=country
+            country=country,
+            score=0
         )
         return club
 
@@ -69,7 +70,8 @@ def test_create_new_club():
         "name": "Read This",
         "city": "Phoenix",
         "state": "AZ",
-        "country": "US"
+        "country": "US",
+        "score": 0
     }
 
     response = client.post("/api/clubs", json=club)

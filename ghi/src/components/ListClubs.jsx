@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { NavLink, useParams } from 'react-router-dom'
-
+import { TextField, Autocomplete } from '@mui/material'
 
 export default function ListClubs() {
-    const [clubs, setClubs] = useState([])
-    const { user } = useAuthService()
+    const [clubs, setClubs] = useState([]);
+    const { user } = useAuthService();
     const {clubID} = useParams();
+    const [filteredClubs, setFilteredClubs] = useState("");
 
 
     const fetchData = async () => {
@@ -26,8 +27,15 @@ export default function ListClubs() {
 if (user) {
     return (
         <>
-            {/* {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>} */}
-            <h1 className="m3 mt-3">Clubs</h1>
+      <div>
+        <input
+          className="search-box"
+          placeholder="Enter a Club Name"
+          value={filteredClubs}
+          onChange={(event) => setFilteredClubs(event.target.value)}
+        />
+      </div>
+            <h1 className="m3 mt-3" >Clubs</h1>
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -39,7 +47,16 @@ if (user) {
                     </tr>
                 </thead>
                 <tbody>
-                    {clubs.map((club) => {
+                      {
+        clubs.length && clubs.filter((club) => {
+          if (filteredClubs === "") {
+
+            return club;
+          } else if (club.name.toLowerCase().includes(filteredClubs.toLowerCase())) {
+
+            return club;
+          }
+        }).map((club) => {
                         return (
                             <tr key={club.club_id} value={club.club_id} >
                                 <td><NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true">

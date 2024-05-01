@@ -27,7 +27,7 @@ export default function Nav() {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="flexbox-container" >
                 <div>
-                <NavLink aria-current="page" to="/" exact>
+                <NavLink aria-current="page" to="/" exact="true" activeClassName="underline">
                     Home
                 </NavLink>
                 </div>

@@ -105,7 +105,7 @@ export default function ClubDetailPage() {
         fetchMeetings();
         setInterval(() => {
             setHideComponent(!hideComponent);
-        }, 3000);
+        }, 2500);
 
     }, []);
 
@@ -113,7 +113,7 @@ export default function ClubDetailPage() {
 if (user) {
     return (
         <>
-
+            {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>}
             <h1>{club.name}</h1>
             <button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button>
 

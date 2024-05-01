@@ -72,7 +72,7 @@ if (user) {
     return (
         <form onSubmit={handleFormSubmit}>
 
-
+            <h1>Create a Club</h1>
             <div className="form-floating mb-3">
             <input
                 name='name'

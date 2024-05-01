@@ -28,12 +28,17 @@ if (!API_HOST) {
 
 function App() {
     return (
-        <div className="App" style={{ backgroundColor: '#F0EAD6' }}>
+        <>
+        <div className='nav' style={{ backgroundColor: '#FAEBD7'}}>
+            <Nav />
+        </div>
+        <div className="App" style={{ backgroundColor: '#8A807E' }}>
             <header className="App-header">
-                <Nav />
+
             </header>
             <Outlet />
         </div>
+        </>
     )
 }
 
