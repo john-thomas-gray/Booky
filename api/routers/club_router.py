@@ -109,5 +109,5 @@ def update_club(
     queries: ClubQueries = Depends(),
 ) -> ClubResponse:
 
-    updated_club = queries.edit_club(club.name, club.city, club.state, club.country, club_id=club_id)
+    updated_club = queries.edit_club(club.name, club.city, club.state, club.country, club.score, club_id=club_id)
     return updated_club

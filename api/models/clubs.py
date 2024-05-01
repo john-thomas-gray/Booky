@@ -25,6 +25,7 @@ class ClubResponse(BaseModel):
     city: str
     state: str
     country: str
+    score: int
 
 
 class ClubDelete(BaseModel):
@@ -50,6 +51,7 @@ class ClubEditRequest(BaseModel):
     city: str
     state: str
     country: str
+    score: int
 
 
 class ClubEditResponse(BaseModel):
@@ -60,3 +62,4 @@ class ClubEditResponse(BaseModel):
     city: str
     state: str
     country: str
+    score: int

@@ -25,45 +25,67 @@ export default function Nav() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
+            <div className="flexbox-container" >
+                <div>
                 <NavLink aria-current="page" to="/" exact>
                     Home
                 </NavLink>
+                </div>
+                <div>
                 {isLoggedIn && user && (
                     <NavLink aria-current="page" to={`/user/${user.id}`} exact>
                         Userpage
                     </NavLink>
                 )}
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/user" exact>
                     User List
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/clubs" exact>
                     Create a Club
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/clubs/list" exact>
                     List Clubs
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/meetings" exact>
                     Create Meeting
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/meetings/list" exact>
                     All Meetings
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/signup" exact="true">
                     Sign Up
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/book" exact="true">
                     Create Book
                 </NavLink>
+                </div>
+                <div>
                 <NavLink aria-current="page" to="/book/book" exact="true">
                     Book List
                 </NavLink>
+                </div>
+                <div>
                 {!isLoggedIn && !user && (
                     <NavLink aria-current="page" to="/auth" exact>
                         Log In
                     </NavLink>
                 )}
                 {isLoggedIn && <button onClick={signOut}>Sign Out</button>}
+            </div>
             </div>
         </nav>
     )

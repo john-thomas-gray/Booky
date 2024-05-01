@@ -1,4 +1,4 @@
-/* You should probably replace this with your own CSS */
+
 
 .App {
     text-align: center;
@@ -10,4 +10,36 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
+    display: flex;
+}
+
+
+div {
+    margin-right: 10px;
+}
+
+
+.flexbox-container{
+    display: flex;
+    flex-direction: row;
+}
+
+nav {
+
+    vertical-align: text-top;
+    display: flex;
+
+}
+
+
+#container {
+  background-color: red;
+  overflow: hidden;
+  width: 200px;
+  display: flex;
+}
+
+#inner {
+  overflow: hidden;
+  width: 2000px;
 }

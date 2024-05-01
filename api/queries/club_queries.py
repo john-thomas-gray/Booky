@@ -52,7 +52,7 @@ class ClubQueries:
             raise UserDatabaseException(f"Error getting club with id: {club_id}")
         return club
 
-    def create_club(self, owner_id: int, name: str, city: str, state: str, country: str):
+    def create_club(self, owner_id: int, name: str, city: str, state: str, country: str, score: Optional[str] = 0):
         """
         Creates a new club in the database
 
@@ -64,9 +64,9 @@ class ClubQueries:
                   """
 
                     INSERT INTO clubs (
-                      owner_id, name, city, state, country
+                      owner_id, name, city, state, country, score
                     ) VALUES (
-                      %s, %s, %s, %s, %s
+                      %s, %s, %s, %s, %s, %s
                     )
                     RETURNING *;
                   """,
@@ -76,6 +76,7 @@ class ClubQueries:
                     city,
                     state,
                     country,
+                    score,
                   ],
                 )
                 club = cur.fetchone()
@@ -149,7 +150,7 @@ class ClubQueries:
             raise UserDatabaseException(f"Error getting user's clubs: {e}")
         return clubs
 
-    def edit_club(self, name: str, city: str, state: str, country: str, club_id: int) -> Optional[ClubResponse]:
+    def edit_club(self, name: str, city: str, state: str, country: str, score: int, club_id: int) -> Optional[ClubResponse]:
         """
         Edits club by id
         """
@@ -159,11 +160,11 @@ class ClubQueries:
                     cur.execute(
                         """
                         UPDATE clubs
-                        SET name=%s, city=%s, state=%s, country=%s
+                        SET name=%s, city=%s, state=%s, country=%s, score=%s
                         WHERE club_id = %s
                         RETURNING *;
                         """,
-                        (name, city, state, country, club_id)
+                        (name, city, state, country, score, club_id)
 
                     )
 
