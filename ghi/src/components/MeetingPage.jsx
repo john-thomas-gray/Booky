@@ -63,22 +63,69 @@ export default function MeetingPage() {
         if (response.ok) {
             setAttendeePage(await response.json())
         }
+        updateUserScore(pageInput)
     }
+
+    const updateUserScore = async (input) => {
+        const url = `http://localhost:8000/api/users/${user.id}`;
+        const updated_score = authUser.score + (input - attendeePage.attendee_page);
+        const response = await fetch(url, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: authUser.username, email: authUser.email, score: updated_score, picture_url: authUser.picture_url }),
+        })
+        if (response.ok) {
+            setAuthUser(await response.json())
+        }
+    }
+
+    // const updateClubScore = async (input) => {
+    //     const url = `http://localhost:8000/api/clubs/${club.club_id}`
+    //     const updated_score =
+    //         club.score + (input - attendeePage.attendee_page)
+    //     console.log(updated_score)
+    //     console.log(attendeePage.attendee_page)
+    //     const response = await fetch(url, {
+    //         method: 'PATCH',
+    //         credentials: 'include',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             name: club.username,
+    //             score: updated_score,
+    //             city: club.city,
+    //             state: club.state,
+    //             country: club.country,
+    //         }),
+    //     })
+    //     if (response.ok) {
+    //         setClub(await response.json())
+    //     }
+    // }
 
     useEffect(() => {
         fetchMeetingData()
         fetchClubData()
         fetchAuthUserData()
         fetchAttendeePage()
-    }, [meetingID, meeting])
+    }, []);
 
     return (
         <>
             <h1>{club.name} - BOOK NAME</h1>
             <div className="updateProgress">
                 <h2>Update Your Progress</h2>
-                <div className="currentProgress">{attendeePage.attendee_page}/546{' '}</div>
-                <input type="number" placeholder="What page are you on?" value={pageInput} onChange={handlePageInput} />
+                <div className="currentProgress">
+                    {attendeePage.attendee_page}/546{' '}
+                </div>
+                <input
+                    type="number"
+                    placeholder="What page are you on?"
+                    value={pageInput}
+                    onChange={handlePageInput}
+                    // min={attendeePage.attendee_page + 1}
+                    // max={546} << book page
+                />
                 <button onClick={updateAttendeePage}>Submit</button>
             </div>
         </>
