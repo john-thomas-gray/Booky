@@ -1,15 +1,31 @@
-import useAuthService from '../hooks/useAuthService'
 import React, { useState, useEffect } from 'react'
+import useAuthService from '../hooks/useAuthService'
 import { useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
-export default function MeetingPage() {
+
+
+export default function MeetingPage(){
     const [club, setClub] = useState([]);
     const [meeting, setMeeting] = useState([]);
     const [attendeePage, setAttendeePage] = useState(0);
     const [pageInput, setPageInput] = useState(attendeePage.attendee_page);
     const [authUser, setAuthUser] = useState([]);
+    const [attendees, setAttendees] = useState([]);
     const { user } = useAuthService();
     const { meetingID } = useParams();
+
+
+    const fetchAttendees = async () => {
+        const url = `http://localhost:8000/api/meeting/${meetingID}/attendees`
+        const response = await fetch(url, { credentials: 'include' })
+        if (response.ok) {
+            const data = await response.json()
+            setAttendees(data)
+
+        }
+    }
+
 
 
     const fetchMeetingData = async () => {
@@ -20,6 +36,55 @@ export default function MeetingPage() {
             setMeeting(data)
         }
     }
+
+    const getId = (val) => (e) => {
+        joinMeeting(val)
+    };
+
+    const joinMeeting = async (val) => {
+        const data = {}
+        data.attendee_id = user.id
+        data.meeting_id = val
+
+        const url = `http://localhost:8000/api/meeting/${meetingID}`;
+        const fetchConfig = {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            credentials: "include",
+        };
+        const response = await fetch(url, fetchConfig)
+        if (response.ok){
+            fetchAttendees()
+            console.log(
+                "request is good and went through"
+            )
+        }
+
+    };
+
+    const leaveMeeting = async (id) => {
+    const url = `http://localhost:8000/api/meeting/${id}/leave`;
+    const fetchConfig = {
+        method: 'delete',
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+    };
+
+
+        const response = await fetch(url,fetchConfig );
+    if (response.ok) {
+      fetchAttendees();
+    } else {
+      console.error('http error:', response.status);
+    }
+
+    };
 
     const fetchClubData = async () => {
         const url = `http://localhost:8000/api/clubs/${meeting.club_id}`
@@ -103,12 +168,19 @@ export default function MeetingPage() {
     //     }
     // }
 
+    const maxScore = Math.max(...attendees.map(attendee => attendee.score));
+    attendees.sort((a,b) => b.score - a.score);
+
     useEffect(() => {
         fetchMeetingData()
         fetchClubData()
         fetchAuthUserData()
         fetchAttendeePage()
+        fetchAttendees()
     }, []);
+
+
+
 
     return (
         <>
@@ -128,6 +200,46 @@ export default function MeetingPage() {
                 />
                 <button onClick={updateAttendeePage}>Submit</button>
             </div>
+            <div>
+                <button onClick={() => joinMeeting(meeting.id)}>join meeting</button>
+            </div>
+             <div>
+                <button onClick={() => leaveMeeting(meeting.id)}>leave meeting</button>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>
+                            Attendees
+                        </th>
+                        <th>
+                            Score
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {attendees.map((attendee) => {
+                            return (
+                                <tr key={attendee.id}>
+                                    <td>
+                                        {attendee.score === maxScore ? "👑" : null}
+                                        {attendee.username}
+                                        <img className="attendee_profile" src={attendee.picture_url}></img>
+                                    </td>
+                                    <td>
+                                        {attendee.score}
+
+                                    </td>
+
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+
+            </div>
+
         </>
     )
 }

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { NavLink, useParams } from 'react-router-dom'
 
 export default function ListMeetings(){
 const [meetings, setMeetings] = useState([])
+const {meetingId} = useParams()
 
 const fetchData = async () => {
     const url = 'http://localhost:8000/api/meeting/'
@@ -35,6 +37,7 @@ const deleteMeeting = async (id) => {
     };
 
 
+
 useEffect(() => {
     fetchData()
 }, [])
@@ -45,12 +48,7 @@ useEffect(() => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        {/* <th>Meeting ID</th> */}
-                        <th>Club Name</th>
-                        <th>Club Score</th>
                         <th>Book Title</th>
-                        {/* <th>Total Pages</th> */}
-                        {/* <th>Current Page</th> */}
                         <th>Active Date</th>
                         <th>Delete Meeting</th>
 
@@ -60,12 +58,11 @@ useEffect(() => {
                     {meetings.map((meeting) => {
                         return (
                             <tr key={meeting.id}>
-                                {/* <td>{meeting.club_id}</td> */}
-                                <td>{meeting.club_name}</td>
-                                <td>{meeting.club_score}</td>
-                                <td>{meeting.book_title}</td>
-                                {/* <td>{meeting.total_pages}</td> */}
-                                {/* <td>{meeting.current_page}</td> */}
+                                <td>
+                                    <NavLink aria-current="page" to={"/meetings/" + meeting.id} exact="true">
+                                    {meeting.book_title}
+                                    </NavLink>
+                                </td>
                                 <td>{meeting.active}</td>
                                 <td>
                                     <button onClick={() => deleteMeeting(meeting.id)}>Delete</button>

@@ -10,11 +10,7 @@ class MeetingRequest(BaseModel):
     Represents a the parameters needed to create a new meeting
     """
     club_id: int
-    club_name: str
-    club_score: int
     book_title: str
-    total_pages: int
-    current_page: int
     active: date
 
 
@@ -24,11 +20,7 @@ class MeetingResponse(BaseModel):
     """
     id: int
     club_id: int
-    club_name: str
-    club_score: int
     book_title: str
-    total_pages: int
-    current_page: int
     active: date
 
 

@@ -58,11 +58,7 @@ class MeetingQueries:
     def create_meeting(
         self,
         club_id: int,
-        club_name: str,
-        club_score: int,
         book_title: str,
-        total_pages: int,
-        current_page: int,
         active: datetime
       ):
         """
@@ -75,23 +71,19 @@ class MeetingQueries:
                 cur.execute(
                   """
                     INSERT INTO meetings (
-                      club_id, club_name, club_score, book_title, total_pages, current_page, active
+                      club_id, book_title, active
                     ) VALUES (
-                      %s, %s, %s, %s, %s, %s, %s
+                      %s, %s, %s
                     )
                     RETURNING *;
                   """,
                   [
                     club_id,
-                    club_name,
-                    club_score,
                     book_title,
-                    total_pages,
-                    current_page,
                     active
                   ],
                 )
-            meeting = cur.fetchone()
+                meeting = cur.fetchone()
 
         return meeting
 
@@ -243,6 +235,27 @@ class MeetingQueries:
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(f'{"Error joining meeting"}')
+
+    def leave_meeting(self, meeting_id: int, attendee_id: int) -> bool:
+        """
+        allows user to join meeting as an attendee
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                      """
+                      DELETE FROM meetings_attendees
+                      WHERE meeting_id = %s AND attendee_id = %s
+                      """,
+                      [meeting_id, attendee_id]
+                    )
+                    print("you have left the meeting")
+                    return True
+        except Exception as e:
+            print(e)
+            print("error with leaving meeting you are stuck fool")
+            return False
 
     def update_attendee_page(self, attendee_page: int, meeting_id: int, user_id: int) -> Optional[AttendeePageUpdate]:
         """

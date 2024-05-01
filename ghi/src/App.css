@@ -52,3 +52,12 @@ nav {
 .underline {
   text-decoration: none;
 }
+
+.attendee_profile{
+  max-width: 50%;
+  max-height: 50%;
+}
+
+td {
+  width: 100px;
+}

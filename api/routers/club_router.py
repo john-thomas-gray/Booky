@@ -49,7 +49,6 @@ def get_club(
     club = queries.get_by_id(club_id)
     if club is None:
         response.status_code = 404
-    print(club)
     return club
 
 

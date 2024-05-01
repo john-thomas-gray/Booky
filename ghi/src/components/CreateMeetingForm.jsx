@@ -5,11 +5,7 @@ import useAuthService from '../hooks/useAuthService';
 
 function CreateMeetingForm() {
   const [clubId, setClubId] = useState('')
-  const [clubName, setClubName] = useState('')
-  const [clubScore, setClubScore] = useState('')
   const [bookTitle, setBookTitle] = useState('')
-  const [totalPages, setTotalPages] = useState('')
-  const [currentPage, setCurrentPage] = useState('')
   const [active, setActive] = useState('')
   const [data, setData] = useState([])
   const {user} = useAuthService()
@@ -34,18 +30,14 @@ function CreateMeetingForm() {
   }, []);
 
   const handleClubChange = (event) => {
-    setClubName(event.target.value);
+    setClubId(event.target.value);
   }
 
   async function handleFormSubmit(event){
     event.preventDefault()
     const data = {};
     data.club_id = Number(clubId);
-    data.club_name = clubName;
-    data.club_score = Number(clubScore);
     data.book_title = bookTitle;
-    data.total_pages = Number(totalPages);
-    data.current_page = Number(currentPage);
     data.active = active;
     console.log("data", data)
 
@@ -59,20 +51,16 @@ function CreateMeetingForm() {
           credentials: "include"
         };
       const response = await fetch(meetingUrl, fetchConfig);
+      console.log("response", response)
 
 
       if (response.ok) {
         setClubId('');
-        setClubName('');
-        setClubScore('');
         setBookTitle('');
-        setTotalPages('');
-        setCurrentPage('');
         setActive('');
-
       }
   }
-
+  console.log("user", user)
 
 if (user){
 return (
@@ -81,51 +69,26 @@ return (
     <div>this is CreateMeetingForm.jsx</div>
 
 
+
+
+
     <select
-    value={clubName} onChange={handleClubChange} required name="club_name" id="club_name" className="form-select">
-      <option value="">select a club</option>
+    type="number"
+    value={clubId} onChange={handleClubChange} required name="club_id" id="club_id" className="form-select"
+    placeholder="club"
+    >
+      {console.log("data", data)}
       {data.map(club => (
-        <option key={club.name} value={club.name}>{club.name}</option>
-      ))
-
-      }
-
+        <option key={club.club_id} value={club.club_id}>{club.name}</option>
+      ))}
     </select>
 
-
-    <input
-    type="number"
-    value={clubId}
-    onChange={(event) => setClubId(event.target.value)}
-    placeholder="club id"
-    />
-
-    <input
-    type="number"
-    value={clubScore}
-    onChange={(event) => setClubScore(event.target.value)}
-    placeholder="club score"
-    />
 
     <input
     type="text"
     value={bookTitle}
     onChange={(event) => setBookTitle(event.target.value)}
     placeholder="book title"
-    />
-
-    <input
-    type="number"
-    value={totalPages}
-    onChange={(event) => setTotalPages(event.target.value)}
-    placeholder="total pages"
-    />
-
-    <input
-    type="number"
-    value={currentPage}
-    onChange={(event) => setCurrentPage(event.target.value)}
-    placeholder="current page"
     />
 
     <input

@@ -40,14 +40,10 @@ def create_meeting(
             status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
         )
     else:
-        # Create the club in the database
+        # Create the meeting in the database
         meeting = queries.create_meeting(
             new_meeting.club_id,
-            new_meeting.club_name,
-            new_meeting.club_score,
             new_meeting.book_title,
-            new_meeting.total_pages,
-            new_meeting.current_page,
             new_meeting.active
             )
         meeting_out = MeetingResponse(**meeting.model_dump())
@@ -168,6 +164,29 @@ def list_meetings_by_user(
         if meetings is None:
             response.status_code = 404
         return meetings
+
+
+@router.delete("/{meeting_id}/leave")
+async def leave_meeting(
+    meeting_id: int,
+    response: Response,
+    user: UserResponse = Depends(try_get_jwt_user_data),
+        queries: MeetingQueries = Depends()) -> bool:
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+        )
+    else:
+        try:
+            queries.leave_meeting(meeting_id=meeting_id, attendee_id=user.id)
+            print("meeting_id", meeting_id)
+
+            print("success! you left the meeting")
+            return True
+        except Exception as e:
+            print(e)
+            print("could NOT leave meeting")
+            return False
 
 
 @router.patch("/page")
