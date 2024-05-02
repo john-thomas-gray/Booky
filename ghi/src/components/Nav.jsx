@@ -27,60 +27,60 @@ export default function Nav() {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="flexbox-container" >
                 <div>
-                <NavLink aria-current="page" to="/" exact="true" activeClassName="underline">
+                <NavLink aria-current="page" to="/" exact="true" className='link'>
                     Home
                 </NavLink>
                 </div>
                 <div>
                 {isLoggedIn && user && (
-                    <NavLink aria-current="page" to={`/user/${user.id}`} exact>
+                    <NavLink aria-current="page" to={`/user/${user.id}`} exact="true" className='link'>
                         Userpage
                     </NavLink>
                 )}
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/user" exact>
+                <NavLink aria-current="page" to="/user" exact="true" className='link'>
                     User List
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/clubs" exact>
+                <NavLink aria-current="page" to="/clubs" exact="true" className={'link'}>
                     Create a Club
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/clubs/list" exact>
+                <NavLink aria-current="page" to="/clubs/list" exact="true" className='link'>
                     List Clubs
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/meetings" exact>
+                <NavLink aria-current="page" to="/meetings" exact="true" className='link'>
                     Create Meeting
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/meetings/list" exact>
+                <NavLink aria-current="page" to="/meetings/list" exact="true" className='link'>
                     All Meetings
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/signup" exact="true">
+                <NavLink aria-current="page" to="/signup" exact="true" className='link'>
                     Sign Up
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/book" exact="true">
+                <NavLink aria-current="page" to="/book" exact="true" className='link'>
                     Create Book
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/book/book" exact="true">
+                <NavLink aria-current="page" to="/book/book" exact="true" className='link'>
                     Book List
                 </NavLink>
                 </div>
                 <div>
                 {!isLoggedIn && !user && (
-                    <NavLink aria-current="page" to="/auth" exact>
+                    <NavLink aria-current="page" to="/auth" exact="true" className='link'>
                         Log In
                     </NavLink>
                 )}

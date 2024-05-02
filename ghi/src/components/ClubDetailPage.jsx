@@ -140,7 +140,7 @@ if (user) {
                     <>
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
-                        <NavLink aria-current="page" to="/meetings" exact="true">
+                        <NavLink aria-current="page" to="/meetings" exact="true" className='link'>
                             Create Meeting
                         </NavLink>
                     </div>
@@ -158,7 +158,7 @@ if (user) {
                     {meetings.map((meeting) => {
                         return (
                             <tr key={meeting.book_title}>
-                                <td><NavLink aria-current="page" to={"/meetings/" + meeting.id} exact="true">{meeting.book_title}</NavLink></td>
+                                <td><NavLink aria-current="page" to={"/meetings/" + meeting.id} exact="true" className='link'>{meeting.book_title}</NavLink></td>
                                 <td>{meeting.active}</td>
                                 <td><button onClick={getMeetingId(meeting.id)}>Join Meeting</button></td>
                             </tr>

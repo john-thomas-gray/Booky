@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { NavLink, useParams } from 'react-router-dom'
-import { TextField, Autocomplete } from '@mui/material'
+
+import '../App.css'
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([]);
@@ -59,7 +60,7 @@ if (user) {
         }).map((club) => {
                         return (
                             <tr key={club.club_id} value={club.club_id} >
-                                <td><NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true">
+                                <td><NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true" className='link'>
                                         {club.name}
                                     </NavLink></td>
                                 <td>{club.state}</td>

@@ -81,7 +81,7 @@ export default function UserPage() {
                 <list>
                     {clubs.map((club) => {
                         return (
-                            <a href={`/clubs/${club.club_id}`}>{club.name}</a>
+                            <a href={`/clubs/${club.club_id}`} className='link'>{club.name}</a>
                         )
                     })}
                 </list>
@@ -94,7 +94,7 @@ export default function UserPage() {
                         if (new Date(meeting.active) < new Date()) {
                             return (
                                 <div>
-                                    <a href={`/meetings/${meeting.meeting_id}`}>
+                                    <a href={`/meetings/${meeting.meeting_id}`} >
                                         {meeting.book_title} {meeting.active}
                                     </a>
                                 </div>
