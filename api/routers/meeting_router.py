@@ -16,7 +16,7 @@ from queries.meeting_queries import (
 from models.users import UserResponse, UserOut
 
 # from utils.exceptions import ClubDatabaseException
-from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeePageUpdate
+from models.meetings import MeetingRequest, MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeeUpdate
 from utils.authentication import (
     try_get_jwt_user_data,
 )
@@ -37,7 +37,7 @@ def create_meeting(
     """
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         # Create the meeting in the database
@@ -71,7 +71,7 @@ def list_meetings_by_club(
 ) -> List[MeetingClubResponse]:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         meetings = queries.list_meetings_by_club(club_id)
@@ -88,7 +88,7 @@ def delete_meeting(
         queries: MeetingQueries = Depends()) -> bool:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         try:
@@ -109,13 +109,16 @@ def get_meeting_details(
         queries: MeetingQueries = Depends()) -> MeetingResponse:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         meeting = queries.get_by_id(id)
         if meeting is None:
             response.status_code = 404
         return meeting
+
+# Should rename list_attendees_by_meeting at some point. The name is confusing since it
+# actually lists user objects, not attendees
 
 
 @router.get("/{id}/attendees")
@@ -127,13 +130,31 @@ def list_attendees_by_meeting(
 ) -> List[UserOut]:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
-        meetings = queries.list_attendees_by_meeting(id)
-        if meetings is None:
+        users = queries.list_attendees_by_meeting(id)
+        if users is None:
             response.status_code = 404
-        return meetings
+        return users
+
+
+@router.get("/{meeting_id}/attendees/actual")
+def actual_list_attendees_by_meeting(
+    id: int,
+    response: Response,
+    user: AttendeeResponse = Depends(try_get_jwt_user_data),
+    queries: MeetingQueries = Depends(),
+) -> List[AttendeeResponse]:
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
+        )
+    else:
+        attendees = queries.actual_list_attendees_by_meeting(id)
+        if attendees is None:
+            response.status_code = 404
+        return attendees
 
 
 @router.post("/{meeting_id}")
@@ -157,7 +178,7 @@ def list_meetings_by_user(
 ) -> List[MeetingResponse]:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         meetings = queries.list_meetings_by_user(user_id)
@@ -174,7 +195,7 @@ async def leave_meeting(
         queries: MeetingQueries = Depends()) -> bool:
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="not logged in fool"
+            status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
         try:
@@ -190,22 +211,22 @@ async def leave_meeting(
 
 
 @router.patch("/page")
-def update_attendee_page(
-    response: Response,
-    attendee_page: AttendeePageUpdate,
+def update_attendee(
+    attendee: AttendeeUpdate,
     queries: MeetingQueries = Depends(),
-) -> AttendeePageUpdate:
-    updated_page = queries.update_attendee_page(
-        attendee_page.attendee_page,
-        attendee_page.meeting_id,
-        attendee_page.attendee_id
+) -> AttendeeUpdate:
+    updated_attendee = queries.update_attendee(
+        attendee.attendee_page,
+        attendee.meeting_id,
+        attendee.attendee_id,
+        attendee.place_at_last_finish,
+        attendee.finished
     )
-    return updated_page
+    return updated_attendee
 
 
 @router.get("/page/{meeting_id}/{attendee_id}")
 def get_attendee(
-    response: Response,
     meeting_id: int,
     attendee_id: int,
     queries: MeetingQueries = Depends(),

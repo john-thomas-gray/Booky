@@ -7,7 +7,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.meetings import MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeePageUpdate
+from models.meetings import MeetingResponse, MeetingClubResponse, AttendeeResponse, AttendeeUpdate
 from models.users import UserOut
 from utils.exceptions import UserDatabaseException
 from datetime import datetime
@@ -183,6 +183,27 @@ class MeetingQueries:
             print(e)
             raise UserDatabaseException(f"Error getting attendees: {e}")
 
+    def actual_list_attendees_by_meeting(self, meeting_id: int) -> Optional[List[AttendeeResponse]]:
+        """
+        gets all meetings given a club id
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(AttendeeResponse)) as cur:
+                    cur.execute(
+                      """
+                      SELECT ma.*
+                      FROM meetings_attendees ma
+                      WHERE ma.meeting_id = %s;
+                      """,
+                      [meeting_id],
+                    )
+                    attendees_by_meeting = cur.fetchall()
+                return attendees_by_meeting
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException(f"Error getting attendees: {e}")
+
     def list_meetings_by_user(self, user_id: int) -> Optional[List[MeetingResponse]]:
         """
         gets all meetings given a club id
@@ -255,24 +276,32 @@ class MeetingQueries:
             print("error with leaving meeting you are stuck fool")
             return False
 
-    def update_attendee_page(self, attendee_page: int, meeting_id: int, user_id: int) -> Optional[AttendeePageUpdate]:
+    def update_attendee(
+            self,
+            attendee_page: int,
+            meeting_id: int,
+            user_id: int,
+            place_at_last_finish: int,
+            finished: bool
+            ) -> Optional[AttendeeUpdate]:
         """
         Updates attendee score in the meetings_attendees table, allowing the score users
         have accrued in individual meetings to be tracked.
         """
         try:
             with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(AttendeePageUpdate)) as cur:
+                with conn.cursor(row_factory=class_row(AttendeeUpdate)) as cur:
                     cur.execute(
                         """
                         UPDATE meetings_attendees
-                        SET attendee_page=%s
+                        SET attendee_page=%s, place_at_last_finish=%s, finished=%s
                         WHERE meeting_id = %s AND attendee_id = %s
-                        RETURNING attendee_page, meeting_id, attendee_id;
+                        RETURNING attendee_page, meeting_id, attendee_id, place_at_last_finish, finished;
                         """,
-                        (attendee_page, meeting_id, user_id),
+                        (attendee_page, place_at_last_finish, finished, meeting_id, user_id),
                     )
                     updated_attendee_page = cur.fetchone()
+                    print("!!!!", updated_attendee_page)
                     if not updated_attendee_page:
                         return None
                     return updated_attendee_page

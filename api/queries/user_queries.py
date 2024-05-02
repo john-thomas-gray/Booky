@@ -224,9 +224,6 @@ class UserQueries:
         return club_members
 
     def join_club(self, club_id: int, member_id: int) -> Optional[MemberResponse]:
-        """
-        :param club_id: The identifier of the club.
-        """
         try:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(MemberResponse)) as cur:

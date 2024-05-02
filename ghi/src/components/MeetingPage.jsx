@@ -3,88 +3,95 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 export default function MeetingPage() {
-    const [club, setClub] = useState([])
-    const [meeting, setMeeting] = useState([])
-    const [attendeePage, setAttendeePage] = useState(0)
-    const [book, setBook] = useState([])
-    const [pageInput, setPageInput] = useState(attendeePage.attendee_page)
-    const [authUser, setAuthUser] = useState([])
+    const [club, setClub] = useState({})
+    const [meeting, setMeeting] = useState({})
+    const [attendeeTable, setAttendeeTable] = useState({})
+    const [actualAttendees, setActualAttendees] = useState([])
+    const [book, setBook] = useState({})
+    const [pageInput, setPageInput] = useState(0)
+    const [authUser, setAuthUser] = useState({})
     const { user } = useAuthService()
     const { meetingID } = useParams()
     const [attendees, setAttendees] = useState([])
 
     const fetchMeetingData = () => {
-    const url = `http://localhost:8000/api/meeting/${meetingID}`
-    const fetchPromise = fetch(url, { credentials: 'include' })
-    fetchPromise.then(response => {
-        return response.json()
-    }).then(data => {
-        setMeeting(data);
-        return data;
-    }).then(data => {
-        fetchBookData(data);
-        return data;
-    }).then((data) => {
-        fetchClubData(data);
-        return data;
-    })
+        const url = `http://localhost:8000/api/meeting/${meetingID}`
+        const fetchPromise = fetch(url, { credentials: 'include' })
+        fetchPromise
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setMeeting(data)
+                return data
+            })
+            .then((data) => {
+                fetchBookData(data)
+                return data
+            })
+            .then((data) => {
+                fetchClubData(data)
+                return data
+            })
     }
     const getId = (val) => (e) => {
         joinMeeting(val)
-    };
+    }
 
     const joinMeeting = async (val) => {
         const data = {}
         data.attendee_id = user.id
         data.meeting_id = val
 
-        const url = `http://localhost:8000/api/meeting/${meetingID}`;
+        const url = `http://localhost:8000/api/meeting/${meetingID}`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
-                'Content-Type' : 'application/json',
+                'Content-Type': 'application/json',
             },
-            credentials: "include",
-        };
-        const response = await fetch(url, fetchConfig)
-        if (response.ok){
-            fetchAttendees()
-            console.log(
-                "request is good and went through"
-            )
+            credentials: 'include',
         }
-
-    };
-
-    const leaveMeeting = async (id) => {
-    const url = `http://localhost:8000/api/meeting/${id}/leave`;
-    const fetchConfig = {
-        method: 'delete',
-        headers: {
-            'Content-Type' : 'application/json',
-        },
-        body: JSON.stringify({}),
-        credentials: "include",
-    };
-
-
-        const response = await fetch(url,fetchConfig );
-    if (response.ok) {
-      fetchAttendees();
-    } else {
-      console.error('http error:', response.status);
+        const response = await fetch(url, fetchConfig)
+        if (response.ok) {
+            fetchAttendees()
+            console.log('request is good and went through')
+        }
     }
 
-    };
+    const leaveMeeting = async (id) => {
+        const url = `http://localhost:8000/api/meeting/${id}/leave`
+        const fetchConfig = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+            credentials: 'include',
+        }
+        const response = await fetch(url, fetchConfig)
+        if (response.ok) {
+            fetchAttendees()
+        } else {
+            console.error('http error:', response.status)
+        }
+    }
 
     const fetchAttendees = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setAttendees(data)
+            setAttendees(data.sort((a, b) => b.score - a.score))
+        }
+    }
 
+    const fetchActualAttendees = async () => {
+        const url = `http://localhost:8000/api/meeting/${meetingID}/attendees/actual`
+        const response = await fetch(url, { credentials: 'include' })
+        if (response.ok) {
+            const data = await response.json()
+            setActualAttendees(data)
         }
     }
 
@@ -104,19 +111,21 @@ export default function MeetingPage() {
             )}`
         ).href
         const fetchPromise = fetch(url, { credentials: 'include' })
-        fetchPromise.then(response => {
-            return response.json()
-        }).then(data => {
-            setBook(data)
-        })
+        fetchPromise
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                setBook(data)
+            })
     }
 
-    const fetchAttendeePage = async () => {
+    const fetchAttendeeTable = async () => {
         const url = `http://localhost:8000/api/meeting/page/${meetingID}/${user.id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setAttendeePage(data)
+            setAttendeeTable(data)
         }
     }
 
@@ -133,8 +142,17 @@ export default function MeetingPage() {
         setPageInput(Number(event.target.value))
     }
 
-    const updateAttendeePage = async () => {
+    const updateAttendeeTable = async () => {
         const url = `http://localhost:8000/api/meeting/page`
+        const bodyData = JSON.stringify({
+            meeting_id: meetingID,
+            attendee_id: user.id,
+            attendee_page: pageInput,
+            place_at_last_finish: attendeeTable.place_at_last_finish,
+            finished: attendeeTable.finished,
+        })
+
+        console.log('Sending data:', bodyData)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -143,19 +161,47 @@ export default function MeetingPage() {
                 meeting_id: meetingID,
                 attendee_id: user.id,
                 attendee_page: pageInput,
+                place_at_last_finish: attendeeTable.place_at_last_finish,
+                finished: attendeeTable.finished,
             }),
         })
         if (response.ok) {
-            setAttendeePage(await response.json())
+            setAttendeeTable(await response.json())
+            setPageInput(0)
         }
         updateUserScore(pageInput)
         updateClubScore(pageInput)
     }
 
+    // const setRanksAtLastFinish = async () => {
+    //     let rank = 0
+    //     let attendees_finished = []
+    //     let attendees_unfinished = []
+    //     // Split attendees into finished...
+    //     attendees_finished = actualAttendees.filter(
+    //         ((a) =>
+    //             a.meeting_id === meeting_id && a.finished) || a.meeting_id === meeting_id &&
+    //             a.attendee_id === user.id
+    //     )
+    //     /// ...and unfinished
+    //     attendees_unfinished = actualAttendees
+    //         .filter((a) => a.meeting_id === meetingID)
+    //         .sort((a, b) => b.score - a.score)
+
+    //     // Set rank at time of finish
+    //     attendees_unfinished.forEach((a) => {
+    //         a.
+    //     })
+    // }
+
     const updateUserScore = async (input) => {
         const url = `http://localhost:8000/api/users/${user.id}`
+        console.log('userscore', authUser.score)
+        console.log('pagecount', attendeeTable.attendee_page)
+        console.log('input', input)
         const updated_score =
-            authUser.score + (input - attendeePage.attendee_page)
+            authUser.score + (input - attendeeTable.attendee_page)
+        console.log('updated score', updated_score)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -174,9 +220,7 @@ export default function MeetingPage() {
 
     const updateClubScore = async (input) => {
         const url = `http://localhost:8000/api/clubs/${club.club_id}`
-        const updated_score = club.score + (input - attendeePage.attendee_page)
-        console.log(updated_score)
-        console.log(attendeePage.attendee_page)
+        const updated_score = club.score + (input - attendeeTable.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -194,75 +238,85 @@ export default function MeetingPage() {
         }
     }
 
-
-    const maxScore = Math.max(...attendees.map(attendee => attendee.score));
-    attendees.sort((a,b) => b.score - a.score);
+    const maxScore = Math.max(...attendees.map((attendee) => attendee.score))
 
     useEffect(() => {
         fetchMeetingData()
         fetchAuthUserData()
-        fetchAttendeePage()
+        fetchAttendeeTable()
         fetchAttendees()
+        fetchActualAttendees()
     }, [])
+
+    useEffect(() => {
+        fetchMeetingData()
+        fetchAttendees()
+    }, [actualAttendees, attendeeTable])
 
     return (
         <>
             <h1>
                 {club.name} - {meeting.book_title}
             </h1>
-            <div className="updateProgress">
-                <h2>Update Your Progress</h2>
-                <div className="currentProgress">
-                    {attendeePage.attendee_page}/{book.page_count}
+            {attendeeTable.attendee_page < book.page_count ? (
+                <div className="updateProgress">
+                    <h2>Update Your Progress</h2>
+                    <div className="currentProgress">
+                        {attendeeTable.attendee_page}/{book.page_count}
+                    </div>
+                    <input
+                        type="number"
+                        placeholder="What page are you on?"
+                        value={pageInput}
+                        onChange={handlePageInput}
+                        // min={attendeeTable.attendee_page + 1}
+                        // max={book.page_count}
+                    />
+                    <button onClick={updateAttendeeTable}>Submit</button>
                 </div>
-                <input
-                    type="number"
-                    placeholder="What page are you on?"
-                    value={pageInput}
-                    onChange={handlePageInput}
-                    // min={attendeePage.attendee_page + 1}
-                    // max={546} << book page
-                />
-                <button onClick={updateAttendeePage}>Submit</button>
+            ) : (
+                <div id="placeYourBets"></div>
+            )}
+            <div>
+                <button onClick={() => joinMeeting(meeting.id)}>
+                    join meeting
+                </button>
             </div>
             <div>
-                <button onClick={() => joinMeeting(meeting.id)}>join meeting</button>
-            </div>
-             <div>
-                <button onClick={() => leaveMeeting(meeting.id)}>leave meeting</button>
+                <button onClick={() => leaveMeeting(meeting.id)}>
+                    leave meeting
+                </button>
             </div>
             <div>
+                {/* Should rank attendees based upon their book progress
+                in the current meeting, not how much score they have overall. */}
                 <table>
                     <thead>
-                    <tr>
-                        <th>
-                            Attendees
-                        </th>
-                        <th>
-                            Score
-                        </th>
-                    </tr>
+                        <tr>
+                            <th>Attendees</th>
+                            <th>Score</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {attendees.map((attendee) => {
                             return (
                                 <tr key={attendee.id}>
                                     <td>
-                                        {attendee.score === maxScore ? "👑" : null}
+                                        {attendee.score === maxScore
+                                            ? '👑'
+                                            : null}
                                         {attendee.username}
-                                        <img className="attendee_profile" src={attendee.picture_url}></img>
+                                        <img
+                                            className="attendee_profile"
+                                            src={attendee.picture_url}
+                                        ></img>
                                     </td>
-                                    <td>
-                                        {attendee.score}
-
-                                    </td>
-
+                                    <td>{attendee.score}</td>
                                 </tr>
                             )
                         })}
                     </tbody>
                 </table>
-
             </div>
         </>
     )
