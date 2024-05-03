@@ -27,8 +27,6 @@ if (!API_HOST) {
 //  * @returns {React.ReactNode}
 
 function App() {
-    const [deleteSuccess, setDeleteSuccess] = useState([false])
-
     return (
         <>
         <div className='nav' style={{ backgroundColor: '#FAEBD7'}}>
@@ -38,7 +36,7 @@ function App() {
             <header className="App-header">
 
             </header>
-            <Outlet context={{deleteSuccess, setDeleteSuccess}}/>
+            <Outlet />
         </div>
         </>
     )

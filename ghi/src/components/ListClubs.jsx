@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { NavLink, useParams } from 'react-router-dom'
-// import { TextField, Autocomplete } from '@mui/material'
+
+import '../App.css'
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([]);
