@@ -1,8 +1,10 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams, useOutletContext } from 'react-router-dom'
+import Meeting from './ListMeetings'
 
-export default function MeetingPage() {
+export default function MeetingPage(){
+    const {deleteSuccess, setDeleteSuccess} = useOutletContext()
     const [club, setClub] = useState({})
     const [meeting, setMeeting] = useState({})
     const [attendeeTable, setAttendeeTable] = useState({})
@@ -13,6 +15,9 @@ export default function MeetingPage() {
     const { user } = useAuthService()
     const { meetingID } = useParams()
     const [attendees, setAttendees] = useState([])
+
+    console.log("delete success",deleteSuccess)
+
 
     const fetchMeetingData = () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}`
@@ -76,6 +81,26 @@ export default function MeetingPage() {
             console.error('http error:', response.status)
         }
     }
+
+
+    const deleteMeeting = async (id) => {
+        const url = `http://localhost:8000/api/meeting/${id}/`;
+        const fetchConfig = {
+        method: 'delete',
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+    };
+        const response = await fetch(url,fetchConfig );
+        if (response.ok) {
+        (setDeleteSuccess(!deleteSuccess))
+        }
+        if (!response.ok) {
+        console.error('http error:', response.status);
+    }};
+
 
     const fetchAttendees = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/attendees`
@@ -238,13 +263,20 @@ export default function MeetingPage() {
         }
     }
 
-    const maxScore = Math.max(...attendees.map((attendee) => attendee.score))
+
+    const maxScore = Math.max(...attendees.map(attendee => attendee.score));
+    attendees.sort((a,b) => b.score - a.score);
+
+
 
     useEffect(() => {
         fetchMeetingData()
         fetchAuthUserData()
         fetchAttendeeTable()
         fetchAttendees()
+        deleteMeeting()
+        fetchClubData()
+        fetchActualAttendees()
         fetchActualAttendees()
     }, [])
 
@@ -288,6 +320,26 @@ export default function MeetingPage() {
                 </button>
             </div>
             <div>
+                {user.id == club.owner_id &&
+                <button style ={{backgroundColor: 'red'}} onClick={() => deleteMeeting(meeting.id)}>
+                    <NavLink aria-current="page" to={"/meetings/list/"} exact=
+                    "true" className='link'>
+                        delete meeting
+                        </NavLink>
+                    </button>
+                    }
+            </div>
+            <div>
+                {user.id == club.owner_id &&
+                <button style ={{backgroundColor: 'red'}} onClick={() => deleteMeeting(meeting.id)}>
+                    <NavLink aria-current="page" to={"/meetings/list/"} exact=
+                    "true" className='link'>
+                        delete meeting
+                        </NavLink>
+                    </button>
+                    }
+            </div>
+            <div>
                 {/* Should rank attendees based upon their book progress
                 in the current meeting, not how much score they have overall. */}
                 <table>
@@ -319,5 +371,5 @@ export default function MeetingPage() {
                 </table>
             </div>
         </>
-    )
+    );
 }

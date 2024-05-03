@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useParams, Link, useOutletContext } from 'react-router-dom'
+import useAuthService from '../hooks/useAuthService'
 
 export default function ListMeetings(){
 const [meetings, setMeetings] = useState([])
 const {meetingId} = useParams()
-
+const { user } = useAuthService()
+const [club, setClub] = useState("")
+const {deleteSuccess, setDeleteSuccess} = useOutletContext()
 const fetchData = async () => {
     const url = 'http://localhost:8000/api/meeting/'
 
@@ -12,35 +15,26 @@ const fetchData = async () => {
     if (response.ok) {
         const data = await response.json()
         setMeetings(data)
+        const club_id = data.club_id
+        await fetchClub(club_id)
     }
 }
+console.log(deleteSuccess, "deleteSucess111111111")
 
-const deleteMeeting = async (id) => {
-    const url = `http://localhost:8000/api/meeting/${id}`;
-    const fetchConfig = {
-        method: 'delete',
-        headers: {
-            'Content-Type' : 'application/json',
-        },
-        body: JSON.stringify({}),
-        credentials: "include",
-    };
-
-
-        const response = await fetch(url,fetchConfig );
-    if (response.ok) {
-      fetchData();
-    } else {
-      console.error('http error:', response.status);
-    }
-
-    };
-
+const fetchClub = async (club_id) => {
+    const url = `http://localhost:8000/api/clubs/${club_id}`
+    const response = await fetch(url, {credentials: "include"})
+        if (response.ok) {
+            const data = await response.json()
+            setClub(data)
+        }
+        console.log("rresponse", response)
+};
 
 
 useEffect(() => {
-    fetchData()
-}, [])
+    fetchData();
+}, [deleteSuccess])
 
  return (
         <>
@@ -50,7 +44,10 @@ useEffect(() => {
                     <tr>
                         <th>Book Title</th>
                         <th>Active Date</th>
-                        <th>Delete Meeting</th>
+                        <th>Club ID</th>
+                        <th>
+                            {club.owner_id}
+                        </th>
 
                     </tr>
                 </thead>
@@ -65,7 +62,7 @@ useEffect(() => {
                                 </td>
                                 <td>{meeting.active}</td>
                                 <td>
-                                    <button onClick={() => deleteMeeting(meeting.id)}>Delete</button>
+                                    {meeting.club_id}
                                 </td>
 
                             </tr>
