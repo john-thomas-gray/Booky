@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import ExplorePage from './ExplorePage'
 
 import '../App.css'
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([]);
     const { user } = useAuthService();
-    const {clubID} = useParams();
     const [filteredClubs, setFilteredClubs] = useState("");
 
 
@@ -28,6 +28,7 @@ export default function ListClubs() {
 if (user) {
     return (
         <>
+        <div><ExplorePage></ExplorePage></div>
       <div>
         <input
           className="search-box"
@@ -36,7 +37,7 @@ if (user) {
           onChange={(event) => setFilteredClubs(event.target.value)}
         />
       </div>
-            <h1 className="m3 mt-3" >Clubs</h1>
+            <h1 className="m3 mt-3">Clubs</h1>
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -57,6 +58,7 @@ if (user) {
 
             return club;
           }
+
         }).map((club) => {
                         return (
                             <tr key={club.club_id} value={club.club_id} >

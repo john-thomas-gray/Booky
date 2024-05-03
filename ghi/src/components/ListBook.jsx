@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ExplorePage from './ExplorePage';
 
 export default function ListBooks() {
     const [books, setBooks] = useState([]);
@@ -18,6 +19,7 @@ console.log("!!!!!!",books)
 
     return (
         <>
+                <div><ExplorePage></ExplorePage></div>
             <h1 className="mb-3 mt-3">Book List</h1>
             <table className="table table-striped">
                 <thead>

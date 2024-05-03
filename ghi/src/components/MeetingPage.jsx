@@ -106,7 +106,7 @@ export default function MeetingPage() {
 
     const fetchBookData = async (data) => {
         const url = new URL(
-            `http://localhost:8000/api/books/title/${encodeURIComponent(
+            `http://localhost:8000/books/title/${encodeURIComponent(
                 data.book_title
             )}`
         ).href
@@ -245,6 +245,7 @@ export default function MeetingPage() {
         fetchAuthUserData()
         fetchAttendeeTable()
         fetchAttendees()
+        // deleteMeeting()
         fetchActualAttendees()
     }, [])
 

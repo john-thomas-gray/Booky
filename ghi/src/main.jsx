@@ -20,6 +20,7 @@ import MeetingPage from './components/MeetingPage'
 import AuthPage from './components/AuthPage'
 import ListClubs from './components/ListClubs'
 import ListBook from './components/ListBook'
+import ExplorePage from './components/ExplorePage'
 import GoogleBooksApp from './components/GoogleBooksApp'
 
 const BASE_URL = import.meta.env.BASE_URL
@@ -88,6 +89,10 @@ const router = createBrowserRouter(
                 {
                     path: '/auth',
                     element: <AuthPage />
+                },
+                {
+                    path: '/explore',
+                    element: <ExplorePage />
                 },
             ],
         },

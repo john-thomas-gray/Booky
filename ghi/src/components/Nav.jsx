@@ -44,16 +44,6 @@ export default function Nav() {
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/clubs" exact="true" className={'link'}>
-                    Create a Club
-                </NavLink>
-                </div>
-                <div>
-                <NavLink aria-current="page" to="/clubs/list" exact="true" className='link'>
-                    List Clubs
-                </NavLink>
-                </div>
-                <div>
                 <NavLink aria-current="page" to="/meetings" exact="true" className='link'>
                     Create Meeting
                 </NavLink>
@@ -74,8 +64,8 @@ export default function Nav() {
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/book/book" exact="true" className='link'>
-                    Book List
+                <NavLink aria-current="page" to="/explore" exact="true" className='link'>
+                    Explore
                 </NavLink>
                 </div>
                 <div>

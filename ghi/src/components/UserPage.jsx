@@ -1,7 +1,7 @@
 import useAuthService from '../hooks/useAuthService'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-
+import { NavLink } from 'react-router-dom';
 
 export default function UserPage() {
     const { pageOwnerID } = useParams();
@@ -9,6 +9,7 @@ export default function UserPage() {
     const [clubs, setClubs] = useState([]);
     const [meetings, setMeetings] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { user } = useAuthService();
 
     const fetchPageOwnerData = async () => {
         const url = `http://localhost:8000/api/users/${pageOwnerID}`
@@ -76,6 +77,18 @@ export default function UserPage() {
             <div class="scoreDisplay">
                 <div>SCORE: {pageOwner.score}</div>
             </div>
+            {user.id == pageOwnerID &&
+                    <>
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <div className="container-fluid">
+                        <NavLink aria-current="page" to="/clubs" exact="true" className='link'>
+                            Create Club
+                        </NavLink>
+                    </div>
+                    </nav>
+                    </>
+                }
+
             <div class="clubList">
                 <h2>{pageOwner.username}'s Clubs</h2>
                 <list>

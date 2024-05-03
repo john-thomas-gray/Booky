@@ -66,3 +66,13 @@ td {
     color:rgb(102, 59, 2) !important;
     text-decoration: none;
 }
+
+.explore-header{
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  left: 15%;
+
+
+
+}
