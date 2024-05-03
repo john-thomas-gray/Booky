@@ -1,7 +1,7 @@
 
 import React, {useState, useEffect } from 'react';
 import useAuthService from '../hooks/useAuthService';
-
+import { useLocation } from 'react-router-dom';
 
 function CreateMeetingForm() {
   const [clubId, setClubId] = useState('')
@@ -10,6 +10,13 @@ function CreateMeetingForm() {
   const [data, setData] = useState([])
   const {user} = useAuthService()
 
+  const location = useLocation();
+  if (location!==null){
+    console.log("location.state", location.state)
+  }
+
+
+  const state= [location.state]
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
      */
@@ -68,8 +75,17 @@ return (
 
     <div>this is CreateMeetingForm.jsx</div>
 
+    {location.state && location.state.hasOwnProperty("volumeInfo") && state.map((book) => {
 
+    return (
 
+            <ul>
+                <li key={book.volumeInfo.title}>
+                    {book.volumeInfo.title}
+                </li>
+            </ul>
+        )
+    })}
 
 
     <select

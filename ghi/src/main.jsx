@@ -9,7 +9,6 @@ import App from './App'
 import AuthProvider from './components/AuthProvider'
 import CreateMeetingForm from './components/CreateMeetingForm'
 import ListMeetings from './components/ListMeetings'
-import CreateBookForm from './components/CreateBookForm'
 
 import './index.css'
 import UserList from './components/UserList'
@@ -21,6 +20,7 @@ import MeetingPage from './components/MeetingPage'
 import AuthPage from './components/AuthPage'
 import ListClubs from './components/ListClubs'
 import ListBook from './components/ListBook'
+import GoogleBooksApp from './components/GoogleBooksApp'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -78,8 +78,8 @@ const router = createBrowserRouter(
                     element: <ClubDetailPage />
                 },
                 {
-                    path: '/book/bookform',
-                    element: <CreateBookForm />
+                    path: '/book',
+                    element: <GoogleBooksApp />
                 },
                 {
                     path: '/book/book',

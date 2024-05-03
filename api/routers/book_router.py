@@ -1,12 +1,13 @@
 """
 Book API Router
 """
-
+import requests
+import os
 from fastapi import APIRouter, Depends, Request, Response
 from queries.book_queries import BookQueries
 from models.books import BookRequest, BookResponse
 from utils.exceptions import UserDatabaseException
-router = APIRouter(tags=["Book"], prefix="/api")
+router = APIRouter(tags=["Book"])
 
 
 @router.post("/book")
@@ -47,18 +48,6 @@ async def delete_book(
         return False
 
 
-@router.get("/books/{book_id}")
-def get_book(
-    book_id: int,
-    response: Response,
-        queries: BookQueries = Depends()) -> BookResponse:
-    book = queries.get_by_id(book_id)
-    if book is None:
-        response.status_code = 404
-    print(book)
-    return book
-
-
 @router.get("/books/title/{title}")
 def get_by_title(
     title: str,
@@ -84,3 +73,15 @@ def list_books(
         response.status_code = 404
         return []
     return books
+
+
+@router.get("/getbooks/{title}")
+def get_book(title: str):
+    GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")
+    # GOOGLE_BOOKS_API_KEY = "AIzaSyBhVYIvBYwae-smPMiNhZsRe9_APprNIUA"
+    url = f'https://www.googleapis.com/books/v1/volumes?q={title}&key={GOOGLE_BOOKS_API_KEY}'
+    print(url)
+    response1 = requests.get(url=url)
+    book = response1.json()
+
+    return (book)

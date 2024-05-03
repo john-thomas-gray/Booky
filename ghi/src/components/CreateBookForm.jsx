@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useAuthService from '../hooks/useAuthService';
+import GoogleBooksApp from './GoogleBooksApp';
 
 function CreateBookForm() {
     const [title, setTitle] = useState('');
@@ -42,8 +43,10 @@ function CreateBookForm() {
     }
 
     return (
+        <div> <GoogleBooksApp />
         <form onSubmit={handleFormSubmit}>
             <div>This is CreateBookForm.jsx</div>
+
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Book Title" required />
             <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Author" required />
             <input type="number" value={pageCount} onChange={(e) => setPageCount(e.target.value)} placeholder="Number of Pages" />
@@ -62,6 +65,7 @@ function CreateBookForm() {
 
             <button type="submit">Create Book</button>
         </form>
+        </div>
     )
     }
 export default CreateBookForm;
