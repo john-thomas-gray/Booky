@@ -6,6 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from models.bets import Bet
+from typing import Optional, List
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
@@ -42,5 +43,48 @@ class BetQueries:
                     if not bet:
                         return None
             return bet
+        except psycopg.Error as e:
+            print(e)
+
+    def get_bet(self, meeting_id: int, better_id: int) -> Optional[Bet]:
+        """
+        Gets a bet
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(Bet)) as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                        meeting_id, better_id, horse_id, amount
+                        FROM bets
+                        WHERE meeting_id = %s AND better_id = %s
+                        """,
+                        [meeting_id, better_id]
+                    )
+                    page = cur.fetchone()
+                    if not page:
+                        return None
+                    return page
+        except psycopg.Error as e:
+            print(e)
+
+    def list_bets_by_meeting(self, meeting_id: int) -> Optional[List[Bet]]:
+        """
+        gets all bets given a meeting id
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(Bet)) as cur:
+                    cur.execute(
+                      """
+                      SELECT meeting_id, better_id, horse_id, amount
+                      FROM bets
+                      WHERE meeting_id = %s;
+                      """,
+                      [meeting_id],
+                    )
+                    attendees_by_meeting = cur.fetchall()
+                return attendees_by_meeting
         except psycopg.Error as e:
             print(e)
