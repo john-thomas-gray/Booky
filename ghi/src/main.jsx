@@ -22,6 +22,7 @@ import ListClubs from './components/ListClubs'
 import ListBook from './components/ListBook'
 import ExplorePage from './components/ExplorePage'
 import GoogleBooksApp from './components/GoogleBooksApp'
+import PlaceBet from './components/PlaceBet'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -96,6 +97,10 @@ const router = createBrowserRouter(
                 {
                     path: '/explore',
                     element: <ExplorePage />
+                },
+                {
+                    path: '/bets/:meetingID',
+                    element: <PlaceBet />
                 },
             ],
         },
