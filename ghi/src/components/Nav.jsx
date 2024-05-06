@@ -54,11 +54,6 @@ export default function Nav() {
                 </NavLink>
                 </div>
                 <div>
-                <NavLink aria-current="page" to="/signup" exact="true" className='link'>
-                    Sign Up
-                </NavLink>
-                </div>
-                <div>
                 <NavLink aria-current="page" to="/book" exact="true" className='link'>
                     Create Book
                 </NavLink>
@@ -71,7 +66,7 @@ export default function Nav() {
                 <div>
                 {!isLoggedIn && !user && (
                     <NavLink aria-current="page" to="/auth" exact="true" className='link'>
-                        Log In
+                        Log In / Sign Up
                     </NavLink>
                 )}
                 {isLoggedIn && <button onClick={signOut}>Sign Out</button>}

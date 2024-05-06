@@ -23,7 +23,7 @@ export default function AuthPage() {
                 {showSignUp ? (
                     <span>
                         <div>Already have an account?</div>
-                        <button onClick={toggleForm}>Sign In</button>
+                        <button onClick={toggleForm}>Log In</button>
                     </span>
                 ) : (
                     <>
