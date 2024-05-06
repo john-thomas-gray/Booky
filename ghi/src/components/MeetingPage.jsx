@@ -1,8 +1,10 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams, useOutletContext } from 'react-router-dom'
+import Meeting from './ListMeetings'
 
-export default function MeetingPage() {
+export default function MeetingPage(){
+    const {deleteSuccess, setDeleteSuccess} = useOutletContext()
     const [club, setClub] = useState({})
     const [book, setBook] = useState({})
     // Meetings
@@ -83,6 +85,29 @@ export default function MeetingPage() {
             console.error('http error:', response.status)
         }
     }
+
+
+
+
+
+    const deleteMeeting = async (id) => {
+        const url = `http://localhost:8000/api/meeting/${id}/`;
+        const fetchConfig = {
+        method: 'delete',
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+    };
+        const response = await fetch(url,fetchConfig );
+        if (response.ok) {
+        (setDeleteSuccess(!deleteSuccess))
+        }
+        if (!response.ok) {
+        console.error('http error:', response.status);
+    }};
+
 
     const fetchUsers = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/users`
@@ -322,6 +347,7 @@ export default function MeetingPage() {
         fetchMeetingData()
         fetchAuthUserData()
         fetchAttendeeTable()
+        deleteMeeting()
         fetchActualAttendees()
         fetchUsers()
     }, [])
@@ -335,10 +361,7 @@ export default function MeetingPage() {
         }
     }, [actualAttendees, attendeeTable])
 
-    useEffect(() => {
-        fetchMeetingData()
-        fetchAttendees()
-    }, [actualAttendees, attendeeTable])
+    
 
     return (
         <>
@@ -438,6 +461,16 @@ export default function MeetingPage() {
                     leave meeting
                 </button>
             </div>
+            <div>
+                {user.id == club.owner_id &&
+                <button style ={{backgroundColor: 'red'}} onClick={() => deleteMeeting(meeting.id)}>
+                    <NavLink aria-current="page" to={"/meetings/list/"} exact=
+                    "true" className='link'>
+                        delete meeting
+                        </NavLink>
+                    </button>
+                    }
+            </div>
         </>
-    )
+    );
 }

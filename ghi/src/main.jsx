@@ -1,7 +1,7 @@
 //@ts-check
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, useOutletContext } from 'react-router-dom'
 
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
@@ -27,6 +27,7 @@ const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
     throw new Error('BASE_URL is not defined')
 }
+
 
 const router = createBrowserRouter(
     [
@@ -64,7 +65,8 @@ const router = createBrowserRouter(
                 },
                 {
                     path: '/meetings/list',
-                    element: <ListMeetings />,
+                    element:  <ListMeetings
+                    />,
                 },
                 {
                     path: '/user/:pageOwnerID',
@@ -72,7 +74,8 @@ const router = createBrowserRouter(
                 },
                 {
                     path: '/meetings/:meetingID',
-                    element: <MeetingPage />
+                    element: <MeetingPage
+                    />
                 },
                 {
                     path: '/clubs/:clubID',
