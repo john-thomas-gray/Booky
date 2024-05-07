@@ -42,7 +42,7 @@ export default function SignInForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
             />
-            <button type="submit">Sign In</button>
+            <button type="submit">Log In</button>
         </form>
         </>
     )

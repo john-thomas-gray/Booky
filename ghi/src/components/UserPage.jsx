@@ -77,57 +77,98 @@ export default function UserPage() {
             <div class="scoreDisplay">
                 <div>SCORE: {pageOwner.score}</div>
             </div>
-            {user.id == pageOwnerID &&
-                    <>
+            {user.id == pageOwnerID && (
+                <div class="create_club">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="container-fluid">
-                        <NavLink aria-current="page" to="/clubs" exact="true" className='link'>
-                            Create Club
-                        </NavLink>
-                    </div>
+                        <div className="container-fluid">
+                            <NavLink
+                                aria-current="page"
+                                to="/clubs"
+                                exact="true"
+                                className="link"
+                            >
+                                Create Club
+                            </NavLink>
+                        </div>
                     </nav>
-                    </>
-                }
+                </div>
+            )}
 
-            <div class="clubList">
+            <div className="clubList">
                 <h2>{pageOwner.username}'s Clubs</h2>
-                <list>
-                    {clubs.map((club) => {
-                        return (
-                            <a href={`/clubs/${club.club_id}`} className='link'>{club.name}</a>
-                        )
-                    })}
-                </list>
-            </div>
-            <div class="pastMeetings">
-                <h2>Past Meetings</h2>
-                <list>
-                    {meetings.map((meeting) => {
-                        // Check if the meeting was on a past date
-                        if (new Date(meeting.active) < new Date()) {
-                            return (
-                                <div>
-                                    <a href={`/meetings/${meeting.meeting_id}`} >
-                                        {meeting.book_title} {meeting.active}
-                                    </a>
-                                </div>
-                            )
-                        }
-                    })}
-                </list>
-            </div>
-            <div className="currentMeetings">
-                <h2>Current Meetings</h2>
-                {currentMeetings.length > 0 && (
+                {clubs.length > 0 ? (
+                    <list>
+                        {clubs.map((club) => (
+                            <NavLink
+                                to={`/clubs/${club.club_id}`}
+                                className="link"
+                            >
+                                {club.name}
+                            </NavLink>
+                        ))}
+                    </list>
+                ) : (
                     <div>
-                        <div>{currentMeetings[currentIndex].book_title}</div>
-                        <div>{currentMeetings[currentIndex].active}</div>
+                        No clubs...
+                        <div>
+                            <NavLink to="/clubs/list" className="link">
+                                Join a club
+                            </NavLink>{' '}
+                            or{' '}
+                            <NavLink to="/clubs" className="link">
+                                create your own!
+                            </NavLink>
+                        </div>
                     </div>
                 )}
-                <div>
-                    <button onClick={handlePrevMeeting}>Previous</button>
-                    <button onClick={handleNextMeeting}>Next</button>
-                </div>
+            </div>
+
+            <div className="pastMeetings">
+                <h2>Past Meetings</h2>
+                {meetings.some(
+                    (meeting) => new Date(meeting.active) < new Date()
+                ) ? (
+                    <list>
+                        {meetings.map((meeting) => {
+                            if (new Date(meeting.active) < new Date()) {
+                                return (
+                                    <div>
+                                        <a
+                                            href={`/meetings/${meeting.meeting_id}`}
+                                        >
+                                            {meeting.book_title}{' '}
+                                            {meeting.active}
+                                        </a>
+                                    </div>
+                                )
+                            }
+                        })}
+                    </list>
+                ) : (
+                    <div>No past meetings...</div>
+                )}
+            </div>
+
+            <div className="currentMeetings">
+                <h2>Current Meetings</h2>
+                {currentMeetings.length > 0 ? (
+                    <>
+                        <div>
+                            <div>
+                                {currentMeetings[currentIndex].book_title}
+                            </div>
+                            <div>{currentMeetings[currentIndex].active}</div>
+                        </div>
+                        <div>
+                            <button onClick={handlePrevMeeting}>
+                                Previous
+                            </button>
+                            <button onClick={handleNextMeeting}>Next</button>
+                        </div>
+                    </>
+                ) : (
+                    <div>No meetings scheduled...</div>
+                )}
             </div>
         </>
     )

@@ -21,17 +21,25 @@ export default function AuthPage() {
             {showSignUp ? <SignUpForm /> : <SignInForm />}
             <div>
                 {showSignUp ? (
-                    <span>
-                        <div>Already have an account?</div>
-                        <button onClick={toggleForm}>Log In</button>
-                    </span>
+                    <div>
+                        Already have an account?{' '}
+                        <span
+                            onClick={toggleForm}
+                            style={{ cursor: 'pointer', color: 'blue' }}
+                        >
+                            Log In
+                        </span>
+                    </div>
                 ) : (
-                    <>
-                        <div>Need an account?</div>
-                        <div>
-                            <button onClick={toggleForm}>Sign Up</button>
-                        </div>
-                    </>
+                    <div>
+                        Need an account?{' '}
+                        <span
+                            onClick={toggleForm}
+                            style={{ cursor: 'pointer', color: 'blue' }}
+                        >
+                            Sign Up
+                        </span>
+                    </div>
                 )}
             </div>
         </div>

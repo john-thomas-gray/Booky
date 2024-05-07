@@ -18,7 +18,7 @@ export default function SignUpForm() {
             email,
             score: 0,
             picture_url:
-                'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
+                'https://i.postimg.cc/XnM4zGxH/DALL-E-2024-05-06-16-43-10-Create-a-user-logo-with-a-book-and-gambling-theme-featuring-a-silhouet.webp',
         })
     }
 
