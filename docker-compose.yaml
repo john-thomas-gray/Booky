@@ -19,7 +19,7 @@ services:
             CORS_HOST: http://localhost:5173
             DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
             SIGNING_KEY: ${SIGNING_KEY}
-            GOOGLE_BOOKS_API_KEY: AIzaSyBhVYIvBYwae-smPMiNhZsRe9_APprNIUA
+            GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY}
 
         build:
             context: api

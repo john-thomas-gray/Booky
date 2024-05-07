@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ExplorePage from './ExplorePage';
+import Footer from './Footer';
+import '../App.css'
 
 function GoogleBooksApp() {
     const [query, setQuery] = useState('');
@@ -17,9 +20,7 @@ function GoogleBooksApp() {
                 throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log(data);
                 setBooks(data)
-                console.log("!!!!!!!!!!", books)
             } catch (error) {
                 console.error('Failed to fetch books:', error);
             }
@@ -33,16 +34,19 @@ function GoogleBooksApp() {
                 searchBooks(query)
                 }
             return (
+                <>
+                        <div><ExplorePage></ExplorePage></div>
                 <div>
                     <form onSubmit={handleSubmit}>
                         <input
+                        className="search-box"
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search for Books"
                         required
                         />
-                        <button type="submit" disabled={isLoading}>
+                        <button type="submit" disabled={isLoading} className="search-button">
                             {isLoading ? 'Searching for Books' : 'Search'}
                         </button>
                     </form>
@@ -56,12 +60,14 @@ function GoogleBooksApp() {
                                <Link aria-current="page" to="/meetings/" state= {book} exact="true">{book.volumeInfo.title}</Link>
 
 
-                                by{book.volumeInfo.authors?.join(', ')}
+                                 by {book.volumeInfo.authors?.join(', ')}
 
                             </li>
                         ))}
                     </ul>
                 </div>
+                <div><Footer></Footer></div>
+                </>
             );
         }
 

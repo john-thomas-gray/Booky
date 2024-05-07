@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-
+import ExplorePage from './ExplorePage';
+import Footer from './Footer';
 export default function UserList() {
     const [users, setUsers] = useState([])
+    const [filteredUsers, setFilteredUsers] = useState("");
 
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/users/'
@@ -18,6 +20,17 @@ export default function UserList() {
 
     return (
         <>
+        <div><ExplorePage></ExplorePage></div>
+
+        <div>
+        <input
+          className="search-box"
+          placeholder="Enter a Username"
+          value={filteredUsers}
+          onChange={(event) => setFilteredUsers(event.target.value)}
+        />
+        </div>
+              <div className='list-container'>
             <h1 className="m3 mt-3">Users</h1>
             <table className="table table-striped">
                 <thead>
@@ -29,7 +42,17 @@ export default function UserList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => {
+                    {
+        users.length && users.filter((user) => {
+          if (filteredUsers === "") {
+
+            return user;
+          } else if (user.username.toLowerCase().includes(filteredUsers.toLowerCase())) {
+
+            return user;
+          }
+
+        }).map((user) => {
                         return (
                             <tr key={user.id}>
                                 <td>{user.username}</td>
@@ -52,6 +75,8 @@ export default function UserList() {
                     })}
                 </tbody>
             </table>
+            </div>
+            <div><Footer></Footer></div>
         </>
     )
 }

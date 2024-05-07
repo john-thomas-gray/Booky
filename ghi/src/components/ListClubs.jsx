@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { NavLink } from 'react-router-dom'
 import ExplorePage from './ExplorePage'
-
+import Footer from './Footer'
 import '../App.css'
 
 export default function ListClubs() {
@@ -37,6 +37,7 @@ if (user) {
           onChange={(event) => setFilteredClubs(event.target.value)}
         />
       </div>
+      <div className='list-container'>
             <h1 className="m3 mt-3">Clubs</h1>
             <table className="table table-striped">
                 <thead>
@@ -73,6 +74,8 @@ if (user) {
                     })}
                 </tbody>
             </table>
+            </div>
+            <div><Footer></Footer></div>
         </>
     )
 }

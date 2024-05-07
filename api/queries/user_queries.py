@@ -92,6 +92,7 @@ class UserQueries:
                             SELECT
                                 *
                             FROM users
+                            ORDER BY score DESC;
                             """,
                     )
                     users = cur.fetchall()

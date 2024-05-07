@@ -1,11 +1,11 @@
 // @ts-check
 import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
-
+import { useNavigate } from 'react-router-dom'
 
 export default function CreateClubForm() {
-  const [users, setUsers] = useState([])
   const { user } = useAuthService()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     owner_id: user.id,
     name: '',
@@ -14,25 +14,12 @@ export default function CreateClubForm() {
     country: '',
 
   })
-    const fetchData = async () => {
-        const url = 'http://localhost:8000/api/users/'
-        const response = await fetch(url)
-        if (response.ok) {
-            const data = await response.json()
-            setUsers(data)
-        }
-    }
-  useEffect(() => {
-    fetchData();
-  }, []);
 
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
      */
     async function handleFormSubmit(e) {
         e.preventDefault()
-
-        console.log(formData)
 
         const clubUrl = `http://localhost:8000/api/clubs/`;
         const fetchOptions = {
@@ -43,20 +30,13 @@ export default function CreateClubForm() {
           },
         };
         const clubResponse = await fetch(clubUrl, fetchOptions);
-        console.log(clubResponse);
-
         if (clubResponse.ok) {
-            setFormData ({
-                owner_id: user.id,
-                name: '',
-                city: '',
-                state: '',
-                country: '',
+          navigate('/clubs/list');
 
-            });
         }
 
     }
+
 
     const handleFormChange = (e) => {
     const value = e.target.value;

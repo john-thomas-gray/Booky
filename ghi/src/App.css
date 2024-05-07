@@ -3,7 +3,7 @@
 .App {
     text-align: center;
     background-color: #282c34;
-    min-height: 100vh;
+    background-size: 100% 100%;
     color: white;
     display: flex;
     flex-direction: column;
@@ -11,12 +11,15 @@
     justify-content: center;
     font-size: calc(10px + 2vmin);
 
+    height: 100vh;
+
+
 }
 
 
 div {
     margin-right: 10px;
-
+    background-repeat: repeat-x;
 }
 
 
@@ -65,14 +68,65 @@ td {
 .link {
     color:rgb(102, 59, 2) !important;
     text-decoration: none;
+    overflow: hidden;
+
 }
 
 .explore-header{
   position: absolute;
-  top: 10%;
+  top: 2%;
   right: 15%;
   left: 15%;
 
+}
+
+.flexbox-explore {
+  position: absolute;
+  top: 14%;
+  left: 33%;
+  display: flex;
+  flex-direction: row;
+  text-decoration: none;
+
+}
+
+.explore-div {
+  margin-right: 200px;
+  margin-left: 00px;
+}
+
+.search-box {
+  position: absolute;
+  top: 22%;
+  left: 45%;
+}
+
+.search-button {
+  position: absolute;
+  top: 22%;
+  left: 54.2%;
+}
+
+.list-container {
+  position: absolute;
+  top: 23.68%;
+  overflow: hidden;
+
+}
 
 
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #faebd7;
+  color: rgb(102, 59, 2);
+
+  height: 7%;
+}
+
+.footer-text {
+
+ line-height: 1px;
 }
