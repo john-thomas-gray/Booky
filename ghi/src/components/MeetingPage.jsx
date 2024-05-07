@@ -106,7 +106,7 @@ export default function MeetingPage(){
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setUsers(data.sort((a, b) => b.score - a.score))
+            setUsers(data)
         }
     }
 
@@ -324,6 +324,17 @@ export default function MeetingPage(){
     }, [actualAttendees, attendeeTable])
 
 
+    // Used in user list
+    const getAttendeePage = (userId) => {
+        const attendee = actualAttendees.find(
+            (attendee) => attendee.attendee_id === userId
+        )
+        return attendee ? attendee.attendee_page : 0 // Default to 0 if attendee not found
+    }
+
+    const sortedUsers = [...users].sort(
+        (a, b) => getAttendeePage(b.id) - getAttendeePage(a.id)
+    )
 
     return (
         <>
@@ -357,34 +368,49 @@ export default function MeetingPage(){
                     </NavLink>
                 </div>
             )}
-            <div>
-                {/* Should rank attendees based upon their book progress
-                in the current meeting, not how much score they have overall. */}
+            <div style={{ overflowY: 'auto', maxHeight: '400px' }}>
                 <table>
                     <thead>
                         <tr>
-                            <th>Attendees</th>
-                            <th>Score</th>
+                            <th>Position</th>
+                            <th>Member</th>
+                            <th style={{ textAlign: 'right' }}>Progress</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((u) => (
+                        {sortedUsers.map((u, index) => (
                             <tr key={u.id}>
-                                <td>
-                                    {u.score === maxScore ? '👑' : null}
-                                    {u.username}
-                                    <img
-                                        className="attendee_profile"
-                                        src={u.picture_url}
-                                        alt=""
-                                    />
+                                <td>{index + 1}</td>
+                                <td style={{ textAlign: 'left' }}>
+                                    <a
+                                        href={`/user/${u.id}`}
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: 'inherit',
+                                        }}
+                                    >
+                                        <img
+                                            className="attendee_profile"
+                                            src={u.picture_url}
+                                            alt={u.username}
+                                            style={{
+                                                maxHeight: '40px',
+                                                maxWidth: '40px',
+                                                verticalAlign: 'middle',
+                                            }}
+                                        />
+                                        {u.username}
+                                    </a>
                                 </td>
-                                <td>{u.score}</td>
+                                <td style={{ textAlign: 'right' }}>
+                                    {getAttendeePage(u.id)} / {book.page_count}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
             <div>
                 <button onClick={() => joinMeeting(meeting.id)}>
                     join meeting
