@@ -4,14 +4,12 @@ import ExplorePage from './ExplorePage';
 import Footer from './Footer';
 import '../App.css'
 import useAuthService from '../hooks/useAuthService'
-
 function GoogleBooksApp() {
     const [query, setQuery] = useState('');
     const [books, setBooks] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const {user} = useAuthService();
-
         const searchBooks = async (title) => {
         const url = `http://localhost:8000/getbooks/${title}`;
             try {
@@ -28,16 +26,11 @@ function GoogleBooksApp() {
         const getBook = (book) => (e) => {
             submitBook(book)
         };
-
         async function submitBook(book) {
-
         const data = {};
-            data.title = book.volumeInfo.title, data.author = book.volumeInfo.authors[0], data.page_count = Number(book.volumeInfo.pageCount), data.genre = book.volumeInfo.categories[0],
-            data.publisher = book.volumeInfo.publisher, data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
-
-
+            data.title = String(book.volumeInfo.title), data.author = book.volumeInfo.authors[0], data.page_count = Number(book.volumeInfo.pageCount), data.genre = book.volumeInfo.categories[0],
+            data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
         console.log("Submitting data", data);
-
         const bookUrl = 'http://localhost:8000/book';
         const fetchConfig = {
             method: "POST",
@@ -46,11 +39,9 @@ function GoogleBooksApp() {
         };
         const response = await fetch(bookUrl, fetchConfig);
         console.log("response", response)
-
         if (response.ok) {
         console.log("Sucess!")
         }}
-
             const handleSubmit = (event) => {
                 event.preventDefault();
                 searchBooks(query)
@@ -88,7 +79,3 @@ function GoogleBooksApp() {
             );
         }
 export default GoogleBooksApp;
-
-
-// {book.volumeInfo.categories[0]} {book.volumeInfo.pageCount}
-// {book.volumeInfo.imageLinks.smallThumbnail}

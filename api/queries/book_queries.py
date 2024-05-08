@@ -62,7 +62,7 @@ class BookQueries:
                 with conn.cursor(row_factory=class_row(BookResponse)) as cur:
                     cur.execute(
                         """
-                        SELECT book_id, title, author, page_count, genre, publisher, synopsis, cover_img_url
+                        SELECT book_id, title, author, page_count, genre, synopsis, cover_img_url
                         FROM books
                         WHERE title = %s
                         """,
@@ -75,8 +75,7 @@ class BookQueries:
         except psycopg.Error as e:
             print(e)
 
-    def create_book(self, title: str, author: str, page_count: int, genre: str,
-                    publisher: str, synopsis: str, cover_img_url: str):
+    def create_book(self, title: str, author: str, page_count: int, genre: str, synopsis: str, cover_img_url: str):
         """
         Creates a new book in the database
 
@@ -89,9 +88,9 @@ class BookQueries:
                         """
 
                         INSERT INTO books (
-                        title, author, page_count, genre, publisher,  synopsis, cover_img_url
+                        title, author, page_count, genre, synopsis, cover_img_url
                         ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s
+                        %s, %s, %s, %s, %s, %s
                         )
                         RETURNING *;
                         """,
@@ -101,7 +100,6 @@ class BookQueries:
                             author,
                             page_count,
                             genre,
-                            publisher,
                             synopsis,
                             cover_img_url,
                         ],

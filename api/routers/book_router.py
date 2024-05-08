@@ -27,7 +27,6 @@ def create_book(
         new_book.author,
         new_book.page_count,
         new_book.genre,
-        new_book.publisher,
         new_book.synopsis,
         new_book.cover_img_url
     )

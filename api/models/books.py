@@ -13,7 +13,6 @@ class BookRequest(BaseModel):
     author: str
     page_count: int
     genre: str
-    publisher: str
     synopsis: str
     cover_img_url: str
 
@@ -28,6 +27,5 @@ class BookResponse(BaseModel):
     author: str
     page_count: int
     genre: str
-    publisher: str
     synopsis: str
     cover_img_url: str

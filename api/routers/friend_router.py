@@ -1,5 +1,5 @@
 """
-Club API Router
+Friend API Router
 """
 from utils.exceptions import UserDatabaseException
 from fastapi import (

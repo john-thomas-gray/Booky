@@ -1,5 +1,5 @@
 """
-Database Queries for Users
+Database Queries for Friends
 """
 import os
 import psycopg
@@ -28,9 +28,9 @@ class FriendQueries:
 
     def add_friend(self, member_id: int, friend_id: int):
         """
-        Creates a new club in the database
+        Creates a new friend relationship in the database
 
-        Raises a ClubInsertionException if creating the club fails (ADD LATER)
+        Raises a UserDatabaseException if creating the relationship fails
         """
         try:
             with pool.connection() as conn:
