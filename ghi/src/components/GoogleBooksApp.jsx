@@ -14,8 +14,6 @@ function GoogleBooksApp() {
 
         const searchBooks = async (title) => {
         const url = `http://localhost:8000/getbooks/${title}`;
-
-
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
@@ -27,9 +25,31 @@ function GoogleBooksApp() {
                 console.error('Failed to fetch books:', error);
             }
             }
+        const getBook = (book) => (e) => {
+            submitBook(book)
+        };
+
+        async function submitBook(book) {
+
+        const data = {};
+            data.title = book.volumeInfo.title, data.author = book.volumeInfo.authors[0], data.page_count = Number(book.volumeInfo.pageCount), data.genre = book.volumeInfo.categories[0],
+            data.publisher = book.volumeInfo.publisher, data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
 
 
+        console.log("Submitting data", data);
 
+        const bookUrl = 'http://localhost:8000/book';
+        const fetchConfig = {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+        };
+        const response = await fetch(bookUrl, fetchConfig);
+        console.log("response", response)
+
+        if (response.ok) {
+        console.log("Sucess!")
+        }}
 
             const handleSubmit = (event) => {
                 event.preventDefault();
@@ -53,16 +73,12 @@ function GoogleBooksApp() {
                         </button>
                     </form>
                     {error && <div>{error}</div>}
-
                     <ul>
                         {books && books.items.map(book => (
-
                             <li key={book.id}>
                             {user &&
-                               <Link aria-current="page" to="/meetings/" state= {book} exact="true" className='link'>Create a meeting</Link> }
-
+                               <Link aria-current="page" to="/meetings/" onClick={getBook(book)} state= {book} exact="true" className='link'>Create a meeting</Link> }
                                 {book.volumeInfo.title} by {book.volumeInfo.authors?.join(', ')}
-
                             </li>
                         ))}
                     </ul>
@@ -71,7 +87,8 @@ function GoogleBooksApp() {
                 </>
             );
         }
-
-
-
 export default GoogleBooksApp;
+
+
+// {book.volumeInfo.categories[0]} {book.volumeInfo.pageCount}
+// {book.volumeInfo.imageLinks.smallThumbnail}
