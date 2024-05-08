@@ -163,7 +163,11 @@ export default function MeetingPage() {
     }
 
     const handlePageInput = (event) => {
-        setPageInput(Number(event.target.value))
+        let page = event.target.value;
+        if (page > book.page_count) {
+            page = book.page_count
+        }
+        setPageInput(Number(page))
     }
 
     const handleUpdatePage = () => {
@@ -315,7 +319,7 @@ export default function MeetingPage() {
     }, [])
 
     useEffect(() => {
-        fetchMeetingData()
+        // fetchMeetingData()
         fetchUsers()
         // // Runs more often than it should
         // if (attendee.attendee_page === book.page_count) {
