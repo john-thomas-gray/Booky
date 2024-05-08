@@ -120,6 +120,7 @@ return (<>
 
 <div>
 <h1 className="explore-header">Friend Requests</h1></div>
+{requests.length > 0 ? ( <>
 <div>
     <table>
         <thead>
@@ -130,18 +131,25 @@ return (<>
 
         </thead>
         <tbody>
-{requests && requests.map((request) => {
-                        return (
+
+
+{requests.map((request) => (
+
                             <tr key={request.user_id} value={request.user_id} >
                                 <td>{request.friend_name}</td>
                                 <td><button onClick={() => handleFriends(request.friend_id)}>Approve</button></td>
                                 <td><button onClick={() => deleteRequests(request.friend_id)}>Deny</button></td>
                             </tr>
-                        )
-                    })}
-        </tbody>
-    </table>
-</div>
+                        ))}
+                        </tbody>
+                        </table>
+                        </div>
+                </>
+                ):(
+
+                    <div><h1>You have no requests</h1></div>
+                )}
+
 
 
 

@@ -45,7 +45,7 @@ export default function ClubDetailPage() {
         };
       const response = await fetch(membersUrl,  fetchConfig).catch(error => setError(error))
       if (response.ok){
-        console.log("request went through")
+        fetchMembers()
       };
 
     }
@@ -162,7 +162,6 @@ if (user) {
                             <tr key={meeting.book_title}>
                                 <td><NavLink aria-current="page" to={"/meetings/" + meeting.id} exact="true" className='link'>{meeting.book_title}</NavLink></td>
                                 <td>{meeting.active}</td>
-                                <td><button onClick={getMeetingId(meeting.id)}>Join Meeting</button></td>
                             </tr>
                         )
                     })}
