@@ -89,3 +89,22 @@ class BetQueries:
                 return attendees_by_meeting
         except psycopg.Error as e:
             print(e)
+
+    def bet_paid(self, meeting_id: int, better_id: int) -> Bet:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE bets
+                        SET paid = true
+                        WHERE meeting_id = %s AND better_id = %s
+                        """,
+                        [
+                            meeting_id,
+                            better_id
+                        ]
+                    )
+                    return True
+        except psycopg.Error as e:
+            print(e)

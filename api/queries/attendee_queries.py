@@ -73,7 +73,6 @@ class AttendeeQueries:
             raise UserDatabaseException(f"Error updating user attendee_page in meeting: {e}")
 
     def finish_update(self, meeting_id: int, attendee_id: int, attendee: FinishUpdate) -> AttendeeResponse:
-        print("meeting", meeting_id, "attendee", attendee_id, "place", attendee.place_at_last_finish, "finish", attendee.finished)
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:

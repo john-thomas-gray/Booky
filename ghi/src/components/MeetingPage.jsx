@@ -206,15 +206,86 @@ export default function MeetingPage() {
         setPageInput(page)
     }
 
-    const handleUpdatePage = () => {
+    const handleUpdatePage = async () => {
         const data = pageInput
         updateAttendeePage(attendee.attendee_id).then(() => {
-            updateUserScore(data)
             updateClubScore(data)
         }).then( () => {
-            if(data == book.page_count)
-            {
-                finish()
+            updateUserScore(data)
+        }).then( async () => {
+            if (data == book.page_count) {
+                const b = getCurrentBet()
+        if (user.id === b.horse_id) {
+            // Pay the user who just finished, that the better bet on.
+            // Update user information
+            let url = `http://localhost:8000/api/users/${user.id}`
+            let updated_score = authUser.score + b.amount
+            let response = await fetch(url, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: authUser.username,
+                    email: authUser.email,
+                    score: updated_score,
+                    picture_url: authUser.picture_url,
+                }),
+            })
+            fetch(`http://localhost:8000/api/users/${b.better_id}`, {
+                credentials: 'include',
+                method: 'get',
+                dataType: 'json',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('kkkkk', response)
+                    setUser(response)
+                    return response
+                })
+                .then((r) => {
+                    updated_score = r.score + b.amount
+                    console.log('fdhaisojfheiow', r.score, b.amount)
+                    let response = fetch(
+                        `http://localhost:8000/api/users/${b.better_id}`,
+                        {
+                            method: 'PATCH',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: r.username,
+                                email: r.email,
+                                score: updated_score,
+                                picture_url: r.picture_url,
+                            }),
+                        }
+                    )
+
+                    return response
+                })
+        } else {
+
+            // Pay only the user who just finished
+            const url = `http://localhost:8000/api/users/${user.id}`
+            const updated_score = authUser.score + b.amount
+            console.log(updated_score)
+            // console.log(updated_score)
+            // Update user information
+            const response = await fetch(url, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: authUser.username,
+                    email: authUser.email,
+                    score: updated_score,
+                    picture_url: authUser.picture_url,
+                }),
+            })
+        }
             }
         })
     }
@@ -251,9 +322,7 @@ export default function MeetingPage() {
             }
             // Update the database
             updateAttendee(
-                meetingID,
                 a.attendee_id,
-                a.attendee_page,
                 a.place_at_last_finish,
                 a.finished
             )
@@ -261,155 +330,105 @@ export default function MeetingPage() {
         })
     }
 
-    const payout = async () => {
-        const b = getCurrentBet()
-        if (user.id === b.horse_id) {
-            // Pay the user who just finished, that the better bet on.
-            // Update user information
-            let url = `http://localhost:8000/api/users/${user.id}`
-            let updated_score = authUser.score + b.amount
-            console.log(updated_score)
-            let response = await fetch(url, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: authUser.username,
-                    email: authUser.email,
-                    score: updated_score,
-                    picture_url: authUser.picture_url,
-                }),
-            })
-            console.log('horse paid: ', updated_score)
-            fetch(`http://localhost:8000/api/users/${b.better_id}`, {
-                credentials: 'include',
-                method: 'get',
-                dataType: 'json',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('kkkkk', response)
-                    setUser(response)
-                    return response
-                })
-                .then((r) => {
-                    console.log('fdhaisojfheiow', r)
-                    updated_score = r.score + b.amount
-                    let response = fetch(
-                        `http://localhost:8000/api/users/${b.better_id}`,
-                        {
-                            method: 'PATCH',
-                            credentials: 'include',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                username: r.username,
-                                email: r.email,
-                                score: updated_score,
-                                picture_url: r.picture_url,
-                            }),
-                        }
-                    )
+    // const payout = async () => {
+    //     const b = getCurrentBet()
+    //     if (user.id === b.horse_id) {
+    //         // Pay the user who just finished, that the better bet on.
+    //         // Update user information
+    //         let url = `http://localhost:8000/api/users/${user.id}`
+    //         let updated_score = authUser.score + b.amount
+    //         let response = await fetch(url, {
+    //             method: 'PATCH',
+    //             credentials: 'include',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 username: authUser.username,
+    //                 email: authUser.email,
+    //                 score: updated_score,
+    //                 picture_url: authUser.picture_url,
+    //             }),
+    //         })
+    //         console.log("llll", response)
+    //         console.log('horse paid: ', b.better_id)
+    //         fetch(`http://localhost:8000/api/users/${b.better_id}`, {
+    //             credentials: 'include',
+    //             method: 'get',
+    //             dataType: 'json',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         })
+    //             .then((response) => response.json())
+    //             .then((response) => {
+    //                 console.log('kkkkk', response)
+    //                 setUser(response)
+    //                 return response
+    //             })
+    //             .then((r) => {
+    //                 updated_score = r.score + b.amount
+    //                 console.log('fdhaisojfheiow', r.score, b.amount)
+    //                 let response = fetch(
+    //                     `http://localhost:8000/api/users/${b.better_id}`,
+    //                     {
+    //                         method: 'PATCH',
+    //                         credentials: 'include',
+    //                         headers: { 'Content-Type': 'application/json' },
+    //                         body: JSON.stringify({
+    //                             username: r.username,
+    //                             email: r.email,
+    //                             score: updated_score,
+    //                             picture_url: r.picture_url,
+    //                         }),
+    //                     }
+    //                 )
 
-                    return response
-                })
-            // url = `http://localhost:8000/api/users/${b.better_id}`
-            //     .then((response) => {
-            //         console.log("thisresposne", response)
-            //         return response.json()
-            //     })
-            //     .then((data) => {
-            //         console.log(
-            //             'user',
-            //             data.username,
-            //             'email',
-            //             data.email,
-            //             'score',
-            //             updated_score,
-            //             'pic',
-            //             data.picture_url
-            //         )
-            //         let response = fetch(url, {
-            //             method: 'PATCH',
-            //             credentials: 'include',
-            //             headers: { 'Content-Type': 'application/json' },
-            //             body: JSON.stringify({
-            //                 username: data.username,
-            //                 email: data.email,
-            //                 score: updated_score,
-            //                 picture_url: data.picture_url,
-            //             }),
-            //         })
-            //         return response
-            //     })
-            // // Pay better
-            // const better = fetchUserData(b.better_id)
-            // // Update user information
-            // url = `http://localhost:8000/api/users/${b.better_id}`
-            // updated_score = better.score + b.amount
-            // console.log(updated_score)
-            // response = await fetch(url, {
-            //     method: 'PATCH',
-            //     credentials: 'include',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         username: horse.username,
-            //         email: horse.email,
-            //         score: updated_score,
-            //         picture_url: horse.picture_url,
-            //     }),
-            // })
-            // console.log('better paid: ', updated_score)
-        } else {
-            // Pay only the user who just finished
-            const url = `http://localhost:8000/api/users/${user.id}`
-            const updated_score = authUser.score + b.amount
-            // console.log(updated_score)
-            // Update user information
-            const response = await fetch(url, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: authUser.username,
-                    email: authUser.email,
-                    score: updated_score,
-                    picture_url: authUser.picture_url,
-                }),
-            })
-            // console.log(response)
-        }
-    }
+    //                 return response
+    //             })
+    //     } else {
+
+    //         // Pay only the user who just finished
+    //         const url = `http://localhost:8000/api/users/${user.id}`
+    //         const updated_score = authUser.score + b.amount
+    //         console.log(updated_score)
+    //         // console.log(updated_score)
+    //         // Update user information
+    //         const response = await fetch(url, {
+    //             method: 'PATCH',
+    //             credentials: 'include',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 username: authUser.username,
+    //                 email: authUser.email,
+    //                 score: updated_score,
+    //                 picture_url: authUser.picture_url,
+    //             }),
+    //         })
+    //     }
+    //     // // Set bet paid to true UNCOMMENT AFTER TESTING
+    //     // const bet_url = `http://localhost:8000/api/bets/${meetingID}/${b.better_id}`
+    //     // fetch(bet_url, {
+    //     //     method: 'PATCH',
+    //     //     credentials: 'include',
+    //     //     headers: { 'Content-Type': 'application/json' },
+    //     // })
+    // }
 
     const updateAttendee = async (
-        meetingId,
         attendeeId,
-        attendeePage,
         placeAtLastFinish,
         Finished
     ) => {
-        const url = `http://localhost:8000/api/attendees/page`
-        const bodyData = JSON.stringify({
-            meeting_id: meetingId,
-            attendee_id: attendeeId,
-            attendee_page: attendeePage,
-            place_at_last_finish: placeAtLastFinish,
-            finished: Finished,
-        })
-
-        const response = await fetch(url, {
+        const url = `http://localhost:8000/api/finish/${meetingID}/${attendeeId}`
+        let response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: bodyData
+            body: JSON.stringify({
+                place_at_last_finish: placeAtLastFinish,
+                finished: Finished,
+            }),
         })
-        if (response.ok) {
-            setAttendee(await response.json())
-            setPageInput(0)
-        }
     }
 
     const updateAttendeePage = async (attendeeID) => {
@@ -454,6 +473,7 @@ export default function MeetingPage() {
                 picture_url: authUser.picture_url,
             }),
         })
+        setAuthUser(await response.json())
     }
 
     const updateClubScore = async (input) => {
@@ -499,7 +519,8 @@ export default function MeetingPage() {
     useEffect(() => {
         fetchAttendees()
         fetchAttendee()
-    }, [pageInput])
+    // }, [pageInput])
+    }, [])
     // Used in user list
     const getAttendeePage = (userId) => {
         const a = attendees.find((a) => a.attendee_id === userId)

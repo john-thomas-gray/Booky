@@ -55,3 +55,13 @@ def list_bets_by_meeting(
     if bets is None:
         response.status_code = 404
     return bets
+
+
+@router.patch("/{meeting_id}/{better_id}")
+def bet_paid(
+    meeting_id: int,
+    better_id: int,
+    repo: BetQueries = Depends()
+):
+    paid_bet = repo.bet_paid(meeting_id, better_id)
+    return paid_bet
