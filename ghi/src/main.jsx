@@ -9,7 +9,7 @@ import App from './App'
 import AuthProvider from './components/AuthProvider'
 import CreateMeetingForm from './components/CreateMeetingForm'
 import ListMeetings from './components/ListMeetings'
-
+import FriendRequestPage from './components/FriendRequestPage'
 import './index.css'
 import UserList from './components/UserList'
 import Home from './components/Home'
@@ -101,6 +101,10 @@ const router = createBrowserRouter(
                 {
                     path: '/bets/:meetingID',
                     element: <Betting />
+                },
+                {
+                    path: '/requests/',
+                    element: <FriendRequestPage />
                 },
             ],
         },

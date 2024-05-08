@@ -83,7 +83,7 @@ class ClubQueries:
 
         return club
 
-    def delete_club(self, club_id) -> bool:
+    def delete_club(self, club_id: int) -> bool:
         """
         Deletes club from the database
         """
@@ -102,9 +102,8 @@ class ClubQueries:
 
     def list_clubs(self) -> Optional[List[ClubResponse]]:
         """
-        Gets a club from the database by id
+        Gets all clubs from the database
 
-        Returns None if the club isn't found
         """
         try:
             with pool.connection() as conn:

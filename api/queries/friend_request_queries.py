@@ -5,7 +5,7 @@ import os
 import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
-# from typing import List
+from typing import Optional, List
 from models.friend_request import FriendRequestResponse
 from utils.exceptions import UserDatabaseException
 
@@ -58,3 +58,53 @@ class FriendRequestQueries:
             print(e)
             raise UserDatabaseException(f"Error adding friend with id: {user_id}")
         return request
+
+    def deny_request(self, user_id: int, friend_id: int) -> bool:
+        """
+        Deletes club from the database
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        DELETE FROM request
+                        WHERE user_id = %s
+                        AND friend_id = %s;
+
+                        """,
+                        [
+                            user_id,
+                            friend_id
+                        ],
+                    )
+
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException('Could not delete relationship')
+        return True
+
+    def list_requests(self) -> Optional[List[FriendRequestResponse]]:
+        """
+        Gets all friend requests from the database
+
+        """
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(FriendRequestResponse)) as cur:
+                    cur.execute(
+                      """
+                        SELECT
+                          *
+                        FROM request
+                        ORDER BY user_id;
+
+                      """,
+                    )
+                    requests = cur.fetchall()
+                    if not requests:
+                        return None
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException('Error getting requests')
+        return requests

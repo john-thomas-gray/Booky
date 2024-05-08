@@ -84,5 +84,7 @@ if (user) {
 else{
     return(
 <>
+        <div><ExplorePage></ExplorePage></div>
 <h1 className="m3 mt-3">You are not signed in!</h1>
+            <div><Footer></Footer></div>
 </>)}}

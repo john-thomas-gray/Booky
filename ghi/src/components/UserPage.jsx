@@ -1,7 +1,7 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 
 export default function UserPage() {
@@ -12,7 +12,7 @@ export default function UserPage() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { user } = useAuthService();
     const [friends, setFriends] = useState([]);
-
+    const [requests, setRequests] = useState([]);
 
     const handleRemoveFriend = async (val) => {
         removeFriend(val)
@@ -20,6 +20,15 @@ export default function UserPage() {
 
     }
 
+    const fetchRequests = async () => {
+        const url = 'http://localhost:8000/api/friend/requests'
+        const response = await fetch(url, {credentials: "include"})
+        if (response.ok) {
+            const data = await response.json()
+            setRequests(data.filter((request) =>
+            request.user_id == user.id))
+        }
+    }
     const removeFriend = async (val) => {
         const url = `http://localhost:8000/api/friend/${user.id}/${val}`
         const fetchOptions = {
@@ -93,6 +102,7 @@ export default function UserPage() {
         fetchClubData()
         fetchMeetingData()
         fetchFriends()
+        fetchRequests()
     }, []);
 
     const currentMeetings = meetings.filter(
@@ -184,7 +194,9 @@ export default function UserPage() {
                     </table>
                 </div>
             <div className='friend-list'>
-                <h2>{pageOwner.username}'s Friends</h2>
+                {user && user.id == pageOwnerID &&
+                <Link to={"/requests"} exact="true" className='link'><h4>Friend Requests ({requests.length})</h4></Link>}
+                <h3>{pageOwner.username}'s Friends</h3>
                 {friends.length > 0 ? (
                     <list>
                         {friends.map((friend) => (

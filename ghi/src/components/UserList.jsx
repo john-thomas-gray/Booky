@@ -8,49 +8,64 @@ export default function UserList() {
     const [filteredUsers, setFilteredUsers] = useState("");
     const {user} = useAuthService();
     // const [friendID, setFriendID] = useState('');
-    const handleFriends = async (val) => {
-        addFriend(val)
-        addOtherFriend(val)
-
+    const grabID = (val) => {
+      handleFriendRequest(val)
     }
 
 
-    const addFriend = async (val) => {
-        const data = {}
-        data.member_id = user.id
-        data.friend_id = val
-        const url = 'http://localhost:8000/api/friend/'
-        const fetchOptions = {
-          method: 'post',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        credentials: 'include',
-        };
-        const response = await fetch(url, fetchOptions);
-        if (response.ok) {
-          console.log("request went through")
-        }
-    }
-    const addOtherFriend = async (val) => {
-        const data = {}
-        data.member_id = val
+
+    const handleFriendRequest = async (val) => {
+        const data = {};
+        data.user_id = val
         data.friend_id = user.id
-        const url = 'http://localhost:8000/api/friend/'
-        const fetchOptions = {
-          method: 'post',
+        data.friend_name = user.username
+        const url = `http://localhost:8000/api/friend/request`
+
+        const fetchConfig = {
+          method: "post",
           body: JSON.stringify(data),
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-        credentials: 'include',
+          credentials: "include"
         };
-        const response = await fetch(url, fetchOptions);
+        const response = await fetch(url, fetchConfig)
+
         if (response.ok) {
-          console.log("request went through")
+          console.log('request went through')
         }
+
+
     }
+    async function handleFormSubmit(event){
+    event.preventDefault()
+    const data = {};
+    data.club_id = Number(clubId);
+    data.book_title = bookTitle;
+    data.active = active;
+    console.log("data", data)
+
+    const meetingUrl = 'http://localhost:8000/api/meeting/create/'
+    const fetchConfig = {
+          method: "post",
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: "include"
+        };
+      const response = await fetch(meetingUrl, fetchConfig);
+      console.log("response", response)
+
+
+      if (response.ok) {
+        setClubId('');
+        setBookTitle('');
+        setActive('');
+      }
+  }
+
+
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/users/'
         const response = await fetch(url)
@@ -63,7 +78,7 @@ export default function UserList() {
     useEffect(() => {
         fetchData()
     }, [])
-
+if(user){
     return (
         <>
         <div><ExplorePage></ExplorePage></div>
@@ -101,7 +116,7 @@ export default function UserList() {
         }).map((user) => {
                         return (
                             <tr key={user.id}>
-                                <td>{user.username}    <button onClick={() => handleFriends(user.id)}>Add Friend</button></td>
+                                <td>{user.username}   <button onClick={() => grabID(user.id)}>Friend Request</button></td>
                                 <td>{user.email}</td>
                                 <td>{user.score}</td>
                                 <td>
@@ -126,3 +141,10 @@ export default function UserList() {
         </>
     )
 }
+else {
+     return(
+<>
+        <div><ExplorePage></ExplorePage></div>
+<h1 className="m3 mt-3">You are not signed in!</h1>
+            <div><Footer></Footer></div>
+</>)}}
