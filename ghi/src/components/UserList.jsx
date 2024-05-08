@@ -1,10 +1,56 @@
 import React, { useState, useEffect } from 'react'
 import ExplorePage from './ExplorePage';
 import Footer from './Footer';
-export default function UserList() {
-    const [users, setUsers] = useState([])
-    const [filteredUsers, setFilteredUsers] = useState("");
+import useAuthService from '../hooks/useAuthService'
 
+export default function UserList() {
+    const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState("");
+    const {user} = useAuthService();
+    // const [friendID, setFriendID] = useState('');
+    const handleFriends = async (val) => {
+        addFriend(val)
+        addOtherFriend(val)
+
+    }
+
+
+    const addFriend = async (val) => {
+        const data = {}
+        data.member_id = user.id
+        data.friend_id = val
+        const url = 'http://localhost:8000/api/friend/'
+        const fetchOptions = {
+          method: 'post',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include',
+        };
+        const response = await fetch(url, fetchOptions);
+        if (response.ok) {
+          console.log("request went through")
+        }
+    }
+    const addOtherFriend = async (val) => {
+        const data = {}
+        data.member_id = val
+        data.friend_id = user.id
+        const url = 'http://localhost:8000/api/friend/'
+        const fetchOptions = {
+          method: 'post',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include',
+        };
+        const response = await fetch(url, fetchOptions);
+        if (response.ok) {
+          console.log("request went through")
+        }
+    }
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/users/'
         const response = await fetch(url)
@@ -55,7 +101,7 @@ export default function UserList() {
         }).map((user) => {
                         return (
                             <tr key={user.id}>
-                                <td>{user.username}</td>
+                                <td>{user.username}    <button onClick={() => handleFriends(user.id)}>Add Friend</button></td>
                                 <td>{user.email}</td>
                                 <td>{user.score}</td>
                                 <td>

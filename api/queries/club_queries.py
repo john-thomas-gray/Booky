@@ -113,7 +113,8 @@ class ClubQueries:
                       """
                         SELECT
                           *
-                        FROM clubs;
+                        FROM clubs
+                        ORDER BY score DESC;
 
                       """,
                     )

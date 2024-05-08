@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import ExplorePage from './ExplorePage';
 import Footer from './Footer';
 import '../App.css'
+import useAuthService from '../hooks/useAuthService'
 
 function GoogleBooksApp() {
     const [query, setQuery] = useState('');
     const [books, setBooks] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const {user} = useAuthService();
 
         const searchBooks = async (title) => {
         const url = `http://localhost:8000/getbooks/${title}`;
@@ -56,11 +58,10 @@ function GoogleBooksApp() {
                         {books && books.items.map(book => (
 
                             <li key={book.id}>
+                            {user &&
+                               <Link aria-current="page" to="/meetings/" state= {book} exact="true" className='link'>Create a meeting</Link> }
 
-                               <Link aria-current="page" to="/meetings/" state= {book} exact="true">{book.volumeInfo.title}</Link>
-
-
-                                 by {book.volumeInfo.authors?.join(', ')}
+                                {book.volumeInfo.title} by {book.volumeInfo.authors?.join(', ')}
 
                             </li>
                         ))}

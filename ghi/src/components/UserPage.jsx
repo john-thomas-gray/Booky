@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom';
 
+
 export default function UserPage() {
     const { pageOwnerID } = useParams();
     const [pageOwner, setPageOwner] = useState([]);
@@ -10,6 +11,46 @@ export default function UserPage() {
     const [meetings, setMeetings] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const { user } = useAuthService();
+    const [friends, setFriends] = useState([]);
+
+
+    const handleRemoveFriend = async (val) => {
+        removeFriend(val)
+        removeOtherFriend(val)
+
+    }
+
+    const removeFriend = async (val) => {
+        const url = `http://localhost:8000/api/friend/${user.id}/${val}`
+        const fetchOptions = {
+          method: 'delete',
+          body: JSON.stringify({}),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include',
+        };
+        const response = await fetch(url, fetchOptions);
+        if (response.ok) {
+          fetchFriends();
+        }
+    }
+        const removeOtherFriend = async (val) => {
+        const url = `http://localhost:8000/api/friend/${val}/${user.id}`
+        const fetchOptions = {
+          method: 'delete',
+          body: JSON.stringify({}),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include',
+        };
+        const response = await fetch(url, fetchOptions);
+        if (response.ok) {
+          console.log("request went through")
+        }
+    }
+
 
     const fetchPageOwnerData = async () => {
         const url = `http://localhost:8000/api/users/${pageOwnerID}`
@@ -38,10 +79,20 @@ export default function UserPage() {
       }
     };
 
+    const fetchFriends = async () => {
+        const url = `http://localhost:8000/api/${pageOwnerID}/friends`
+        const response = await fetch(url)
+        if (response.ok){
+            const data = await response.json()
+            setFriends(data)
+        }
+    };
+
     useEffect(() => {
         fetchPageOwnerData()
         fetchClubData()
         fetchMeetingData()
+        fetchFriends()
     }, []);
 
     const currentMeetings = meetings.filter(
@@ -132,7 +183,20 @@ export default function UserPage() {
                         </tbody>
                     </table>
                 </div>
+            <div className='friend-list'>
+                <h2>{pageOwner.username}'s Friends</h2>
+                {friends.length > 0 ? (
+                    <list>
+                        {friends.map((friend) => (
+                            <li>{friend.friend_username}  {user && user.id == pageOwnerID && <button onClick={() => handleRemoveFriend(friend.friend_id)}>Remove Friend</button>}</li>
+                        ))}
+                    </list>
 
+
+                ):(
+                    <div>No friends...</div>
+                )}
+            </div>
                 <div className="currentMeetings">
                     <h2>Current Meetings</h2>
                     {currentMeetings.length > 0 ? (

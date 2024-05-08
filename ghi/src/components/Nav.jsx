@@ -81,16 +81,6 @@ export default function Nav() {
                 <div>
                     <NavLink
                         aria-current="page"
-                        to="/book"
-                        exact="true"
-                        className="link"
-                    >
-                        Create Book
-                    </NavLink>
-                </div>
-                <div>
-                    <NavLink
-                        aria-current="page"
                         to="/explore"
                         exact="true"
                         className="link"

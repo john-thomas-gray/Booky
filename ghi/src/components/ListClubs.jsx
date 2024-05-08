@@ -44,6 +44,7 @@ if (user) {
                     <tr>
 
                         <th>Club Name</th>
+                        <th>Score</th>
                         <th>State</th>
                         <th>Country</th>
 
@@ -66,6 +67,7 @@ if (user) {
                                 <td><NavLink aria-current="page" to={"/clubs/" + club.club_id} exact="true" className='link'>
                                         {club.name}
                                     </NavLink></td>
+                                <td>{club.score}</td>
                                 <td>{club.state}</td>
                                 <td>{club.country}</td>
 

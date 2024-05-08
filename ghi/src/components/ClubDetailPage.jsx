@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
+import Footer from './Footer'
+
 
 export default function ClubDetailPage() {
     const [club, setClub] = useState("")
@@ -114,7 +116,7 @@ if (user) {
     return (
         <>
             {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>}
-            <h1>{club.name}</h1>
+            <h1 className='explore-header'>{club.name}</h1>
             <button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button>
 
             <table className="table table-striped">
@@ -140,7 +142,7 @@ if (user) {
                     <>
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
-                        <NavLink aria-current="page" to="/meetings" exact="true" className='link'>
+                        <NavLink aria-current="page" to="/book" exact="true" className='link'>
                             Create Meeting
                         </NavLink>
                     </div>
@@ -166,7 +168,7 @@ if (user) {
                     })}
                 </tbody>
             </table>
-
+            <Footer/>
         </>
     )
 }
