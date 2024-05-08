@@ -1,11 +1,12 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
-import { NavLink, useParams, useOutletContext } from 'react-router-dom'
+import { Navigate, useParams, useOutletContext } from 'react-router-dom'
 
 export default function Betting(){
     const { meetingID } = useParams()
     // Bets
     const [selectedAttendeeId, setSelectedAttendeeId] = useState('')
+    const [betPlaced, setBetPlaced] = useState(false);
     const [betAmount, setBetAmount] = useState(0)
     const [attendees, setAttendees] = useState([])
     const [users, setUsers] = useState([])
@@ -34,6 +35,7 @@ export default function Betting(){
         if (response.ok) {
             setSelectedAttendeeId('')
             setBetAmount(0)
+            setBetPlaced(true)
         }
     }
 
@@ -84,6 +86,7 @@ export default function Betting(){
 
     return (
         <>
+            {betPlaced && <Navigate to={`/meetings/${meetingID}`} />}
             <div id="placeYourBet">
                 <form onSubmit={handleBetSubmit}>
                     <div>

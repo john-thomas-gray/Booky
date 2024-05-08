@@ -1,5 +1,3 @@
-
-
 .App {
     text-align: center;
     background-color: #282c34;
@@ -27,7 +25,6 @@ div {
     display: flex;
     flex-direction: row;
     text-decoration: none;
-
 }
 
 .nav {

@@ -2,8 +2,8 @@ import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { NavLink, useParams, useOutletContext } from 'react-router-dom'
 
-export default function MeetingPage(){
-    const {deleteSuccess, setDeleteSuccess} = useOutletContext()
+export default function MeetingPage() {
+    const { deleteSuccess, setDeleteSuccess } = useOutletContext()
     const [club, setClub] = useState({})
     const [book, setBook] = useState({})
     // Meetings
@@ -12,8 +12,8 @@ export default function MeetingPage(){
     // Score
     const [pageInput, setPageInput] = useState(0)
     // Attendees
-    const [attendeeTable, setAttendeeTable] = useState({})
-    const [actualAttendees, setActualAttendees] = useState([])
+    const [attendee, setAttendee] = useState({})
+    const [attendees, setAttendees] = useState([])
     // User Info
     const { user } = useAuthService()
     const [authUser, setAuthUser] = useState({})
@@ -83,23 +83,23 @@ export default function MeetingPage(){
     }
 
     const deleteMeeting = async (id) => {
-        const url = `http://localhost:8000/api/meeting/${id}/`;
+        const url = `http://localhost:8000/api/meeting/${id}/`
         const fetchConfig = {
-        method: 'delete',
-        headers: {
-            'Content-Type' : 'application/json',
-        },
-        body: JSON.stringify({}),
-        credentials: "include",
-    };
-        const response = await fetch(url,fetchConfig );
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+            credentials: 'include',
+        }
+        const response = await fetch(url, fetchConfig)
         if (response.ok) {
-        (setDeleteSuccess(!deleteSuccess))
+            setDeleteSuccess(!deleteSuccess)
         }
         if (!response.ok) {
-        console.error('http error:', response.status);
-    }};
-
+            console.error('http error:', response.status)
+        }
+    }
 
     const fetchUsers = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/users`
@@ -110,12 +110,12 @@ export default function MeetingPage(){
         }
     }
 
-    const fetchActualAttendees = async () => {
+    const fetchAttendees = async () => {
         const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setActualAttendees(data)
+            setAttendees(data)
         }
     }
 
@@ -144,12 +144,12 @@ export default function MeetingPage(){
             })
     }
 
-    const fetchAttendeeTable = async () => {
+    const fetchAttendee = async () => {
         const url = `http://localhost:8000/api/attendees/page/${meetingID}/${user.id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setAttendeeTable(data)
+            setAttendee(data)
         }
     }
 
@@ -167,13 +167,13 @@ export default function MeetingPage(){
     }
 
     const handleUpdatePage = () => {
-        updateAttendeePage(attendeeTable.attendee_id).then(() => {
+        updateAttendeePage(attendee.attendee_id).then(() => {
             updateUserScore(pageInput)
             updateClubScore(pageInput)
         })
     }
 
-    // const updateAttendeeTable = async (
+    // const updateAttendee = async (
     //     meetingId,
     //     attendeeId,
     //     attendeePage,
@@ -196,7 +196,7 @@ export default function MeetingPage(){
     //         body: bodyData
     //     })
     //     if (response.ok) {
-    //         setAttendeeTable(await response.json())
+    //         setAttendee(await response.json())
     //         setPageInput(0)
     //     }
     // }
@@ -207,8 +207,8 @@ export default function MeetingPage(){
             meeting_id: meetingID,
             attendee_id: attendeeID,
             attendee_page: pageInput,
-            place_at_last_finish: attendeeTable.place_at_last_finish,
-            finished: attendeeTable.finished,
+            place_at_last_finish: attendee.place_at_last_finish,
+            finished: attendee.finished,
         })
 
         const response = await fetch(url, {
@@ -219,12 +219,12 @@ export default function MeetingPage(){
                 meeting_id: meetingID,
                 attendee_id: user.id,
                 attendee_page: pageInput,
-                place_at_last_finish: attendeeTable.place_at_last_finish,
-                finished: attendeeTable.finished,
+                place_at_last_finish: attendee.place_at_last_finish,
+                finished: attendee.finished,
             }),
         })
         if (response.ok) {
-            setAttendeeTable(await response.json())
+            setAttendee(await response.json())
             setPageInput(0)
         }
     }
@@ -233,13 +233,13 @@ export default function MeetingPage(){
     //     let attendees_finished = []
     //     let attendees_unfinished = []
     //     // Split attendees into finished...
-    //     attendees_finished = actualAttendees.filter(
+    //     attendees_finished = attendees.filter(
     //         (a) => a.meeting_id === parseInt(meetingID) && a.finished === true
     //     )
     //     console.log('finished', attendees_finished)
     //     let rank = attendees_finished.length
     //     /// ...and unfinished
-    //     attendees_unfinished = actualAttendees
+    //     attendees_unfinished = attendees
     //         .filter(
     //             (a) =>
     //                 a.meeting_id === parseInt(meetingID) && a.finished === false
@@ -255,7 +255,7 @@ export default function MeetingPage(){
     //             a.finished = true
     //         }
     //         // Update the database
-    //         updateAttendeeTable(meetingID, a.attendee_id, a.attendee_page, a.place_at_last_finish, a.finished)
+    //         updateAttendee(meetingID, a.attendee_id, a.attendee_page, a.place_at_last_finish, a.finished)
     //         console.log(a.attendee_id, rank)
     //     })
     // }
@@ -263,10 +263,10 @@ export default function MeetingPage(){
     const updateUserScore = async (input) => {
         const url = `http://localhost:8000/api/users/${user.id}`
         console.log('userscore', authUser.score)
-        console.log('pagecount', attendeeTable.attendee_page)
+        console.log('pagecount', attendee.attendee_page)
         console.log('input', input)
         const updated_score =
-            authUser.score + (input - attendeeTable.attendee_page)
+            authUser.score + (input - attendee.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -285,7 +285,7 @@ export default function MeetingPage(){
 
     const updateClubScore = async (input) => {
         const url = `http://localhost:8000/api/clubs/${club.club_id}`
-        const updated_score = club.score + (input - attendeeTable.attendee_page)
+        const updated_score = club.score + (input - attendee.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -308,9 +308,9 @@ export default function MeetingPage(){
     useEffect(() => {
         fetchMeetingData()
         fetchAuthUserData()
-        fetchAttendeeTable()
+        fetchAttendee()
         deleteMeeting()
-        fetchActualAttendees()
+        fetchAttendees()
         fetchUsers()
     }, [])
 
@@ -318,15 +318,18 @@ export default function MeetingPage(){
         fetchMeetingData()
         fetchUsers()
         // // Runs more often than it should
-        // if (attendeeTable.attendee_page === book.page_count) {
+        // if (attendee.attendee_page === book.page_count) {
         //     saveRanksEachFinish()
         // }
-    }, [actualAttendees, attendeeTable])
+    }, [attendees, attendee])
 
-
+    useEffect(() => {
+        fetchAttendees()
+        fetchAttendee()
+    }, [pageInput])
     // Used in user list
     const getAttendeePage = (userId) => {
-        const attendee = actualAttendees.find(
+        const attendee = attendees.find(
             (attendee) => attendee.attendee_id === userId
         )
         return attendee ? attendee.attendee_page : 0 // Default to 0 if attendee not found
@@ -341,11 +344,11 @@ export default function MeetingPage(){
             <h1>
                 {club.name} - {meeting.book_title}
             </h1>
-            {attendeeTable.attendee_page < book.page_count ? (
+            {attendee.attendee_page < book.page_count ? (
                 <div className="updateProgress">
                     <h2>Update Your Progress</h2>
                     <div className="currentProgress">
-                        {attendeeTable.attendee_page}/{book.page_count}
+                        {attendee.attendee_page}/{book.page_count}
                     </div>
                     <input
                         type="number"
@@ -412,12 +415,15 @@ export default function MeetingPage(){
             </div>
 
             <div>
-                <button onClick={() => joinMeeting(meeting.id)}>
-                    join meeting
-                </button>
-                <button onClick={() => leaveMeeting(meeting.id)}>
-                    leave meeting
-                </button>
+                {attendees.some((a) => a.attendee_id === user.id) ? (
+                    <button onClick={() => leaveMeeting(meeting.id)}>
+                        Leave Meeting
+                    </button>
+                ) : (
+                    <button onClick={() => joinMeeting(meeting.id)}>
+                        Join Meeting
+                    </button>
+                )}
             </div>
             <div>
                 {user.id == club.owner_id && (

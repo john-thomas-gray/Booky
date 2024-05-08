@@ -1,0 +1,30 @@
+.userPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.userInfo {
+    align-self: flex-start;
+}
+
+.scoreDisplay {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    height: 100%; */
+}
+
+.clubList {
+    /* align-self: flex-end; */
+}
+
+.currentMeetings {
+    align-self: center;
+}
+
+.pastMeetings {
+    align-self: flex-end;
+}
