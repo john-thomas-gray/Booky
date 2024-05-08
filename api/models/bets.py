@@ -12,3 +12,4 @@ class Bet(BaseModel):
     better_id: int
     horse_id: int
     amount: int
+    paid: bool

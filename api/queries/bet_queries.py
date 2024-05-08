@@ -22,7 +22,8 @@ class BetQueries:
         meeting_id: int,
         better_id: int,
         horse_id: int,
-        amount: int
+        amount: int,
+        paid: bool
     ):
         try:
             with pool.connection() as conn:
@@ -30,14 +31,14 @@ class BetQueries:
                     cur.execute(
                         """
                         INSERT INTO bets (
-                        meeting_id, better_id, horse_id, amount
+                        meeting_id, better_id, horse_id, amount, paid
                         )
                         VALUES (
-                        %s, %s, %s, %s
+                        %s, %s, %s, %s, %s
                         )
-                        RETURNING meeting_id, better_id, horse_id, amount;
+                        RETURNING meeting_id, better_id, horse_id, amount, paid;
                         """,
-                        [meeting_id, better_id, horse_id, amount]
+                        [meeting_id, better_id, horse_id, amount, paid]
                     )
                     bet = cur.fetchone()
                     if not bet:
@@ -56,7 +57,7 @@ class BetQueries:
                     cur.execute(
                         """
                         SELECT
-                        meeting_id, better_id, horse_id, amount
+                        meeting_id, better_id, horse_id, amount, paid
                         FROM bets
                         WHERE meeting_id = %s AND better_id = %s
                         """,
@@ -78,7 +79,7 @@ class BetQueries:
                 with conn.cursor(row_factory=class_row(Bet)) as cur:
                     cur.execute(
                       """
-                      SELECT meeting_id, better_id, horse_id, amount
+                      SELECT meeting_id, better_id, horse_id, amount, paid
                       FROM bets
                       WHERE meeting_id = %s;
                       """,

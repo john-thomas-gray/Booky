@@ -19,7 +19,8 @@ export default function Betting(){
             meeting_id: parseInt(meetingID),
             better_id: parseInt(user.id),
             horse_id: parseInt(selectedAttendeeId),
-            amount: parseInt(betAmount)
+            amount: parseInt(betAmount),
+            paid: false
         }
         console.log({data})
         const fetchConfig = {
@@ -56,6 +57,19 @@ export default function Betting(){
             setAttendees(data)
         }
     }
+    // const fetchAttendees = () => {
+    //     const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`
+    //     const fetchPromise = fetch(url, { credentials: 'include' })
+    //     fetchPromise
+    //         .then((response) => {
+    //             return response.json()
+    //         })
+    //         .then((data) => {
+    //             const attendee_pool = data.filter((a) => !a.finished);
+    //             console.log("!!!", attendee_pool[0].attendee_id)
+    //             setSelectedAttendeeId(attendee_pool[0].attendee_id)
+    //             return data
+    //         })
 
     const fetchUsers = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/users`

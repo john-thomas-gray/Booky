@@ -61,10 +61,10 @@ class UserNew(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    username: str
-    email: str
-    score: int
-    picture_url: str
+    username: Optional[str]
+    email: Optional[str]
+    score: Optional[int]
+    picture_url: Optional[str]
 
 
 class MemberRequest(BaseModel):

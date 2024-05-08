@@ -16,7 +16,7 @@ from queries.attendee_queries import (
 from models.users import UserResponse
 
 # from utils.exceptions import ClubDatabaseException
-from models.attendees import AttendeeResponse, AttendeeUpdate
+from models.attendees import AttendeeResponse, AttendeeUpdate, FinishUpdate
 from utils.authentication import (
     try_get_jwt_user_data,
 )
@@ -92,6 +92,16 @@ def update_attendee(
         attendee.finished
     )
     return updated_attendee
+
+
+@router.patch("/finish/{meeting_id}/{attendee_id}")
+def finish_attendee(
+    meeting_id: int,
+    attendee_id: int,
+    attendee: FinishUpdate,
+    repo: AttendeeQueries = Depends()
+) -> bool:
+    return repo.finish_update(meeting_id, attendee_id, attendee)
 
 
 @router.get("/page/{meeting_id}/{attendee_id}")

@@ -7,7 +7,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional, List
-from models.attendees import AttendeeResponse, AttendeeUpdate
+from models.attendees import AttendeeResponse, AttendeeUpdate, FinishUpdate
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -71,6 +71,30 @@ class AttendeeQueries:
                     return updated_attendee_page
         except psycopg.Error as e:
             raise UserDatabaseException(f"Error updating user attendee_page in meeting: {e}")
+
+    def finish_update(self, meeting_id: int, attendee_id: int, attendee: FinishUpdate) -> AttendeeResponse:
+        print("meeting", meeting_id, "attendee", attendee_id, "place", attendee.place_at_last_finish, "finish", attendee.finished)
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE meetings_attendees
+                        SET place_at_last_finish = %s
+                            , finished = %s
+                        WHERE meeting_id = %s AND attendee_id = %s
+                        """,
+                        [
+                            attendee.place_at_last_finish,
+                            attendee.finished,
+                            meeting_id,
+                            attendee_id
+                        ]
+                    )
+                    return True
+        except psycopg.Error as e:
+            print(e)
+            raise UserDatabaseException("Error updating attendee finish")
 
     def get_attendee(self, meeting_id: int, user_id: int) -> Optional[AttendeeResponse]:
         """

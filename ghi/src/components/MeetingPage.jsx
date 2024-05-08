@@ -17,7 +17,10 @@ export default function MeetingPage() {
     // User Info
     const { user } = useAuthService()
     const [authUser, setAuthUser] = useState({})
+    const [User, setUser] = useState({})
     const [users, setUsers] = useState([])
+    // Bets
+    const [bets, setBets] = useState([])
 
     const fetchMeetingData = () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}`
@@ -119,6 +122,15 @@ export default function MeetingPage() {
         }
     }
 
+    const fetchBets = async () => {
+        const url = `http://localhost:8000/api/bets/${meetingID}`
+        const response = await fetch(url, { credentials: 'include' })
+        if (response.ok) {
+            const data = await response.json()
+            setBets(data)
+        }
+    }
+
     const fetchClubData = async (data) => {
         const url = `http://localhost:8000/api/clubs/${data.club_id}`
         const response = await fetch(url, { credentials: 'include' })
@@ -162,48 +174,243 @@ export default function MeetingPage() {
         }
     }
 
+    // const fetchUserData = async (user_id) => {
+    //     const url = `http://localhost:8000/api/users/${user_id}`
+    //     // const response = await fetch(url, { credentials: 'include' })
+    //     // if (response.ok) {
+    //     //     console.log("working: ", response)
+    //     //     response.then((data) => {
+    //     //         return data.json()
+    //     //     })
+    //     //     const data = await response.json()
+    //     //     // setAuthUser(data)
+    //     // }
+    //     fetch(url, {
+    //         credentials: 'include',
+    //         method: 'get',
+    //         dataType: 'json',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //     }).then(response => response.json())
+    //     .then((response => {
+    //         setUser(response)
+    //         return response
+    //     }))
+    //     return response
+    // }
+
     const handlePageInput = (event) => {
-        let page = event.target.value;
-        if (page > book.page_count) {
-            page = book.page_count
-        }
-        setPageInput(Number(page))
+        const page = Number(event.target.value)
+        setPageInput(page)
     }
 
     const handleUpdatePage = () => {
+        const data = pageInput
         updateAttendeePage(attendee.attendee_id).then(() => {
-            updateUserScore(pageInput)
-            updateClubScore(pageInput)
+            updateUserScore(data)
+            updateClubScore(data)
+        }).then( () => {
+            if(data == book.page_count)
+            {
+                finish()
+            }
         })
     }
 
-    // const updateAttendee = async (
-    //     meetingId,
-    //     attendeeId,
-    //     attendeePage,
-    //     placeAtLastFinish,
-    //     Finished
-    // ) => {
-    //     const url = `http://localhost:8000/api/attendees/page`
-    //     const bodyData = JSON.stringify({
-    //         meeting_id: meetingId,
-    //         attendee_id: attendeeId,
-    //         attendee_page: attendeePage,
-    //         place_at_last_finish: placeAtLastFinish,
-    //         finished: Finished,
-    //     })
+    const finish = () => {
+        // saveRanksEachFinish();
+        payout()
+    }
 
-    //     const response = await fetch(url, {
-    //         method: 'PATCH',
-    //         credentials: 'include',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: bodyData
-    //     })
-    //     if (response.ok) {
-    //         setAttendee(await response.json())
-    //         setPageInput(0)
-    //     }
-    // }
+    const saveRanksEachFinish = async () => {
+        let attendees_finished = []
+        let attendees_unfinished = []
+        // Split attendees into finished...
+        attendees_finished = attendees.filter(
+            (a) => a.meeting_id === parseInt(meetingID) && a.finished === true
+        )
+        console.log('finished', attendees_finished)
+        let rank = attendees_finished.length
+        /// ...and unfinished
+        attendees_unfinished = attendees
+            .filter(
+                (a) =>
+                    a.meeting_id === parseInt(meetingID) && a.finished === false
+            )
+            .sort((a, b) => b.attendee_page - a.attendee_page)
+        console.log('unfinished', attendees_unfinished)
+        // Set rank at time of finish
+        attendees_unfinished.forEach((a) => {
+            rank++
+            console.log('attendee: ', rank, a)
+            a.place_at_last_finish = rank
+            if (a.attendee_page === book.page_count) {
+                a.finished = true
+            }
+            // Update the database
+            updateAttendee(
+                meetingID,
+                a.attendee_id,
+                a.attendee_page,
+                a.place_at_last_finish,
+                a.finished
+            )
+            console.log(a.attendee_id, rank)
+        })
+    }
+
+    const payout = async () => {
+        const b = getCurrentBet()
+        if (user.id === b.horse_id) {
+            // Pay the user who just finished, that the better bet on.
+            // Update user information
+            let url = `http://localhost:8000/api/users/${user.id}`
+            let updated_score = authUser.score + b.amount
+            console.log(updated_score)
+            let response = await fetch(url, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: authUser.username,
+                    email: authUser.email,
+                    score: updated_score,
+                    picture_url: authUser.picture_url,
+                }),
+            })
+            console.log('horse paid: ', updated_score)
+            fetch(`http://localhost:8000/api/users/${b.better_id}`, {
+                credentials: 'include',
+                method: 'get',
+                dataType: 'json',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('kkkkk', response)
+                    setUser(response)
+                    return response
+                })
+                .then((r) => {
+                    console.log('fdhaisojfheiow', r)
+                    updated_score = r.score + b.amount
+                    let response = fetch(
+                        `http://localhost:8000/api/users/${b.better_id}`,
+                        {
+                            method: 'PATCH',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: r.username,
+                                email: r.email,
+                                score: updated_score,
+                                picture_url: r.picture_url,
+                            }),
+                        }
+                    )
+
+                    return response
+                })
+            // url = `http://localhost:8000/api/users/${b.better_id}`
+            //     .then((response) => {
+            //         console.log("thisresposne", response)
+            //         return response.json()
+            //     })
+            //     .then((data) => {
+            //         console.log(
+            //             'user',
+            //             data.username,
+            //             'email',
+            //             data.email,
+            //             'score',
+            //             updated_score,
+            //             'pic',
+            //             data.picture_url
+            //         )
+            //         let response = fetch(url, {
+            //             method: 'PATCH',
+            //             credentials: 'include',
+            //             headers: { 'Content-Type': 'application/json' },
+            //             body: JSON.stringify({
+            //                 username: data.username,
+            //                 email: data.email,
+            //                 score: updated_score,
+            //                 picture_url: data.picture_url,
+            //             }),
+            //         })
+            //         return response
+            //     })
+            // // Pay better
+            // const better = fetchUserData(b.better_id)
+            // // Update user information
+            // url = `http://localhost:8000/api/users/${b.better_id}`
+            // updated_score = better.score + b.amount
+            // console.log(updated_score)
+            // response = await fetch(url, {
+            //     method: 'PATCH',
+            //     credentials: 'include',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         username: horse.username,
+            //         email: horse.email,
+            //         score: updated_score,
+            //         picture_url: horse.picture_url,
+            //     }),
+            // })
+            // console.log('better paid: ', updated_score)
+        } else {
+            // Pay only the user who just finished
+            const url = `http://localhost:8000/api/users/${user.id}`
+            const updated_score = authUser.score + b.amount
+            // console.log(updated_score)
+            // Update user information
+            const response = await fetch(url, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: authUser.username,
+                    email: authUser.email,
+                    score: updated_score,
+                    picture_url: authUser.picture_url,
+                }),
+            })
+            // console.log(response)
+        }
+    }
+
+    const updateAttendee = async (
+        meetingId,
+        attendeeId,
+        attendeePage,
+        placeAtLastFinish,
+        Finished
+    ) => {
+        const url = `http://localhost:8000/api/attendees/page`
+        const bodyData = JSON.stringify({
+            meeting_id: meetingId,
+            attendee_id: attendeeId,
+            attendee_page: attendeePage,
+            place_at_last_finish: placeAtLastFinish,
+            finished: Finished,
+        })
+
+        const response = await fetch(url, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: bodyData
+        })
+        if (response.ok) {
+            setAttendee(await response.json())
+            setPageInput(0)
+        }
+    }
 
     const updateAttendeePage = async (attendeeID) => {
         const url = `http://localhost:8000/api/attendees/page`
@@ -233,44 +440,9 @@ export default function MeetingPage() {
         }
     }
 
-    // const saveRanksEachFinish = async () => {
-    //     let attendees_finished = []
-    //     let attendees_unfinished = []
-    //     // Split attendees into finished...
-    //     attendees_finished = attendees.filter(
-    //         (a) => a.meeting_id === parseInt(meetingID) && a.finished === true
-    //     )
-    //     console.log('finished', attendees_finished)
-    //     let rank = attendees_finished.length
-    //     /// ...and unfinished
-    //     attendees_unfinished = attendees
-    //         .filter(
-    //             (a) =>
-    //                 a.meeting_id === parseInt(meetingID) && a.finished === false
-    //         )
-    //         .sort((a, b) => b.attendee_page - a.attendee_page)
-    //     console.log('unfinished', attendees_unfinished)
-    //     // Set rank at time of finish
-    //     attendees_unfinished.forEach((a) => {
-    //         rank++
-    //         console.log("attendee: ", rank, a)
-    //         a.place_at_last_finish = rank
-    //         if (a.attendee_page === book.page_count) {
-    //             a.finished = true
-    //         }
-    //         // Update the database
-    //         updateAttendee(meetingID, a.attendee_id, a.attendee_page, a.place_at_last_finish, a.finished)
-    //         console.log(a.attendee_id, rank)
-    //     })
-    // }
-
     const updateUserScore = async (input) => {
         const url = `http://localhost:8000/api/users/${user.id}`
-        console.log('userscore', authUser.score)
-        console.log('pagecount', attendee.attendee_page)
-        console.log('input', input)
-        const updated_score =
-            authUser.score + (input - attendee.attendee_page)
+        const updated_score = authUser.score + (input - attendee.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -282,9 +454,6 @@ export default function MeetingPage() {
                 picture_url: authUser.picture_url,
             }),
         })
-        if (response.ok) {
-            setAuthUser(await response.json())
-        }
     }
 
     const updateClubScore = async (input) => {
@@ -307,15 +476,15 @@ export default function MeetingPage() {
         }
     }
 
-    const maxScore = Math.max(...users.map((u) => u.score))
+    // const maxScore = Math.max(...attendees.map((a) => a.attendee_page))
 
     useEffect(() => {
         fetchMeetingData()
         fetchAuthUserData()
         fetchAttendee()
-        deleteMeeting()
         fetchAttendees()
         fetchUsers()
+        fetchBets()
     }, [])
 
     useEffect(() => {
@@ -333,22 +502,35 @@ export default function MeetingPage() {
     }, [pageInput])
     // Used in user list
     const getAttendeePage = (userId) => {
-        const attendee = attendees.find(
-            (attendee) => attendee.attendee_id === userId
-        )
-        return attendee ? attendee.attendee_page : 0 // Default to 0 if attendee not found
+        const a = attendees.find((a) => a.attendee_id === userId)
+        return a ? a.attendee_page : 0 // Default to 0 if attendee not found
     }
 
     const sortedUsers = [...users].sort(
         (a, b) => getAttendeePage(b.id) - getAttendeePage(a.id)
     )
 
+    const getCurrentBet = () => {
+        const b = bets.find((b) => b.paid === false)
+        // console.log('!!!!', b)
+        return b ? b : null
+    }
+
     return (
         <>
             <h1>
                 {club.name} - {meeting.book_title}
             </h1>
-            {attendee.attendee_page < book.page_count ? (
+            {/* {bets.length > 0 ? ( */}
+            {/* <div className="betAnnouncement">
+                {getCurrentBet().better_id} bet {getCurrentBet().amount} that {getCurrentBet().horse_id} will finish next.
+                Prove them wrong by finishing next and receive !
+            </div> */}
+            {/* ) : ( */}
+                <div>
+                </div>
+            {/* )} */}
+            {/* {attendee.attendee_page < book.page_count ? ( */}
                 <div className="updateProgress">
                     <h2>Update Your Progress</h2>
                     <div className="currentProgress">
@@ -364,7 +546,7 @@ export default function MeetingPage() {
                     />
                     <button onClick={handleUpdatePage}>Submit</button>
                 </div>
-            ) : (
+            {/* ) : !bets.some((bet) => bet.better === user.id) ? ( */}
                 <div id="placeYourBet">
                     <NavLink
                         aria-current="page"
@@ -374,12 +556,20 @@ export default function MeetingPage() {
                         Place your bet!
                     </NavLink>
                 </div>
-            )}
-            <div style={{ overflowY: 'auto', maxHeight: '400px' }}>
+            {/* ) : ( */}
+                <div></div>
+            {/* )} */}
+            <div
+                style={{
+                    overflowY: 'auto',
+                    maxHeight: '400px',
+                    maxWidth: '500px',
+                }}
+            >
                 <table>
                     <thead>
                         <tr>
-                            <th>Position</th>
+                            <th></th>
                             <th>Member</th>
                             <th style={{ textAlign: 'right' }}>Progress</th>
                         </tr>
@@ -387,7 +577,13 @@ export default function MeetingPage() {
                     <tbody>
                         {sortedUsers.map((u, index) => (
                             <tr key={u.id}>
-                                <td>{index + 1}</td>
+                                <td>
+                                    {/* {index === 0 &&
+                                    !attendees.some((a) => a.finished === true)
+                                        ? '👑'
+                                        : null} */}
+                                    {index + 1}
+                                </td>
                                 <td style={{ textAlign: 'left' }}>
                                     <a
                                         href={`/user/${u.id}`}

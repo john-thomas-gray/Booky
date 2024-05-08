@@ -25,7 +25,8 @@ async def place_bet(
       new_bet.meeting_id,
       new_bet.better_id,
       new_bet.horse_id,
-      new_bet.amount
+      new_bet.amount,
+      new_bet.paid
     )
     bet_out = Bet(**bet.model_dump())
     return bet_out
@@ -45,7 +46,7 @@ def get_bet(
 
 
 @router.get("/{meeting_id}")
-def list_attendees_by_meeting(
+def list_bets_by_meeting(
     meeting_id: int,
     response: Response,
     queries: BetQueries = Depends(),

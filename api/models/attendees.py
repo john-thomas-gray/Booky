@@ -24,3 +24,8 @@ class AttendeeUpdate(BaseModel):
     attendee_page: Optional[int]
     place_at_last_finish: Optional[int]
     finished: Optional[bool]
+
+
+class FinishUpdate(BaseModel):
+    place_at_last_finish: Optional[int]
+    finished: Optional[bool]
