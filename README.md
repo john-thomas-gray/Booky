@@ -1,11 +1,11 @@
-# Module3 Project Gamma
+# Booky
 
-## Getting started
+## Team
 
-You have a project repository, now what? The next section
-lists all of the deliverables that are due at the end of the
-week. Below is some guidance for getting started on the
-tasks for this week.
+John Gray
+Vinny Vitiritto
+Judah Viggers
+Tyler Primavera
 
 ## Install Extensions
 
@@ -14,11 +14,17 @@ tasks for this week.
 
 ## Deliverables
 
--   [ ] Wire-frame diagrams
--   [ ] API documentation
--   [ ] Project is deployed to Caprover (BE, DB) & GitLab-pages (FE)
--   [ ] GitLab issue board is setup and in use (or project management tool of choice)
--   [ ] Journals
+-   Wire-frame diagrams
+    ![alt text](image.png)
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
+
+-   [API documentation] (README_APIDOCS.md)
+-   Project is deployed to PostgreSQL (BE, DB) & GitLab-pages (FE)
 
 ## Project layout
 
