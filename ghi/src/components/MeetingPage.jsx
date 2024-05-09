@@ -9,6 +9,7 @@ export default function MeetingPage() {
     // Meetings
     const { meetingID } = useParams()
     const [meeting, setMeeting] = useState({})
+    const [inMeeting, setInMeeting] = useState(false)
     // Score
     const [pageInput, setPageInput] = useState(0)
     // Attendees
@@ -42,9 +43,6 @@ export default function MeetingPage() {
                 return data
             })
     }
-    // const getId = (val) => (e) => {
-    //     joinMeeting(val)
-    // }
 
     const joinMeeting = async (val) => {
         const data = {}
@@ -63,6 +61,7 @@ export default function MeetingPage() {
         const response = await fetch(url, fetchConfig)
         if (response.ok) {
             fetchUsers()
+            setInMeeting(true)
             console.log('request is good and went through')
         }
     }
@@ -80,6 +79,7 @@ export default function MeetingPage() {
         const response = await fetch(url, fetchConfig)
         if (response.ok) {
             fetchUsers()
+            setInMeeting(false)
         } else {
             console.error('http error:', response.status)
         }
@@ -195,20 +195,27 @@ export default function MeetingPage() {
                     if (user.id === b.horse_id) {
                         // Pay the user who just finished, that the better bet on.
                         // Update user information
-                        let url = `http://localhost:8000/api/users/${user.id}`
-                        let updated_score = authUser.score + b.amount
-                        console.log("update", updated_score, "horsescore", authUser.score, "bet", b.amount)
-                        let response = await fetch(url, {
-                            method: 'PATCH',
-                            credentials: 'include',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                username: authUser.username,
-                                email: authUser.email,
-                                score: updated_score,
-                                picture_url: authUser.picture_url,
-                            }),
-                        })
+                        // let url = `http://localhost:8000/api/users/${user.id}`
+                        // const updated_score_horse = authUser.score + b.amount
+                        // console.log(
+                        //     'update',
+                        //     updated_score_horse,
+                        //     'horsescore',
+                        //     authUser.score,
+                        //     'bet',
+                        //     b.amount
+                        // )
+                        // let response = await fetch(url, {
+                        //     method: 'PATCH',
+                        //     credentials: 'include',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify({
+                        //         username: authUser.username,
+                        //         email: authUser.email,
+                        //         score: updated_score_horse,
+                        //         picture_url: authUser.picture_url,
+                        //     }),
+                        // })
                         fetch(
                             `http://localhost:8000/api/users/${b.better_id}`,
                             {
@@ -228,8 +235,16 @@ export default function MeetingPage() {
                                 return response
                             })
                             .then((better) => {
-                                updated_score = better.score + b.amount
-                                console.log("update", updated_score, "betterscore", authUser.score, "bet", b.amount)
+                                const updated_score_better =
+                                    better.score + b.amount
+                                console.log(
+                                    'update',
+                                    updated_score_better,
+                                    'betterscore',
+                                    better.score,
+                                    'bet',
+                                    b.amount
+                                )
                                 let response = fetch(
                                     `http://localhost:8000/api/users/${b.better_id}`,
                                     {
@@ -241,7 +256,7 @@ export default function MeetingPage() {
                                         body: JSON.stringify({
                                             username: better.username,
                                             email: better.email,
-                                            score: updated_score,
+                                            score: updated_score_better,
                                             picture_url: better.picture_url,
                                         }),
                                     }
@@ -249,25 +264,26 @@ export default function MeetingPage() {
 
                                 return response
                             })
-                    } else {
-                        // Pay only the user who just finished
-                        const url = `http://localhost:8000/api/users/${user.id}`
-                        const updated_score = authUser.score + b.amount
-                        console.log(updated_score)
-                        // console.log(updated_score)
-                        // Update user information
-                        const response = await fetch(url, {
-                            method: 'PATCH',
-                            credentials: 'include',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                username: authUser.username,
-                                email: authUser.email,
-                                score: updated_score,
-                                picture_url: authUser.picture_url,
-                            }),
-                        })
                     }
+                    // else {
+                    //     // Pay only the user who just finished
+                    //     const url = `http://localhost:8000/api/users/${user.id}`
+                    //     const updated_score = authUser.score + b.amount
+                    //     console.log(updated_score)
+                    //     // console.log(updated_score)
+                    //     // Update user information
+                    //     const response = await fetch(url, {
+                    //         method: 'PATCH',
+                    //         credentials: 'include',
+                    //         headers: { 'Content-Type': 'application/json' },
+                    //         body: JSON.stringify({
+                    //             username: authUser.username,
+                    //             email: authUser.email,
+                    //             score: updated_score,
+                    //             picture_url: authUser.picture_url,
+                    //         }),
+                    //     })
+                    // }
                     const bet_url = `http://localhost:8000/api/bets/${meetingID}/${b.better_id}`
                     fetch(bet_url, {
                         method: 'PATCH',
@@ -304,20 +320,12 @@ export default function MeetingPage() {
                 a.finished = true
             }
             // Update the database
-            updateAttendee(
-                a.attendee_id,
-                a.place_at_last_finish,
-                a.finished
-            )
+            updateAttendee(a.attendee_id, a.place_at_last_finish, a.finished)
             console.log(a.attendee_id, rank)
         })
     }
 
-    const updateAttendee = async (
-        attendeeId,
-        placeAtLastFinish,
-        Finished
-    ) => {
+    const updateAttendee = async (attendeeId, placeAtLastFinish, Finished) => {
         const url = `http://localhost:8000/api/finish/${meetingID}/${attendeeId}`
         let response = await fetch(url, {
             method: 'PATCH',
@@ -407,19 +415,15 @@ export default function MeetingPage() {
     }, [])
 
     useEffect(() => {
-        // fetchMeetingData()
+        fetchMeetingData()
         fetchUsers()
-        // // Runs more often than it should
-        // if (attendee.attendee_page === book.page_count) {
-        //     saveRanksEachFinish()
-        // }
     }, [attendees, attendee])
 
     useEffect(() => {
         fetchAttendees()
         fetchAttendee()
-    // }, [pageInput])
-    }, [])
+    }, [pageInput, inMeeting])
+
     // Used in user list
     const getAttendeePage = (userId) => {
         const a = attendees.find((a) => a.attendee_id === userId)
@@ -432,143 +436,148 @@ export default function MeetingPage() {
 
     const getCurrentBet = () => {
         const b = bets.find((b) => b.paid === false)
-        // console.log('!!!!', b)
+        // console.log('!!!', b)
         return b ? b : null
     }
 
     return (
-        <div style={{ overflow: 'auto', maxHeight: '70vh' }}>
-                <h1>
-                    {club.name} - {meeting.book_title}
-                </h1>
-                <img
-                    src={book.cover_img_url}
-                    style={{ maxHeight: '200px', maxWidth: '100px' }}
-                    alt={book.title}
-                />
-                {bets.length > 0 && getCurrentBet() ? (
-                    <div className="betAnnouncement">
-                        {getCurrentBet().better_id} bet {getCurrentBet().amount}{' '}
-                        that {getCurrentBet().horse_id} will finish next.
-                        {/* Prove them wrong by finishing next and receive ! */}
+        <main style={{ backgroundColor: '#8A807E' }}>
+            <h1>
+                {club.name} - {meeting.book_title}
+            </h1>
+            <img
+                src={book.cover_img_url}
+                style={{ maxHeight: '200px', maxWidth: '100px' }}
+                alt={book.title}
+            />
+            {bets.length > 0 && getCurrentBet() ? (
+                <div className="betAnnouncement">
+                    {getCurrentBet().better_id} bet {getCurrentBet().amount}{' '}
+                    that {getCurrentBet().horse_id} will finish next.
+                    {/* Prove them wrong by finishing next and receive ! */}
+                </div>
+            ) : (
+                <div>{/* The crown is up for grabs! 👑 */}</div>
+            )}
+            {user.id === attendee.attendee_id &&
+            attendee.attendee_page < book.page_count ? (
+                <div className="updateProgress">
+                    <h2>Update Your Progress</h2>
+                    <div className="currentProgress">
+                        {attendee.attendee_page}/{book.page_count}
                     </div>
-                ) : (
-                    <div>{/* The crown is up for grabs! 👑 */}</div>
-                )}
-                {user.id === attendee.attendee_id &&
-                attendee.attendee_page < book.page_count ? (
-                    // {(true) ? (
-                    <div className="updateProgress">
-                        <h2>Update Your Progress</h2>
-                        <div className="currentProgress">
-                            {attendee.attendee_page}/{book.page_count}
-                        </div>
-                        <input
-                            type="number"
-                            placeholder="What page are you on?"
-                            value={pageInput}
-                            onChange={handlePageInput}
-                            min={1}
-                            max={book.page_count}
-                        />
-                        <button onClick={handleUpdatePage}>Submit</button>
-                    </div>
-                ) : user.id === attendee.attendee_id && !bets.some((bet) => bet.better_id === user.id) ? (
-                    <div id="placeYourBet">
-                        <NavLink
-                            aria-current="page"
-                            to={'/bets/' + meetingID}
-                            exact="true"
-                        >
-                            Place your bet!
-                        </NavLink>
-                    </div>
-                ) : (
-                    <div></div>
-                )}
-                <div
-                    style={{
-                        overflowY: 'auto',
-                        maxHeight: '400px',
-                        maxWidth: '500px',
-                    }}
-                >
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Member</th>
-                                <th style={{ textAlign: 'right' }}>Progress</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sortedUsers.map((u, index) => (
-                                <tr key={u.id}>
-                                    <td>
-                                        {/* {index === 0 &&
+                    <input
+                        type="number"
+                        placeholder="What page are you on?"
+                        value={pageInput}
+                        onChange={handlePageInput}
+                        min={1}
+                        max={book.page_count}
+                    />
+                    <button onClick={handleUpdatePage}>Submit</button>
+                </div>
+            ) : user.id === attendee.attendee_id &&
+              !bets.some(
+                  (bet) => bet.better_id === user.id && bet.paid === false
+              ) ? (
+                <div id="placeYourBet">
+                    <NavLink
+                        aria-current="page"
+                        to={'/bets/' + meetingID}
+                        exact="true"
+                    >
+                        Place your bet!
+                    </NavLink>
+                </div>
+            ) : (
+                <div></div>
+            )}
+            <div
+                style={{
+                    overflowY: 'auto',
+                    maxHeight: '400px',
+                    maxWidth: '900px',
+                }}
+            >
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Member</th>
+                            <th style={{ textAlign: 'right' }}>Progress</th>
+                            <th style={{ textAlign: 'right' }}>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {sortedUsers.map((u, index) => (
+                            <tr key={u.id}>
+                                <td>
+                                    {/* {index === 0 &&
                                 !attendees.some((a) => a.finished === true)
                                     ? '👑'
                                     : null} */}
-                                        {index + 1}
-                                    </td>
-                                    <td style={{ textAlign: 'left' }}>
-                                        <a
-                                            href={`/user/${u.id}`}
+                                    {index + 1}
+                                </td>
+                                <td style={{ textAlign: 'left' }}>
+                                    <a
+                                        href={`/user/${u.id}`}
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: 'inherit',
+                                        }}
+                                    >
+                                        <img
+                                            className="attendee_profile"
+                                            src={u.picture_url}
+                                            alt={u.username}
                                             style={{
-                                                textDecoration: 'none',
-                                                color: 'inherit',
+                                                maxHeight: '40px',
+                                                maxWidth: '40px',
+                                                verticalAlign: 'middle',
                                             }}
-                                        >
-                                            <img
-                                                className="attendee_profile"
-                                                src={u.picture_url}
-                                                alt={u.username}
-                                                style={{
-                                                    maxHeight: '40px',
-                                                    maxWidth: '40px',
-                                                    verticalAlign: 'middle',
-                                                }}
-                                            />
-                                            {u.username}
-                                        </a>
-                                    </td>
-                                    <td style={{ textAlign: 'right' }}>
-                                        {getAttendeePage(u.id)} /{' '}
-                                        {book.page_count}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div>
-
-                        <button onClick={() => leaveMeeting(meeting.id)}>
-                            Leave Meeting
-                        </button>
-
-                        <button onClick={() => joinMeeting(meeting.id)}>
-                            Join Meeting
-                        </button>
-
-                </div>
-                <div>
-                    {user.id == club.owner_id && (
-                        <button
-                            style={{ backgroundColor: 'red' }}
-                            onClick={() => deleteMeeting(meeting.id)}
+                                        />
+                                        {u.username}
+                                    </a>
+                                </td>
+                                <td style={{ textAlign: 'right' }}>
+                                    {getAttendeePage(u.id)} / {book.page_count}
+                                </td>
+                                <td style={{ textAlign: 'right' }}>
+                                    {u.score}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                {attendees.some((a) => a.attendee_id === user.id) ? (
+                    <button onClick={() => leaveMeeting(meeting.id)}>
+                        Leave Meeting
+                    </button>
+                ) : (
+                    <button onClick={() => joinMeeting(meeting.id)}>
+                        Join Meeting
+                    </button>
+                )}
+            </div>
+            <div>
+                {user.id == club.owner_id && (
+                    <button
+                        style={{ backgroundColor: 'red' }}
+                        onClick={() => deleteMeeting(meeting.id)}
+                    >
+                        <NavLink
+                            aria-current="page"
+                            to={'/meetings/list/'}
+                            exact="true"
+                            className="link"
                         >
-                            <NavLink
-                                aria-current="page"
-                                to={'/meetings/list/'}
-                                exact="true"
-                                className="link"
-                            >
-                                delete meeting
-                            </NavLink>
-                        </button>
-                    )}
-                </div>
-        </div>
-    )}
+                            delete meeting
+                        </NavLink>
+                    </button>
+                )}
+            </div>
+        </main>
+    )
+}
