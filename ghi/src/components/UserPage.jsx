@@ -95,6 +95,9 @@ export default function UserPage() {
             const data = await response.json()
             setFriends(data)
         }
+        else{
+            setFriends([])
+        }
     };
 
     useEffect(() => {

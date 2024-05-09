@@ -37,33 +37,7 @@ export default function UserList() {
 
 
     }
-    async function handleFormSubmit(event){
-    event.preventDefault()
-    const data = {};
-    data.club_id = Number(clubId);
-    data.book_title = bookTitle;
-    data.active = active;
-    console.log("data", data)
 
-    const meetingUrl = 'http://localhost:8000/api/meeting/create/'
-    const fetchConfig = {
-          method: "post",
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: "include"
-        };
-      const response = await fetch(meetingUrl, fetchConfig);
-      console.log("response", response)
-
-
-      if (response.ok) {
-        setClubId('');
-        setBookTitle('');
-        setActive('');
-      }
-  }
 
 
     const fetchData = async () => {
@@ -91,7 +65,11 @@ if(user){
           onChange={(event) => setFilteredUsers(event.target.value)}
         />
         </div>
-              <div className='list-container'>
+              <div className='list-container' style={{
+                        overflowY: 'auto',
+                        maxHeight: '750px',
+                        maxWidth: '2000px',
+                    }}>
             <h1 className="m3 mt-3">Users</h1>
             <table className="table table-striped">
                 <thead>
@@ -137,7 +115,7 @@ if(user){
                 </tbody>
             </table>
             </div>
-            <div><Footer></Footer></div>
+
         </>
     )
 }
@@ -146,5 +124,5 @@ else {
 <>
         <div><ExplorePage></ExplorePage></div>
 <h1 className="m3 mt-3">You are not signed in!</h1>
-            <div><Footer></Footer></div>
+
 </>)}}

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import Footer from "./Footer"
+
 export default function ExplorePage(){
 
 
@@ -22,12 +22,17 @@ return (<main style={{ backgroundColor: '#8A807E' }}>
                 </div>
                 <div className="explore-div">
                 <NavLink aria-current="page" to="/user" exact="true" className='link'>
-                    Users
+                    Find Friends
                 </NavLink>
                 </div>
+                {/* <div className="explore-div">
+                <NavLink aria-current="page" to="/leaderboard" exact="true" className='link'>
+                    Leaderboard
+                </NavLink>
+                </div> */}
                 </div>
                 </nav>
-                <div><Footer></Footer></div>
+
 
 </main>)
 

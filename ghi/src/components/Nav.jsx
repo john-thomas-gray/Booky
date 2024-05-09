@@ -58,26 +58,6 @@ export default function Nav() {
                         </NavLink>
                     </div>
                 )}
-                {/* <div>
-                    <NavLink
-                        aria-current="page"
-                        to="/meetings"
-                        exact="true"
-                        className="link"
-                    >
-                        Create Meeting
-                    </NavLink>
-                </div> */}
-                <div>
-                    <NavLink
-                        aria-current="page"
-                        to="/meetings/list"
-                        exact="true"
-                        className="link"
-                    >
-                        All Meetings
-                    </NavLink>
-                </div>
                 <div>
                     <NavLink
                         aria-current="page"

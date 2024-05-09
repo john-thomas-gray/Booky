@@ -37,7 +37,11 @@ if (user) {
           onChange={(event) => setFilteredClubs(event.target.value)}
         />
       </div>
-      <div className='list-container'>
+      <div className='list-container'                     style={{
+                        overflowY: 'auto',
+                        maxHeight: '615px',
+                        maxWidth: '2000px',
+                    }}>
             <h1 className="m3 mt-3">Clubs</h1>
             <table className="table table-striped">
                 <thead>
@@ -77,7 +81,7 @@ if (user) {
                 </tbody>
             </table>
             </div>
-            <div><Footer></Footer></div>
+
         </>
     )
 }
@@ -86,5 +90,5 @@ else{
 <>
         <div><ExplorePage></ExplorePage></div>
 <h1 className="m3 mt-3">You are not signed in!</h1>
-            <div><Footer></Footer></div>
+
 </>)}}

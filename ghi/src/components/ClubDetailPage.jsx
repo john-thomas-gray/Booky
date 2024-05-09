@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
-import Footer from './Footer'
+
 
 
 export default function ClubDetailPage() {
@@ -21,10 +21,6 @@ export default function ClubDetailPage() {
 
     const getID = (val) => (e) => {
         joinClub(val)
-    };
-
-    const getMeetingId = (meetingId) => (e) => {
-        joinMeeting(meetingId)
     };
 
     const joinClub = async (val) => {
@@ -49,31 +45,17 @@ export default function ClubDetailPage() {
       };
 
     }
-
-    const joinMeeting = async (meetingId) => {
-        const data = {};
-        data.meeting_id = meetingId
-        data.attendee_id = user.id
-        console.log(data)
-        const membersUrl = `http://localhost:8000/api/meeting/${meetingId}/`
-        const fetchConfig = {
-          method: "post",
-          body: JSON.stringify(data),
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
+    // const RenderJoin = async () => {
+    //     if (members.filter(member => member.member_id === user.id).length === 0){
+    //         console.log(members)
+    //         return( <><button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button></>)
+    //     }
+    //     else {
+    //         return(<></>)
+    //     }
+    // }
 
 
-          },
-
-        };
-
-      const response = await fetch(membersUrl,  fetchConfig).catch(error => setError(error))
-      if (response.ok){
-        console.log("request went through")
-      };
-
-    }
     const fetchMembers = async () => {
         const url = `http://localhost:8000/api/users/club/${clubID}`
         const response = await fetch(url, {credentials: "include"})
@@ -81,6 +63,7 @@ export default function ClubDetailPage() {
             const data = await response.json()
             setMembers(data)
         }
+
     }
 
     const fetchMeetings = async () => {
@@ -117,8 +100,7 @@ if (user) {
         <>
             {error && hideComponent && <h1 className="m3 mt-3">You are already in this club!</h1>}
             <h1 className='explore-header'>{club.name}</h1>
-            <button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button>
-
+            {members && members.filter(member => Number(member.id) == Number(user.id)).length == 0 && <button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button>}
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -128,7 +110,9 @@ if (user) {
                 </thead>
                 <tbody>
                     {members.map((member) => {
+
                         return (
+
                             <tr key={member.id}>
                                 <td>{member.username}</td>
                             </tr>
@@ -167,7 +151,7 @@ if (user) {
                     })}
                 </tbody>
             </table>
-            <Footer/>
+
         </>
     )
 }

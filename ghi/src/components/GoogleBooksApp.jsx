@@ -74,7 +74,6 @@ function GoogleBooksApp() {
                         ))}
                     </ul>
                 </div>
-                <div><Footer></Footer></div>
                 </>
             );
         }

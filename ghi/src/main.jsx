@@ -23,6 +23,7 @@ import ListBook from './components/ListBook'
 import ExplorePage from './components/ExplorePage'
 import GoogleBooksApp from './components/GoogleBooksApp'
 import Betting from './components/Betting'
+import Leaderboard from './components/Leaderboard'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -105,6 +106,10 @@ const router = createBrowserRouter(
                 {
                     path: '/requests/',
                     element: <FriendRequestPage />
+                },
+                {
+                    path: '/leaderboard/',
+                    element: <Leaderboard />
                 },
             ],
         },
