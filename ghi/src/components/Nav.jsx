@@ -58,7 +58,7 @@ export default function Nav() {
                         </NavLink>
                     </div>
                 )}
-                <div>
+                {/* <div>
                     <NavLink
                         aria-current="page"
                         to="/meetings"
@@ -67,7 +67,7 @@ export default function Nav() {
                     >
                         Create Meeting
                     </NavLink>
-                </div>
+                </div> */}
                 <div>
                     <NavLink
                         aria-current="page"

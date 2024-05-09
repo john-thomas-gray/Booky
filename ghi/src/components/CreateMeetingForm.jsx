@@ -26,7 +26,7 @@ function CreateMeetingForm() {
 
         if (response.ok) {
             const data = await response.json()
-            setData(data)
+            setData(data.filter((club) => club.owner_id == user.id))
         }
     }
 
@@ -67,6 +67,9 @@ function CreateMeetingForm() {
             setActive('')
         }
     }
+
+    console.log(user.id, 'user.id')
+    console.log(data, 'club.owner_id')
 
     if (user) {
         return (
@@ -118,6 +121,14 @@ function CreateMeetingForm() {
                 />
 
                 <button type="submit">Create Meeting</button>
+                <div></div>
+                <div>
+                    <h4>Create a meeting for your club</h4>
+                    <div>
+                        Don't own a club? Make one
+                        <a href="http://localhost:5173/clubs"> here</a>
+                    </div>
+                </div>
             </form>
         )
     } else {
