@@ -1,132 +1,131 @@
-
-import React, {useState, useEffect } from 'react';
-import useAuthService from '../hooks/useAuthService';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import useAuthService from '../hooks/useAuthService'
+import { useLocation } from 'react-router-dom'
 
 function CreateMeetingForm() {
-  const [clubId, setClubId] = useState(1)
-  const [bookTitle, setBookTitle] = useState('')
-  const [active, setActive] = useState('')
-  const [data, setData] = useState([])
-  const {user} = useAuthService()
+    const [clubId, setClubId] = useState('')
+    const [bookTitle, setBookTitle] = useState('')
+    const [active, setActive] = useState('')
+    const [data, setData] = useState([])
+    const { user } = useAuthService()
 
-  const location = useLocation();
-  if (location!==null){
-    console.log("location.state", location.state)
-  }
+    const location = useLocation()
+    if (location !== null) {
+    }
 
-
-  const state= [location.state]
+    const state = [location.state]
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
      */
 
-  const getData = async () => {
-    const url = 'http://localhost:8000/api/clubs';
-    const response = await fetch(url, {credentials: "include"});
+    const test = location.state
 
-    if (response.ok){
-      const data = await response.json();
-      console.log("data", data)
-      setData(data)
+    const getData = async () => {
+        const url = 'http://localhost:8000/api/clubs'
+        const response = await fetch(url, { credentials: 'include' })
+
+        if (response.ok) {
+            const data = await response.json()
+            setData(data)
+        }
     }
-  }
 
-  useEffect(() => {
-    getData();
-  }, []);
+    useEffect(() => {
+        getData()
+    }, [])
 
-  const handleClubChange = (event) => {
-    setClubId(event.target.value);
-  }
+    const handleClubChange = (event) => {
+        setClubId(event.target.value)
+        console.log('event.target.value)', event.target.value)
+    }
 
-  async function handleFormSubmit(event){
-    event.preventDefault()
-    const data = {};
-    data.club_id = Number(clubId);
-    data.book_title = bookTitle;
-    data.active = active;
-    console.log("data", data)
+    async function handleFormSubmit(event) {
+        event.preventDefault()
+        const data = {}
+        data.club_id = Number(clubId)
+        data.book_title = test.volumeInfo.title
+        data.active = active
 
-    const meetingUrl = 'http://localhost:8000/api/meeting/create/'
-    const fetchConfig = {
-          method: "post",
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: "include"
-        };
-      const response = await fetch(meetingUrl, fetchConfig);
-      console.log("response", response)
-
-
-      if (response.ok) {
-        setClubId('');
-        setBookTitle('');
-        setActive('');
-      }
-  }
-  console.log("user", user)
-
-if (user){
-return (
-  <form onSubmit={handleFormSubmit}>
-
-    <div>this is CreateMeetingForm.jsx</div>
-
-    {location.state && location.state.hasOwnProperty("volumeInfo") && state.map((book) => {
-
-    return (
-
-            <ul>
-                <li key={book.volumeInfo.title}>
-                    {book.volumeInfo.title}
-                </li>
-            </ul>
+        const meetingUrl = 'http://localhost:8000/api/meeting/create/'
+        const fetchConfig = {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        }
+        const response = await fetch(meetingUrl, fetchConfig)
+        console.log(
+            'state.volumeInfo.titlestate.volumeInfo.title!!!!',
+            state.volumeInfo.title
         )
-    })}
 
+        if (response.ok) {
+            setClubId('')
+            setBookTitle('')
+            setActive('')
+        }
+    }
 
-    <select
-    type="number"
-    value={clubId} onChange={handleClubChange} required name="club_id" id="club_id" className="form-select"
-    placeholder="club"
-    >
-      {console.log("data", data)}
-      {data.map(club => (
-        <option key={club.club_id} value={club.club_id}>{club.name}</option>
-      ))}
-    </select>
+    if (user) {
+        return (
+            <form onSubmit={handleFormSubmit}>
+                {location.state &&
+                    location.state.hasOwnProperty('volumeInfo') &&
+                    state.map((book) => {
+                        return (
+                            <ul>
+                                <img
+                                    src={book.volumeInfo.imageLinks.thumbnail}
+                                ></img>
+                                <ul key={book.volumeInfo.title}>
+                                    {book.volumeInfo.title}
+                                </ul>
+                            </ul>
+                        )
+                    })}
 
+                <select
+                    type="number"
+                    value={clubId}
+                    onChange={handleClubChange}
+                    required
+                    name="club_id"
+                    id="club_id"
+                    className="form-select"
+                    placeholder="club"
+                >
+                    {data.map((club) => (
+                        <option key={club.club_id} value={club.club_id}>
+                            {club.name}
+                        </option>
+                    ))}
+                </select>
 
-    <input
-    type="text"
-    value={bookTitle}
-    onChange={(event) => setBookTitle(event.target.value)}
-    placeholder="book title"
-    />
+                {/* <input
+                    type="text"
+                    value={bookTitle}
+                    onChange={(event) => setBookTitle(event.target.value)}
+                    placeholder="book title"
+                /> */}
 
-    <input
-    type="date"
-    value={active}
-    onChange={(event) => setActive(event.target.value)}
-    placeholder="active date"
-    />
+                <input
+                    type="date"
+                    value={active}
+                    onChange={(event) => setActive(event.target.value)}
+                    placeholder="active date"
+                />
 
-  <button type="submit">Create Meeting</button>
-  </form>
-
-
-)
+                <button type="submit">Create Meeting</button>
+            </form>
+        )
+    } else {
+        return (
+            <>
+                <p> You are not signed in</p>
+            </>
+        )
+    }
 }
-else {
-  return (
-    <>
-    <p> You are not signed in</p>
-    </>
-  )
-}
-
-}
-export default CreateMeetingForm;
+export default CreateMeetingForm

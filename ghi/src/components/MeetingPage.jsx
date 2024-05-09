@@ -543,15 +543,15 @@ export default function MeetingPage() {
                 </div>
 
                 <div>
-                    {attendees.some((a) => a.attendee_id === user.id) ? (
+                    
                         <button onClick={() => leaveMeeting(meeting.id)}>
                             Leave Meeting
                         </button>
-                    ) : (
+
                         <button onClick={() => joinMeeting(meeting.id)}>
                             Join Meeting
                         </button>
-                    )}
+
                 </div>
                 <div>
                     {user.id == club.owner_id && (
