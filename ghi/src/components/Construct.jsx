@@ -11,7 +11,7 @@ function Construct(props) {
     }
 
     return (
-        <>
+        <main style={{ backgroundColor: '#8A807E' }}>
             <h1>Under construction</h1>
             <h2>Coming on (or before)</h2>
             <h2>
@@ -22,7 +22,7 @@ function Construct(props) {
                 by or <strong>WELL BEFORE</strong> {props.info.hour}:
                 {props.info.min} Cohort Time
             </h2>
-        </>
+        </main>
     )
 }
 

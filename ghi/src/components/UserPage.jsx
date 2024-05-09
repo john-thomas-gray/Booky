@@ -120,7 +120,7 @@ export default function UserPage() {
 
 
     return (
-        <>
+        <main style={{ backgroundColor: '#8A807E' }}>
             <div className="userPage">
                 <div className="userInfo">
                     <img
@@ -193,22 +193,36 @@ export default function UserPage() {
                         </tbody>
                     </table>
                 </div>
-            <div className='friend-list'>
-                {user && user.id == pageOwnerID &&
-                <Link to={"/requests"} exact="true" className='link'><h4>Friend Requests ({requests.length})</h4></Link>}
-                <h3>{pageOwner.username}'s Friends</h3>
-                {friends.length > 0 ? (
-                    <list>
-                        {friends.map((friend) => (
-                            <li>{friend.friend_username}  {user && user.id == pageOwnerID && <button onClick={() => handleRemoveFriend(friend.friend_id)}>Remove Friend</button>}</li>
-                        ))}
-                    </list>
-
-
-                ):(
-                    <div>No friends...</div>
-                )}
-            </div>
+                <div className="friend-list">
+                    {user && user.id == pageOwnerID && (
+                        <Link to={'/requests'} exact="true" className="link">
+                            <h4>Friend Requests ({requests.length})</h4>
+                        </Link>
+                    )}
+                    <h3>{pageOwner.username}'s Friends</h3>
+                    {friends.length > 0 ? (
+                        <list>
+                            {friends.map((friend) => (
+                                <li>
+                                    {friend.friend_username}{' '}
+                                    {user && user.id == pageOwnerID && (
+                                        <button
+                                            onClick={() =>
+                                                handleRemoveFriend(
+                                                    friend.friend_id
+                                                )
+                                            }
+                                        >
+                                            Remove Friend
+                                        </button>
+                                    )}
+                                </li>
+                            ))}
+                        </list>
+                    ) : (
+                        <div>No friends...</div>
+                    )}
+                </div>
                 <div className="currentMeetings">
                     <h2>Current Meetings</h2>
                     {currentMeetings.length > 0 ? (
@@ -260,7 +274,6 @@ export default function UserPage() {
                     )}
                 </div>
             </div>
-
             {/* {user.id == pageOwnerID && (
                     <div class="create_club">
                         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -277,6 +290,6 @@ export default function UserPage() {
                         </nav>
                     </div>
                 )} */}
-        </>
+        </main>
     )
 }

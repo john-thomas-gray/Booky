@@ -17,7 +17,7 @@ export default function AuthPage() {
     }
 
     return (
-        <div>
+        <main style={{ backgroundColor: '#8A807E' }}>
             {showSignUp ? <SignUpForm /> : <SignInForm />}
             <div>
                 {showSignUp ? (
@@ -42,6 +42,6 @@ export default function AuthPage() {
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     )
 }

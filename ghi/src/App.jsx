@@ -7,7 +7,7 @@ import ErrorNotification from './components/ErrorNotification'
 import Construct from './components/Construct'
 import SignUpForm from './components/SignUpForm'
 import Nav from './components/Nav'
-
+import Footer from './components/Footer'
 import './App.css'
 
 
@@ -31,15 +31,16 @@ function App() {
 
     return (
         <>
-        <div className='nav' style={{ backgroundColor: '#FAEBD7'}}>
-            <Nav />
-        </div>
-        <div className="App" style={{ backgroundColor: '#8A807E' }}>
-            <header className="App-header">
-
-            </header>
-            <Outlet context={{deleteSuccess, setDeleteSuccess}}/>
-        </div>
+            <div className="nav" >
+                <Nav />
+            </div>
+            <div className="App" >
+                <header className="App-header"></header>
+                <Outlet context={{ deleteSuccess, setDeleteSuccess }} />
+            </div>
+            <div>
+                <Footer></Footer>
+            </div>
         </>
     )
 }

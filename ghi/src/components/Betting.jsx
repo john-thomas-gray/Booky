@@ -99,7 +99,7 @@ export default function Betting(){
     }, []);
 
     return (
-        <>
+        <main style={{ backgroundColor: '#8A807E' }}>
             {betPlaced && <Navigate to={`/meetings/${meetingID}`} />}
             <div id="placeYourBet">
                 <form onSubmit={handleBetSubmit}>
@@ -137,7 +137,7 @@ export default function Betting(){
                     <button type="submit">Place Bet</button>
                 </form>
             </div>
-        </>
+        </main>
     )
 }
 

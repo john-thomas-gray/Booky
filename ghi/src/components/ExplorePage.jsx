@@ -3,7 +3,7 @@ import Footer from "./Footer"
 export default function ExplorePage(){
 
 
-return (<>
+return (<main style={{ backgroundColor: '#8A807E' }}>
 
 
 <div>
@@ -29,7 +29,7 @@ return (<>
                 </nav>
                 <div><Footer></Footer></div>
 
-</>)
+</main>)
 
 
 }

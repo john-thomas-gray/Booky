@@ -8,12 +8,16 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-
     height: 100vh;
-
-
 }
 
+main {
+   min-width: 100%;
+   min-height: 100%;
+   padding-top: 50vh;
+   padding-bottom: 15vh;
+   margin-top: 0vh;
+}
 
 div {
     margin-right: 10px;
@@ -36,6 +40,14 @@ div {
     align-items: center;
     text-decoration: none;
 
+}
+
+nav {
+  z-index: 100;
+  background-color: #faebd7;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
 }
 
 .active{
@@ -108,9 +120,7 @@ td {
   position: absolute;
   top: 23.68%;
   overflow: hidden;
-
 }
-
 
 .footer {
   position: fixed;
