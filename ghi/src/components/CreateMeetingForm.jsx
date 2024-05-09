@@ -4,7 +4,7 @@ import useAuthService from '../hooks/useAuthService';
 import { useLocation } from 'react-router-dom';
 
 function CreateMeetingForm() {
-  const [clubId, setClubId] = useState('')
+  const [clubId, setClubId] = useState(1)
   const [bookTitle, setBookTitle] = useState('')
   const [active, setActive] = useState('')
   const [data, setData] = useState([])

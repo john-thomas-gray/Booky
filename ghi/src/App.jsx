@@ -9,7 +9,6 @@ import SignUpForm from './components/SignUpForm'
 import Nav from './components/Nav'
 
 import './App.css'
-import './userpage.css'
 
 
 // When using environment variables, you should do a check to see if
