@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function CreateMeetingForm() {
     const [clubId, setClubId] = useState('')
@@ -8,6 +8,7 @@ function CreateMeetingForm() {
     const [active, setActive] = useState('')
     const [data, setData] = useState([])
     const { user } = useAuthService()
+    const navigate = useNavigate()
 
     const location = useLocation()
     if (location !== null) {
@@ -56,15 +57,16 @@ function CreateMeetingForm() {
             credentials: 'include',
         }
         const response = await fetch(meetingUrl, fetchConfig)
-        console.log(
-            'state.volumeInfo.titlestate.volumeInfo.title!!!!',
-            state.volumeInfo.title
-        )
+        const responseData = await response.json()
+
+        navigate(`/meetings/${responseData.id}`)
 
         if (response.ok) {
             setClubId('')
             setBookTitle('')
             setActive('')
+        } else {
+            console.error('failed to create meeting')
         }
     }
 
