@@ -35,8 +35,8 @@ steps = [
         """
         INSERT INTO clubs VALUES
             (1,1, 'Read This', 'Phoenix', 'AZ', 'USA', 0),
-            (2,2, 'Smoke Read Everyday', 'Glendale', 'AZ', 'USA', 10000),
-            (1,3, 'Shakespeare Sucks', 'Tokyo city', 'Tokyo', 'Japan', 1000),
+            (2,2, 'Oprah Book Club', 'Glendale', 'AZ', 'USA', 10000),
+            (1,3, 'Josh Elder Fan Club', 'Tokyo city', 'Tokyo', 'Japan', 1000),
             (2,4, 'Much Ado About Something', 'Scottsdale', 'AZ', 'USA', 100);
         ALTER SEQUENCE clubs_club_id_seq RESTART WITH 5;
         """,

@@ -158,7 +158,7 @@ export default function UserPage() {
                             {clubs.length > 0 ? (
                                 clubs.map((club) => (
                                     <tr key={club.club_id}>
-                                        <td style={{ textAlign: 'left' }}>
+                                        <td style={{ textAlign: 'center' }}>
                                             <NavLink
                                                 to={`/clubs/${club.club_id}`}
                                                 className="link"
