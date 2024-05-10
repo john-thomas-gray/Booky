@@ -31,12 +31,12 @@ function GoogleBooksApp() {
             data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
         const bookUrl = 'http://localhost:8000/book';
         const fetchConfig = {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' },
         };
         const response = await fetch(bookUrl, fetchConfig);
-        }
+        } 
             const handleSubmit = (event) => {
                 event.preventDefault();
                 searchBooks(query)
@@ -53,23 +53,39 @@ function GoogleBooksApp() {
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search for Books"
                         required
-                        />
-                        <button type="submit" disabled={isLoading} className="search-button">
-                            {isLoading ? 'Searching for Books' : 'Search'}
-                        </button>
-                    </form>
-                    {error && <div>{error}</div>}
-                    <ul>
-                        {books && books.items.map(book => (
+                    />
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="search-button"
+                    >
+                        {isLoading ? 'Searching for Books' : 'Search'}
+                    </button>
+                </form>
+                {error && <div>{error}</div>}
+                <ul>
+                    {books &&
+                        books.items.map((book) => (
                             <li key={book.id}>
-                            {user &&
-                               <Link aria-current="page" to="/meetings/" onClick={getBook(book)} state= {book} exact="true" className='link'>Create a meeting</Link> }
-                                {book.volumeInfo.title} by {book.volumeInfo.authors?.join(', ')}
+                                {user && (
+                                    <Link
+                                        aria-current="page"
+                                        to="/meetings/"
+                                        onClick={getBook(book)}
+                                        state={book}
+                                        exact="true"
+                                        className="link"
+                                    >
+                                        Create a meeting
+                                    </Link>
+                                )}
+                                {book.volumeInfo.title} by{' '}
+                                {book.volumeInfo.authors?.join(', ')}
                             </li>
                         ))}
-                    </ul>
-                </div>
-                </>
-            );
-        }
-export default GoogleBooksApp;
+                </ul>
+            </div>
+        </>
+    )
+}
+export default GoogleBooksApp
