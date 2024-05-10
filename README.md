@@ -27,7 +27,7 @@ Tyler Primavera
 
 ![alt text](image-3.png)
 
--   [API documentation] (README_APIDOCS.md)
+-   [API documentation](README_APIDOCS.md)
 -   Project is deployed to PostgreSQL (BE, DB) & GitLab-pages (FE)
 
 ## Intended Market
