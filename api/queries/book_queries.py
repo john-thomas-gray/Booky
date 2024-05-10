@@ -132,7 +132,7 @@ class BookQueries:
                         )
         except psycopg.Error:
             raise UserDatabaseException(
-                f"Count not delete book with book_id {id}"
+                "Could not delete book with book_id"
             )
 
     def list_books(self) -> Optional[List[BookResponse]]:

@@ -11,7 +11,8 @@ from queries.friend_queries import (
   FriendQueries
 )
 
-from models.friends import FriendRequest, FriendResponse
+from typing import List
+from models.friends import FriendRequest, FriendResponse, FriendsResponse
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Friends"], prefix="/api")
@@ -36,7 +37,7 @@ async def get_friends(
 
     response: Response,
     queries: FriendQueries = Depends(),
-):
+) -> List[FriendsResponse]:
 
     friends = queries.list_friends()
     if friends is None:

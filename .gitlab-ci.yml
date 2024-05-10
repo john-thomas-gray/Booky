@@ -8,6 +8,7 @@ stages:
 
 # Run flake8 to check for code quality
 # And also optionally run unit tests
+
 tests:
     image: python:3-bullseye
     stage: test
@@ -15,9 +16,13 @@ tests:
         - pip install flake8
         - flake8 api
         # Run unit tests
-        # - cd api
-        # - pip install -r requirements.txt
-        # - python -m pytest
+        - cd api
+        - pip install -r requirements.txt
+        - python -m pytest
+    variables:
+        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
+        SIGNING_KEY: ${SIGNING_KEY}
+        GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY}
 # # Build API Image:
 # # This job builds the API docker image and pushes it to the GitLab docker registry
 # # When this job finishes you will need to use the glv-cloud-cli reset command
