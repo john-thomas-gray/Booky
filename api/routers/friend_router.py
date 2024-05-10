@@ -10,7 +10,6 @@ from fastapi import (
 from queries.friend_queries import (
   FriendQueries
 )
-
 from typing import List
 from models.friends import FriendRequest, FriendResponse, FriendsResponse
 # Note we are using a prefix here,

@@ -113,13 +113,11 @@ if (user) {
                 {user.id == club.owner_id &&
 
                     <>
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
                         <NavLink aria-current="page" to="/book" exact="true" className='link'>
                             Create Meeting
                         </NavLink>
                     </div>
-                    </nav>
                     </>
                 }
             <table>

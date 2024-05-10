@@ -73,7 +73,9 @@ export default function UserPage() {
         if (response.ok) {
             const data = await response.json()
             setClubs(data)
+            console.log("clubs: ", clubs)
         }
+
     };
 
     const fetchMeetingData = async() => {
@@ -164,7 +166,21 @@ export default function UserPage() {
                                             </NavLink>
                                         </td>
                                     </tr>
-                                ))
+                                )),
+                                <>
+                                {user.id == pageOwnerID && (
+                                        <div>
+                                            <NavLink
+                                                aria-current="page"
+                                                to="/clubs"
+                                                exact="true"
+                                                className="link"
+                                            >
+                                                Create Club
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </>
                             ) : (
                                 <tr>
                                     <td
@@ -176,7 +192,7 @@ export default function UserPage() {
                                             <NavLink
                                                 to="/clubs/list"
                                                 className="link"
-                                            >
+                                                >
                                                 Join a club
                                             </NavLink>{' '}
                                             or{' '}
@@ -274,22 +290,6 @@ export default function UserPage() {
                     )}
                 </div>
             </div>
-            {/* {user.id == pageOwnerID && (
-                    <div class="create_club">
-                        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                            <div className="container-fluid">
-                                <NavLink
-                                    aria-current="page"
-                                    to="/clubs"
-                                    exact="true"
-                                    className="link"
-                                >
-                                    Create Club
-                                </NavLink>
-                            </div>
-                        </nav>
-                    </div>
-                )} */}
         </main>
     )
 }

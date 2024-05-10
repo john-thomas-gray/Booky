@@ -64,10 +64,7 @@ if(user){
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Score</th>
-                        <th>Profile Picture</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -84,21 +81,34 @@ if(user){
         }).map((user) => {
                         return (
                             <tr key={user.id}>
-                                <td>{user.username}   <button onClick={() => grabID(user.id)}>Friend Request</button></td>
-                                <td>{user.email}</td>
-                                <td>{user.score}</td>
-                                <td>
-                                    {
-                                        <img
-                                            src={user.picture_url}
-                                            alt="User avatar"
-                                            style={{
-                                                maxWidth: '100px',
-                                                maxHeight: '100px',
-                                            }}
-                                        />
-                                    }
-                                </td>
+                                <a
+                                    href={`/user/${user.id}`}
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: 'inherit',
+                                    }}
+                                >
+                                    <td>
+                                        {
+                                            <img
+                                                src={user.picture_url}
+                                                alt="User avatar"
+                                                style={{
+                                                    maxWidth: '40px',
+                                                    maxHeight: '40px',
+                                                }}
+                                            />
+                                        }
+                                        {user.username}{' '}
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td>{user.score}</td>
+                                    <td>
+                                        <button onClick={() => grabID(user.id)}>
+                                            Friend Request
+                                        </button>
+                                    </td>
+                                </a>
                             </tr>
                         )
                     })}
