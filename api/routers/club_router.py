@@ -5,7 +5,6 @@ from utils.exceptions import UserDatabaseException
 from typing import List
 from fastapi import (
     Depends,
-    Request,
     Response,
     HTTPException,
     status,
@@ -27,8 +26,6 @@ router = APIRouter(tags=["Clubs"], prefix="/api")
 @router.post("/clubs")
 async def create_club(
     new_club: ClubRequest,
-    request: Request,
-    response: Response,
     queries: ClubQueries = Depends(),
 ) -> ClubResponse:
     """

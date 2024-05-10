@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import useAuthService from '../hooks/useAuthService';
+import { useState } from 'react';
 import GoogleBooksApp from './GoogleBooksApp';
 
 function CreateBookForm() {
@@ -17,9 +16,6 @@ function CreateBookForm() {
         const data = {};
             data.title = title, data.author = author, data.page_count = Number(pageCount), data.genre = genre,
             data.publisher = publisher, data.synopsis = synopsis, data.cover_img_url = coverImgUrl
-
-
-        console.log("Submitting data", data);
 
         const bookUrl = 'http://localhost:8000/book';
         const fetchConfig = {

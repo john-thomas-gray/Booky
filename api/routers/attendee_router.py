@@ -47,7 +47,6 @@ def list_attendees_by_meeting(
 @router.post("/{meeting_id}")
 async def join_meeting(
     meeting_id: int,
-    response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
     queries: AttendeeQueries = Depends(),
 ) -> AttendeeResponse:
@@ -59,7 +58,6 @@ async def join_meeting(
 @router.delete("/{meeting_id}/leave")
 async def leave_meeting(
     meeting_id: int,
-    response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
         queries: AttendeeQueries = Depends()) -> bool:
     if not user:
@@ -69,13 +67,9 @@ async def leave_meeting(
     else:
         try:
             queries.leave_meeting(meeting_id=meeting_id, attendee_id=user.id)
-            print("meeting_id", meeting_id)
-
-            print("success! you left the meeting")
             return True
         except Exception as e:
             print(e)
-            print("could NOT leave meeting")
             return False
 
 

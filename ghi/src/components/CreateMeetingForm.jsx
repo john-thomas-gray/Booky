@@ -37,7 +37,6 @@ function CreateMeetingForm() {
 
     const handleClubChange = (event) => {
         setClubId(event.target.value)
-        console.log('event.target.value)', event.target.value)
     }
 
     async function handleFormSubmit(event) {
@@ -69,9 +68,6 @@ function CreateMeetingForm() {
             console.error('failed to create meeting')
         }
     }
-
-    console.log(user.id, 'user.id')
-    console.log(data, 'club.owner_id')
 
     if (user) {
         return (

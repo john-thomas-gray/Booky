@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { NavLink } from 'react-router-dom'
 import ExplorePage from './ExplorePage'
-import Footer from './Footer'
 import '../App.css'
 
 export default function ListClubs() {

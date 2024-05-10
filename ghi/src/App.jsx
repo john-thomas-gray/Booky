@@ -1,11 +1,8 @@
 // This makes VSCode check types as if you are using TypeScript
 //@ts-check
-import { useState, useEffect } from 'react'
-import { Outlet, BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
-import ErrorNotification from './components/ErrorNotification'
-import Construct from './components/Construct'
-import SignUpForm from './components/SignUpForm'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import './App.css'

@@ -12,7 +12,7 @@ export default function ListBooks() {
             setBooks(data)
         }
     }
-console.log("!!!!!!",books)
+
     useEffect(() => {
         fetchData()
     }, [])

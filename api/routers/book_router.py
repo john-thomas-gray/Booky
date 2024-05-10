@@ -3,7 +3,7 @@ Book API Router
 """
 import requests
 import os
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Response
 from queries.book_queries import BookQueries
 from models.books import BookRequest, BookResponse
 from utils.exceptions import UserDatabaseException
@@ -13,8 +13,6 @@ router = APIRouter(tags=["Book"])
 @router.post("/book")
 def create_book(
     new_book: BookRequest,
-    request: Request,
-    response: Response,
     queries: BookQueries = Depends(),
 ) -> BookResponse:
     """
@@ -77,9 +75,7 @@ def list_books(
 @router.get("/getbooks/{title}")
 def get_book(title: str):
     GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")
-    # GOOGLE_BOOKS_API_KEY = "AIzaSyBhVYIvBYwae-smPMiNhZsRe9_APprNIUA"
     url = f'https://www.googleapis.com/books/v1/volumes?q={title}&key={GOOGLE_BOOKS_API_KEY}'
-    print(url)
     response1 = requests.get(url=url)
     book = response1.json()
 

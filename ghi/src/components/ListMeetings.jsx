@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { NavLink, useParams, Link, useOutletContext } from 'react-router-dom'
-import useAuthService from '../hooks/useAuthService'
+import { useState, useEffect } from 'react'
+import { NavLink, useOutletContext } from 'react-router-dom'
+
 
 export default function ListMeetings(){
 const [meetings, setMeetings] = useState([])
-const {meetingId} = useParams()
-const { user } = useAuthService()
 const [club, setClub] = useState("")
-const {deleteSuccess, setDeleteSuccess} = useOutletContext()
+const {deleteSuccess} = useOutletContext()
 const fetchData = async () => {
     const url = 'http://localhost:8000/api/meeting/'
 
@@ -19,7 +17,6 @@ const fetchData = async () => {
         await fetchClub(club_id)
     }
 }
-console.log(deleteSuccess, "deleteSucess111111111")
 
 const fetchClub = async (club_id) => {
     const url = `http://localhost:8000/api/clubs/${club_id}`
@@ -28,7 +25,6 @@ const fetchClub = async (club_id) => {
             const data = await response.json()
             setClub(data)
         }
-        console.log("rresponse", response)
 };
 
 

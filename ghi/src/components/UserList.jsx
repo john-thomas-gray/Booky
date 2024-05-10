@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ExplorePage from './ExplorePage';
-import Footer from './Footer';
 import useAuthService from '../hooks/useAuthService'
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState("");
     const {user} = useAuthService();
-    // const [friendID, setFriendID] = useState('');
     const grabID = (val) => {
       handleFriendRequest(val)
     }
@@ -30,15 +28,7 @@ export default function UserList() {
           credentials: "include"
         };
         const response = await fetch(url, fetchConfig)
-
-        if (response.ok) {
-          console.log('request went through')
-        }
-
-
     }
-
-
 
     const fetchData = async () => {
         const url = 'http://localhost:8000/api/users/'

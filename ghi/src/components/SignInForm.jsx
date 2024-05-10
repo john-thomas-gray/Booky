@@ -18,32 +18,31 @@ export default function SignInForm() {
     }
 
     if (user) {
-        console.log('user', user)
         return <Navigate to={`/user/${user.id}`} />
     }
 
     return (
         <>
-        Log In
-        <form onSubmit={handleFormSubmit}>
-            {error && <div className="error">{error.message}</div>}
+            Log In
+            <form onSubmit={handleFormSubmit}>
+                {error && <div className="error">{error.message}</div>}
 
-            <input
-                type="text"
-                name="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter Username"
-            />
-            <input
-                type="text"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter Password"
-            />
-            <button type="submit">Log In</button>
-        </form>
+                <input
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter Username"
+                />
+                <input
+                    type="text"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter Password"
+                />
+                <button type="submit">Log In</button>
+            </form>
         </>
     )
 }

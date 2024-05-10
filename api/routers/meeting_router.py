@@ -40,7 +40,6 @@ def create_meeting(
             status_code=status.HTTP_404_NOT_FOUND, detail="UserResponse is null"
         )
     else:
-        # Create the meeting in the database
         meeting = queries.create_meeting(
             new_meeting.club_id,
             new_meeting.book_title,
@@ -53,7 +52,6 @@ def create_meeting(
 @router.get("/")
 def list_meetings(
     response: Response,
-    # user: UserResponse=Depends(try_get_jwt_user_data),
     queries: MeetingQueries = Depends(),
 ) -> List[MeetingResponse]:
     meetings = queries.list_meetings()
@@ -83,7 +81,6 @@ def list_meetings_by_club(
 @router.delete("/{id}")
 def delete_meeting(
     id: int,
-    response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
         queries: MeetingQueries = Depends()) -> bool:
     if not user:
@@ -93,11 +90,9 @@ def delete_meeting(
     else:
         try:
             queries.delete_meeting(id)
-            print("success!")
             return True
         except Exception as e:
             print(e)
-            print("could NOT delete meeting")
             return False
 
 
@@ -116,9 +111,6 @@ def get_meeting_details(
         if meeting is None:
             response.status_code = 404
         return meeting
-
-# Should rename list_attendees_by_meeting at some point. The name is confusing since it
-# actually lists user objects, not attendees
 
 
 @router.get("/{id}/users")

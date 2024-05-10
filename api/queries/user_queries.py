@@ -141,7 +141,6 @@ class UserQueries:
                         ],
                     )
                     user = cur.fetchone()
-                    print("USER", type(user))
                     if not user:
                         raise UserDatabaseException(
                             f"Could not create user with username {username}"

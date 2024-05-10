@@ -1,5 +1,5 @@
 // @ts-check
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useNavigate } from 'react-router-dom'
 

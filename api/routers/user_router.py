@@ -5,7 +5,6 @@ from typing import List
 
 from fastapi import (
     Depends,
-    Request,
     Response,
     HTTPException,
     status,
@@ -50,8 +49,6 @@ async def list_users(
 @router.post("/")
 async def create_user(
   new_user: UserWithPw,
-  request: Request,
-  response: Response,
   queries: UserQueries = Depends(),
 ) -> UserWithPw:
     user = queries.create_user(new_user.username, new_user.password, new_user.email, new_user.score, new_user.picture_url)
@@ -61,7 +58,6 @@ async def create_user(
 
 @router.patch("/{user_id}")
 def update_user(
-    response: Response,
     user_id: int,
     user: UserUpdate,
     queries: UserQueries = Depends(),
@@ -111,12 +107,9 @@ async def list_club_members(
 @router.post("/club/{club_id}")
 async def join_club(
     club_id: int,
-    response: Response,
     user: UserResponse = Depends(try_get_jwt_user_data),
     queries: UserQueries = Depends(),
 ) -> MemberResponse:
     club_members = queries.join_club(club_id=club_id, member_id=user.id)
     club_member_out = MemberResponse(**club_members.model_dump())
-    # if club_members is None:
-    #   response.status_code = 404
     return club_member_out

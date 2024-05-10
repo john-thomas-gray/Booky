@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ExplorePage from './ExplorePage';
-import Footer from './Footer';
 import '../App.css'
 import useAuthService from '../hooks/useAuthService'
 function GoogleBooksApp() {
@@ -30,7 +29,6 @@ function GoogleBooksApp() {
         const data = {};
             data.title = String(book.volumeInfo.title), data.author = book.volumeInfo.authors[0], data.page_count = Number(book.volumeInfo.pageCount), data.genre = book.volumeInfo.categories[0],
             data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
-        console.log("Submitting data", data);
         const bookUrl = 'http://localhost:8000/book';
         const fetchConfig = {
             method: "POST",
@@ -38,10 +36,7 @@ function GoogleBooksApp() {
             headers: { 'Content-Type': 'application/json' },
         };
         const response = await fetch(bookUrl, fetchConfig);
-        console.log("response", response)
-        if (response.ok) {
-        console.log("Sucess!")
-        }}
+        }
             const handleSubmit = (event) => {
                 event.preventDefault();
                 searchBooks(query)

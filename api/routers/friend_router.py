@@ -11,10 +11,7 @@ from queries.friend_queries import (
   FriendQueries
 )
 
-from models.users import UserResponse
-# from utils.exceptions import ClubDatabaseException
 from models.friends import FriendRequest, FriendResponse
-from utils.authentication import try_get_jwt_user_data
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Friends"], prefix="/api")
@@ -24,7 +21,6 @@ router = APIRouter(tags=["Friends"], prefix="/api")
 async def add_friend(
     response: Response,
     friend_request: FriendRequest,
-    user: UserResponse = Depends(try_get_jwt_user_data),
     queries: FriendQueries = Depends(),
 ) -> FriendResponse:
     if friend_request.member_id == friend_request.friend_id:

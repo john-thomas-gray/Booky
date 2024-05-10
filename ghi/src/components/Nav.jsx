@@ -12,7 +12,6 @@ export default function Nav() {
             })
             // Check if the response indicates successful signout
             if (response.ok) {
-                console.log('Signed out successfully.')
                 // Redirect to the home page
                 window.location.href = '/'
             } else {

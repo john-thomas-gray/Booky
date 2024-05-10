@@ -55,9 +55,6 @@ export default function UserPage() {
         credentials: 'include',
         };
         const response = await fetch(url, fetchOptions);
-        if (response.ok) {
-          console.log("request went through")
-        }
     }
 
 

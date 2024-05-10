@@ -24,7 +24,6 @@ function CreateMeetingForm() {
 
     if (response.ok){
       const data = await response.json();
-      console.log("data", data)
       setData(data)
     }
   }
@@ -59,7 +58,6 @@ function CreateMeetingForm() {
           },
         };
       const response = await fetch(meetingUrl,{credentials: "include"}, fetchConfig);
-      console.log("response", response)
 
 
       if (response.ok) {

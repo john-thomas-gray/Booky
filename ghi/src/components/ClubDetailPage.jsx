@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
@@ -13,7 +13,6 @@ export default function ClubDetailPage() {
     const [error, setError] = useState(null)
     const [members, setMembers] = useState([])
     const [meetings, setMeetings] = useState([])
-    const [currentIndex, setCurrentIndex] = useState(0);
 
     const currentMeetings = meetings.filter(
             (meeting) => new Date(meeting.active) > new Date()
@@ -45,16 +44,6 @@ export default function ClubDetailPage() {
       };
 
     }
-    // const RenderJoin = async () => {
-    //     if (members.filter(member => member.member_id === user.id).length === 0){
-    //         console.log(members)
-    //         return( <><button className="btn btn-info" onClick={getID(club.club_id)}>Join Club</button></>)
-    //     }
-    //     else {
-    //         return(<></>)
-    //     }
-    // }
-
 
     const fetchMembers = async () => {
         const url = `http://localhost:8000/api/users/club/${clubID}`

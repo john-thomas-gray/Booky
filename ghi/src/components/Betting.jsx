@@ -1,6 +1,6 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
-import { Navigate, useParams, useOutletContext } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 export default function Betting(){
     const { meetingID } = useParams()
@@ -22,7 +22,6 @@ export default function Betting(){
             amount: parseInt(betAmount),
             paid: false
         }
-        console.log({data})
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
@@ -31,7 +30,6 @@ export default function Betting(){
           }
         }
         const response = await fetch(url, fetchConfig);
-        console.log({response})
 
         if (response.ok) {
             setSelectedAttendeeId('')
@@ -57,19 +55,6 @@ export default function Betting(){
             setAttendees(data)
         }
     }
-    // const fetchAttendees = () => {
-    //     const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`
-    //     const fetchPromise = fetch(url, { credentials: 'include' })
-    //     fetchPromise
-    //         .then((response) => {
-    //             return response.json()
-    //         })
-    //         .then((data) => {
-    //             const attendee_pool = data.filter((a) => !a.finished);
-    //             console.log("!!!", attendee_pool[0].attendee_id)
-    //             setSelectedAttendeeId(attendee_pool[0].attendee_id)
-    //             return data
-    //         })
 
     const fetchUsers = async () => {
         const url = `http://localhost:8000/api/meeting/${meetingID}/users`
@@ -140,62 +125,3 @@ export default function Betting(){
         </main>
     )
 }
-
-    // const saveRanksEachFinish = async () => {
-    //     let attendees_finished = []
-    //     let attendees_unfinished = []
-    //     // Split attendees into finished...
-    //     attendees_finished = actualAttendees.filter(
-    //         (a) => a.meeting_id === parseInt(meetingID) && a.finished === true
-    //     )
-    //     console.log('finished', attendees_finished)
-    //     let rank = attendees_finished.length
-    //     /// ...and unfinished
-    //     attendees_unfinished = actualAttendees
-    //         .filter(
-    //             (a) =>
-    //                 a.meeting_id === parseInt(meetingID) && a.finished === false
-    //         )
-    //         .sort((a, b) => b.attendee_page - a.attendee_page)
-    //     console.log('unfinished', attendees_unfinished)
-    //     // Set rank at time of finish
-    //     attendees_unfinished.forEach((a) => {
-    //         rank++
-    //         console.log("attendee: ", rank, a)
-    //         a.place_at_last_finish = rank
-    //         if (a.attendee_page === book.page_count) {
-    //             a.finished = true
-    //         }
-    //         // Update the database
-    //         updateAttendeeTable(meetingID, a.attendee_id, a.attendee_page, a.place_at_last_finish, a.finished)
-    //         console.log(a.attendee_id, rank)
-    //     })
-    // }
-
-        // const updateAttendeeTable = async (
-    //     meetingId,
-    //     attendeeId,
-    //     attendeePage,
-    //     placeAtLastFinish,
-    //     Finished
-    // ) => {
-    //     const url = `http://localhost:8000/api/attendees/page`
-    //     const bodyData = JSON.stringify({
-    //         meeting_id: meetingId,
-    //         attendee_id: attendeeId,
-    //         attendee_page: attendeePage,
-    //         place_at_last_finish: placeAtLastFinish,
-    //         finished: Finished,
-    //     })
-
-    //     const response = await fetch(url, {
-    //         method: 'PATCH',
-    //         credentials: 'include',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: bodyData
-    //     })
-    //     if (response.ok) {
-    //         setAttendeeTable(await response.json())
-    //         setPageInput(0)
-    //     }
-    // }
