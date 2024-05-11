@@ -154,32 +154,43 @@ export default function UserPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {clubs.length > 0 ? (
-                                clubs.map((club) => (
-                                    <tr key={club.club_id}>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <NavLink
-                                                to={`/clubs/${club.club_id}`}
-                                                className="link"
-                                            >
-                                                {club.name}
-                                            </NavLink>
-                                        </td>
-                                    </tr>
-                                )),
+                            {clubs.length > 0 &&
+                            user.id === Number(pageOwnerID) ? (
                                 <>
-                                {user.id == pageOwnerID && (
-                                        <div>
+                                    {clubs.map((club) => (
+                                        <tr key={club.club_id}>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <NavLink
+                                                    to={`/clubs/${club.club_id}`}
+                                                    className="link"
+                                                >
+                                                    {club.name}
+                                                </NavLink>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    <tr>
+                                        <td style={{ textAlign: 'center' }}>
                                             <NavLink
                                                 aria-current="page"
                                                 to="/clubs"
-                                                exact="true"
-                                                className="link"
+                                                exact={true}
+                                                className="link button"
+                                                style={{
+                                                    display: 'inline-block',
+                                                    padding: '10px 20px',
+                                                    borderRadius: '5px',
+                                                    backgroundColor: 'white',
+                                                    color: '#fff',
+                                                    textDecoration: 'none',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                }}
                                             >
-                                                Create Club
+                                                Create a club
                                             </NavLink>
-                                        </div>
-                                    )}
+                                        </td>
+                                    </tr>
                                 </>
                             ) : (
                                 <tr>
@@ -192,7 +203,7 @@ export default function UserPage() {
                                             <NavLink
                                                 to="/clubs/list"
                                                 className="link"
-                                                >
+                                            >
                                                 Join a club
                                             </NavLink>{' '}
                                             or{' '}
