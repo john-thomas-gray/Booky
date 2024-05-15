@@ -38,14 +38,14 @@ export default function Betting(){
         }
     }
 
-    const fetchAttendee = async () => {
-        const url = `http://localhost:8000/api/attendees/page/${meetingID}/${user.id}`
-        const response = await fetch(url, { credentials: 'include' })
-        if (response.ok) {
-            const data = await response.json()
-            setAttendeeTable(data)
-        }
-    }
+    // const fetchAttendee = async () => {
+    //     const url = `http://localhost:8000/api/attendees/page/${meetingID}/${user.id}`
+    //     const response = await fetch(url, { credentials: 'include' })
+    //     if (response.ok) {
+    //         const data = await response.json()
+    //         setAttendeeTable(data)
+    //     }
+    // }
 
     const fetchAttendees = async () => {
         const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`

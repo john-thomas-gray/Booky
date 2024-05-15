@@ -39,7 +39,7 @@ async def delete_book(
         queries: BookQueries = Depends(),) -> bool:
 
     try:
-        queries.delete_books(book_id)
+        queries.delete_book(book_id)
         return True
     except UserDatabaseException:
         return False

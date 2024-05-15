@@ -35,7 +35,7 @@ function CreateBookForm() {
             setCoverImgUrl('');
         } else {
             console.error("Failed to create book");
-        };
+        }
     }
 
     return (

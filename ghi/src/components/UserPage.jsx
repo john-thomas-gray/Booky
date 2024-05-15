@@ -1,62 +1,61 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { NavLink, Link } from 'react-router-dom';
-
+import { NavLink, Link } from 'react-router-dom'
 
 export default function UserPage() {
-    const { pageOwnerID } = useParams();
-    const [pageOwner, setPageOwner] = useState([]);
-    const [clubs, setClubs] = useState([]);
-    const [meetings, setMeetings] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const { user } = useAuthService();
-    const [friends, setFriends] = useState([]);
-    const [requests, setRequests] = useState([]);
+    const { pageOwnerID } = useParams()
+    const [pageOwner, setPageOwner] = useState([])
+    const [clubs, setClubs] = useState([])
+    const [meetings, setMeetings] = useState([])
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const { user } = useAuthService()
+    const [friends, setFriends] = useState([])
+    const [requests, setRequests] = useState([])
 
     const handleRemoveFriend = async (val) => {
         removeFriend(val)
         removeOtherFriend(val)
-
     }
 
     const fetchRequests = async () => {
         const url = 'http://localhost:8000/api/friend/requests'
-        const response = await fetch(url, {credentials: "include"})
+        const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
-            setRequests(data.filter((request) =>
-            request.user_id == user.id))
+            setRequests(data.filter((request) => request.user_id == user.id))
         }
     }
     const removeFriend = async (val) => {
         const url = `http://localhost:8000/api/friend/${user.id}/${val}`
         const fetchOptions = {
-          method: 'delete',
-          body: JSON.stringify({}),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        credentials: 'include',
-        };
-        const response = await fetch(url, fetchOptions);
+            method: 'delete',
+            body: JSON.stringify({}),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        }
+        const response = await fetch(url, fetchOptions)
         if (response.ok) {
-          fetchFriends();
+            fetchFriends()
         }
     }
-        const removeOtherFriend = async (val) => {
+    const removeOtherFriend = async (val) => {
         const url = `http://localhost:8000/api/friend/${val}/${user.id}`
         const fetchOptions = {
-          method: 'delete',
-          body: JSON.stringify({}),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        credentials: 'include',
-        };
-        const response = await fetch(url, fetchOptions);
+            method: 'delete',
+            body: JSON.stringify({}),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        }
+        const response = await fetch(url, fetchOptions)
+        if (response.ok) {
+            fetchFriends()
+        }
     }
-
 
     const fetchPageOwnerData = async () => {
         const url = `http://localhost:8000/api/users/${pageOwnerID}`
@@ -65,7 +64,7 @@ export default function UserPage() {
             const data = await response.json()
             setPageOwner(data)
         }
-    };
+    }
 
     const fetchClubData = async () => {
         const url = `http://localhost:8000/api/clubs/user/${pageOwnerID}`
@@ -73,31 +72,29 @@ export default function UserPage() {
         if (response.ok) {
             const data = await response.json()
             setClubs(data)
-            console.log("clubs: ", clubs)
+            console.log('clubs: ', clubs)
         }
+    }
 
-    };
-
-    const fetchMeetingData = async() => {
-      const url = `http://localhost:8000/api/meeting/${pageOwnerID}/user`
-      const response = await fetch(url, {credentials: "include"})
-      if (response.ok) {
-        const data = await response.json()
-        setMeetings(data)
-      }
-    };
+    const fetchMeetingData = async () => {
+        const url = `http://localhost:8000/api/meeting/${pageOwnerID}/user`
+        const response = await fetch(url, { credentials: 'include' })
+        if (response.ok) {
+            const data = await response.json()
+            setMeetings(data)
+        }
+    }
 
     const fetchFriends = async () => {
         const url = `http://localhost:8000/api/${pageOwnerID}/friends`
         const response = await fetch(url)
-        if (response.ok){
+        if (response.ok) {
             const data = await response.json()
             setFriends(data)
-        }
-        else{
+        } else {
             setFriends([])
         }
-    };
+    }
 
     useEffect(() => {
         fetchPageOwnerData()
@@ -105,21 +102,23 @@ export default function UserPage() {
         fetchMeetingData()
         fetchFriends()
         fetchRequests()
-    }, []);
+    }, [])
 
     const currentMeetings = meetings.filter(
-            (meeting) => new Date(meeting.active) > new Date()
-        )
+        (meeting) => new Date(meeting.active) > new Date()
+    )
 
     const handleNextMeeting = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % currentMeetings.length)
-    };
-
+    }
 
     const handlePrevMeeting = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + currentMeetings.length) % currentMeetings.length);
-    };
-
+        setCurrentIndex(
+            (prevIndex) =>
+                (prevIndex - 1 + currentMeetings.length) %
+                currentMeetings.length
+        )
+    }
 
     return (
         <main style={{ backgroundColor: '#8A807E' }}>
@@ -230,8 +229,7 @@ export default function UserPage() {
                     {friends.length > 0 ? (
                         <list>
                             {friends.map((friend) => (
-                                <li>
-                                    {friend.friend_username}{' '}
+                                <li key={friend.friend_id}>
                                     {user && user.id == pageOwnerID && (
                                         <button
                                             onClick={() =>
@@ -286,7 +284,7 @@ export default function UserPage() {
                             {meetings.map((meeting) => {
                                 if (new Date(meeting.active) < new Date()) {
                                     return (
-                                        <div>
+                                        <div key={meeting.id}>
                                             <a href={`/meetings/${meeting.id}`}>
                                                 {meeting.book_title}{' '}
                                                 {meeting.active}

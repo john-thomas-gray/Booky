@@ -1,5 +1,5 @@
 // @ts-check
-import React, { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { authenticate } from '../services/authService'
 
 /**

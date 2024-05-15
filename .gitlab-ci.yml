@@ -6,6 +6,9 @@ stages:
     - build
     - deploy
 
+variables:
+    EC2_HOST: "52.53.150.236"
+
 # Run flake8 to check for code quality
 # And also optionally run unit tests
 
@@ -27,58 +30,84 @@ tests:
 # # This job builds the API docker image and pushes it to the GitLab docker registry
 # # When this job finishes you will need to use the glv-cloud-cli reset command
 # # To deploy the new image
-# build-api-image:
-#   stage: build
-#   image: docker:git
-#   needs:
-#     - tests
-#   variables:
-#     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
-#   before_script:
-#     # $CI_JOB_TOKEN is variable automatically added by Gitlab: see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html#variables-reference
-#     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
-#   script:
-#     - docker build --tag $GITLAB_IMAGE:latest ./api
-#     - docker push $GITLAB_IMAGE:latest
-#   only:
-#     - main
+build-api-image:
+  stage: build
+  image: docker:git
+  needs:
+    - tests
+  variables:
+    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
+  before_script:
+    # $CI_JOB_TOKEN is variable automatically added by Gitlab: see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html#variables-reference
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+  script:
+    - docker build --tag $GITLAB_IMAGE:latest ./api
+    - docker push $GITLAB_IMAGE:latest
+  only:
+    - main
 
 # # Build the React/JavaScript front-end
-# build-front-end-job:
-#   stage: build
-#   image: node:lts-bullseye
-#   needs:
-#     - tests
-#   variables:
-#     # If either of these variables is defined in the GitLab
-#     # CI/CD variables, that value will override the value here.
-#     # You need to substitute in your real values for
-#     # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
-#     # Don't forget to also replace PROJECT NAME in the npm run build line as well
-#     VITE_API_HOST: https://DEPLOYED_API_SERVICE.mod3projects.com
-#   script:
-#     - cd ghi
-#     - npm install
-#     - npm run lint
-#     - npm run build -- --base=/PROJECT_NAME/
-#     The following line creates a _redirects file to redirect all URLs to index.html
-#     Documentation: https://docs.gitlab.com/ee/user/project/pages/redirects.html#rewrite-all-requests-to-a-root-indexhtml
-#     - echo "/* /index.html 200" > dist/_redirects
-#   artifacts:
-#     paths:
-#       - ghi/dist/
+build-front-end-job:
+  stage: build
+  image: node:lts-bullseye
+  needs:
+    - tests
+  variables:
+    # If either of these variables is defined in the GitLab
+    # CI/CD variables, that value will override the value here.
+    # You need to substitute in your real values for
+    # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
+    # Don't forget to also replace PROJECT NAME in the npm run build line as well
+    VITE_API_HOST: https://DEPLOYED_API_SERVICE.mod3projects.com
+  script:
+    - cd ghi
+    - npm install
+    - npm run lint
+    - npm run build -- --base=/Booky/
+    # The following line creates a _redirects file to redirect all URLs to index.html
+    # Documentation: https://docs.gitlab.com/ee/user/project/pages/redirects.html#rewrite-all-requests-to-a-root-indexhtml
+    - echo "/* /index.html 200" > dist/_redirects
+  artifacts:
+    paths:
+      - ghi/dist/
 
-# # Deploy the React/JavaScript front-end to GitLab pages
-# pages:
-#   stage: deploy
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#   dependencies:
-#     - build-front-end-job
-#   needs:
-#     - build-front-end-job
-#   script:
-#     - mv ghi/dist/ public
-#   artifacts:
-#     paths:
-#       - public
+# Deploy the React/JavaScript front-end to GitLab pages
+pages:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  dependencies:
+    - build-front-end-job
+  needs:
+    - build-front-end-job
+  script:
+    - mv ghi/dist/ public
+  artifacts:
+    paths:
+      - public
+
+deploy-to-ec2:
+    stage: deploy
+    image: docker:26.1.2 # Use an image with Docker pre-installed
+    variables:
+        GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
+        DATABASE_URL: "postgresql://$PG_USER:$PG_PASSWORD@booky.c70cc042grus.us-west-1.rds.amazonaws.com/booky"
+        # SIGNING_KEY: "key"
+    before_script:
+        - apk add --no-cache openssh-client
+        - eval $(ssh-agent -s)
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - || (echo "Failed to add SSH key" && exit 1)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - echo "StrictHostKeyChecking no" > ~/.ssh/config
+        - ssh-keyscan $EC2_HOST >> ~/.ssh/known_hosts || (echo "Failed to ssh-keyscan" && exit 1)
+    script:
+        - echo "$GITLAB_IMAGE" || (echo "Failed to output" && exit 1)
+        - echo "$GITLAB_IMAGE:latest" || (echo "Failed to output" && exit 1)
+        - echo "$DATABASE_URL" || (echo "Failed to output" && exit 1)
+        - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin || (echo "Failed to login to Docker registry" && exit 1)
+        - ssh -v ubuntu@$EC2_HOST "docker pull $GITLAB_IMAGE:latest" || (echo "Failed to pull Docker image" && exit 1)
+        - ssh -v ubuntu@$EC2_HOST "docker stop my-api || true && docker rm my-api || true" || (echo "Failed to stop and remove container" && exit 1)
+        - ssh -v ubuntu@$EC2_HOST "docker run -d --name my-api -e DATABASE_URL=$DATABASE_URL -p 80:80 $GITLAB_IMAGE" || (echo "Failed to run Docker container" && exit 1)
+    only:
+        - main

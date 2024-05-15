@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react'
+/* eslint-disable react/no-unescaped-entities */
+import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function CreateMeetingForm() {
     const [clubId, setClubId] = useState('')
-    const [bookTitle, setBookTitle] = useState('')
+    // const [bookTitle, setBookTitle] = useState('')
     const [active, setActive] = useState('')
     const [data, setData] = useState([])
     const { user } = useAuthService()
     const navigate = useNavigate()
 
     const location = useLocation()
-    if (location !== null) {
-    }
+    // if (location !== null) {
+    // }
 
     const state = [location.state]
     /**
@@ -62,7 +63,6 @@ function CreateMeetingForm() {
 
         if (response.ok) {
             setClubId('')
-            setBookTitle('')
             setActive('')
         } else {
             console.error('failed to create meeting')
@@ -73,10 +73,13 @@ function CreateMeetingForm() {
         return (
             <form onSubmit={handleFormSubmit}>
                 {location.state &&
-                    location.state.hasOwnProperty('volumeInfo') &&
+                    Object.prototype.hasOwnProperty.call(
+                        location.state,
+                        'volumeInfo'
+                    ) &&
                     state.map((book) => {
                         return (
-                            <ul>
+                            <ul key={book.volumeInfo.title}>
                                 <img
                                     src={book.volumeInfo.imageLinks.thumbnail}
                                 ></img>

@@ -14,11 +14,11 @@ export default function ClubDetailPage() {
     const [members, setMembers] = useState([])
     const [meetings, setMeetings] = useState([])
 
-    const currentMeetings = meetings.filter(
-            (meeting) => new Date(meeting.active) > new Date()
-        )
+    // const currentMeetings = meetings.filter(
+    //         (meeting) => new Date(meeting.active) > new Date()
+    //     )
 
-    const getID = (val) => (e) => {
+    const getID = (val) => {
         joinClub(val)
     };
 
@@ -41,7 +41,7 @@ export default function ClubDetailPage() {
       const response = await fetch(membersUrl,  fetchConfig).catch(error => setError(error))
       if (response.ok){
         fetchMembers()
-      };
+      }
 
     }
 

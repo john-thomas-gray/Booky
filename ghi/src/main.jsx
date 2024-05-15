@@ -1,7 +1,6 @@
 //@ts-check
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createBrowserRouter, useOutletContext } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
@@ -28,7 +27,6 @@ const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
     throw new Error('BASE_URL is not defined')
 }
-
 
 const router = createBrowserRouter(
     [
@@ -66,8 +64,7 @@ const router = createBrowserRouter(
                 },
                 {
                     path: '/meetings/list',
-                    element:  <ListMeetings
-                    />,
+                    element: <ListMeetings />,
                 },
                 {
                     path: '/user/:pageOwnerID',
@@ -75,36 +72,35 @@ const router = createBrowserRouter(
                 },
                 {
                     path: '/meetings/:meetingID',
-                    element: <MeetingPage
-                    />
+                    element: <MeetingPage />,
                 },
                 {
                     path: '/clubs/:clubID',
-                    element: <ClubDetailPage />
+                    element: <ClubDetailPage />,
                 },
                 {
                     path: '/book',
-                    element: <GoogleBooksApp />
+                    element: <GoogleBooksApp />,
                 },
                 {
                     path: '/book/book',
-                    element: <ListBook />
+                    element: <ListBook />,
                 },
                 {
                     path: '/auth',
-                    element: <AuthPage />
+                    element: <AuthPage />,
                 },
                 {
                     path: '/explore',
-                    element: <ExplorePage />
+                    element: <ExplorePage />,
                 },
                 {
                     path: '/bets/:meetingID',
-                    element: <Betting />
+                    element: <Betting />,
                 },
                 {
                     path: '/requests/',
-                    element: <FriendRequestPage />
+                    element: <FriendRequestPage />,
                 },
             ],
         },
@@ -125,7 +121,6 @@ console.table(import.meta.env)
 
 const root = ReactDOM.createRoot(rootElement)
 root.render(
-
     <AuthProvider>
         <RouterProvider router={router} />
     </AuthProvider>

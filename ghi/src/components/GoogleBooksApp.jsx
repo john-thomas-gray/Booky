@@ -1,52 +1,62 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import ExplorePage from './ExplorePage';
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import ExplorePage from './ExplorePage'
 import '../App.css'
 import useAuthService from '../hooks/useAuthService'
 function GoogleBooksApp() {
-    const [query, setQuery] = useState('');
-    const [books, setBooks] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const {user} = useAuthService();
-        const searchBooks = async (title) => {
-        const url = `http://localhost:8000/getbooks/${title}`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setBooks(data)
-            } catch (error) {
-                console.error('Failed to fetch books:', error);
+    const [query, setQuery] = useState('')
+    const [books, setBooks] = useState('')
+    // const [isLoading, setIsLoading] = useState(false)
+    // const [error, setError] = useState(null)
+    const { user } = useAuthService()
+    const searchBooks = async (title) => {
+        const url = `http://localhost:8000/getbooks/${title}`
+        try {
+            const response = await fetch(url)
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
             }
-            }
-        const getBook = (book) => (e) => {
-            submitBook(book)
-        };
-        async function submitBook(book) {
-        const data = {};
-            data.title = String(book.volumeInfo.title), data.author = book.volumeInfo.authors[0], data.page_count = Number(book.volumeInfo.pageCount), data.genre = book.volumeInfo.categories[0],
-            data.synopsis = book.volumeInfo.description, data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail
-        const bookUrl = 'http://localhost:8000/book';
+            const data = await response.json()
+            setBooks(data)
+        } catch (error) {
+            console.error('Failed to fetch books:', error)
+        }
+    }
+    const getBook = (book) => {
+        submitBook(book)
+    }
+    async function submitBook(book) {
+        const data = {}
+        ;(data.title = String(book.volumeInfo.title)),
+            (data.author = book.volumeInfo.authors[0]),
+            (data.page_count = Number(book.volumeInfo.pageCount)),
+            (data.genre = book.volumeInfo.categories[0]),
+            (data.synopsis = book.volumeInfo.description),
+            (data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail)
+        const bookUrl = 'http://localhost:8000/book'
         const fetchConfig = {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' },
-        };
-        const response = await fetch(bookUrl, fetchConfig);
-        } 
-            const handleSubmit = (event) => {
-                event.preventDefault();
-                searchBooks(query)
-                }
-            return (
-                <>
-                        <div><ExplorePage></ExplorePage></div>
-                <div>
-                    <form onSubmit={handleSubmit}>
-                        <input
+        }
+        const response = await fetch(bookUrl, fetchConfig)
+        if (response.ok) {
+            console.log('okay')
+        }
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        searchBooks(query)
+    }
+    return (
+        <>
+            <div>
+                <ExplorePage></ExplorePage>
+            </div>
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <input
                         className="search-box"
                         type="text"
                         value={query}
@@ -56,13 +66,12 @@ function GoogleBooksApp() {
                     />
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        // disabled={isLoading}
                         className="search-button"
                     >
-                        {isLoading ? 'Searching for Books' : 'Search'}
+                        {/* {isLoading ? 'Searching for Books' : 'Search'} */}
                     </button>
                 </form>
-                {error && <div>{error}</div>}
                 <ul>
                     {books &&
                         books.items.map((book) => (
