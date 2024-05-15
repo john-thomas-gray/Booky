@@ -18,6 +18,7 @@ export default function MeetingPage() {
     // User Info
     const { user } = useAuthService()
     const [authUser, setAuthUser] = useState({})
+    const [User, setUser] = useState({})
     const [users, setUsers] = useState([])
     // Bets
     const [bets, setBets] = useState([])
@@ -61,6 +62,7 @@ export default function MeetingPage() {
         if (response.ok) {
             fetchUsers()
             setInMeeting(true)
+            console.log('request is good and went through')
         }
     }
 
@@ -191,7 +193,29 @@ export default function MeetingPage() {
                     // PAYOUT FUNCTION
                     const b = getCurrentBet()
                     if (user.id === b.horse_id) {
-                        // If user finishing was predicted to win, pay the better
+                        // Pay the user who just finished, that the better bet on.
+                        // Update user information
+                        // let url = `http://localhost:8000/api/users/${user.id}`
+                        // const updated_score_horse = authUser.score + b.amount
+                        // console.log(
+                        //     'update',
+                        //     updated_score_horse,
+                        //     'horsescore',
+                        //     authUser.score,
+                        //     'bet',
+                        //     b.amount
+                        // )
+                        // let response = await fetch(url, {
+                        //     method: 'PATCH',
+                        //     credentials: 'include',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify({
+                        //         username: authUser.username,
+                        //         email: authUser.email,
+                        //         score: updated_score_horse,
+                        //         picture_url: authUser.picture_url,
+                        //     }),
+                        // })
                         fetch(
                             `http://localhost:8000/api/users/${b.better_id}`,
                             {
@@ -206,12 +230,21 @@ export default function MeetingPage() {
                         )
                             .then((response) => response.json())
                             .then((response) => {
+                                console.log('kkkkk', response)
                                 setUser(response)
                                 return response
                             })
                             .then((better) => {
                                 const updated_score_better =
                                     better.score + b.amount
+                                console.log(
+                                    'update',
+                                    updated_score_better,
+                                    'betterscore',
+                                    better.score,
+                                    'bet',
+                                    b.amount
+                                )
                                 let response = fetch(
                                     `http://localhost:8000/api/users/${b.better_id}`,
                                     {
@@ -232,7 +265,26 @@ export default function MeetingPage() {
                                 return response
                             })
                     }
-                    // Mark the bet as paid
+                    // else {
+                    //     // Pay only the user who just finished
+                    //     const url = `http://localhost:8000/api/users/${user.id}`
+                    //     const updated_score = authUser.score + b.amount
+                    //     console.log(updated_score)
+                    //     // console.log(updated_score)
+                    //     // Update user information
+                    //     const response = await fetch(url, {
+                    //         method: 'PATCH',
+                    //         credentials: 'include',
+                    //         headers: { 'Content-Type': 'application/json' },
+                    //         body: JSON.stringify({
+                    //             username: authUser.username,
+                    //             email: authUser.email,
+                    //             score: updated_score,
+                    //             picture_url: authUser.picture_url,
+                    //         }),
+                    //     })
+                    // }
+                    // Set bet.paid to true
                     const bet_url = `http://localhost:8000/api/bets/${meetingID}/${b.better_id}`
                     fetch(bet_url, {
                         method: 'PATCH',
@@ -250,6 +302,7 @@ export default function MeetingPage() {
         attendees_finished = attendees.filter(
             (a) => a.meeting_id === parseInt(meetingID) && a.finished === true
         )
+        console.log('finished', attendees_finished)
         let rank = attendees_finished.length
         /// ...and unfinished
         attendees_unfinished = attendees
@@ -258,15 +311,18 @@ export default function MeetingPage() {
                     a.meeting_id === parseInt(meetingID) && a.finished === false
             )
             .sort((a, b) => b.attendee_page - a.attendee_page)
+        console.log('unfinished', attendees_unfinished)
         // Set rank at time of finish
         attendees_unfinished.forEach((a) => {
             rank++
+            console.log('attendee: ', rank, a)
             a.place_at_last_finish = rank
             if (a.attendee_page === book.page_count) {
                 a.finished = true
             }
             // Update the database
             updateAttendee(a.attendee_id, a.place_at_last_finish, a.finished)
+            console.log(a.attendee_id, rank)
         })
     }
 
@@ -370,7 +426,7 @@ export default function MeetingPage() {
     // Used in user list
     const getAttendeePage = (userId) => {
         const a = attendees.find((a) => a.attendee_id === userId)
-        return a ? a.attendee_page : 0 // Default to 0 if attendee not found
+        return a ? a.attendee_page : 0
     }
 
     const sortedUsers = [...users].sort(
@@ -396,9 +452,10 @@ export default function MeetingPage() {
                 <div className="betAnnouncement">
                     {getCurrentBet().better_id} bet {getCurrentBet().amount}{' '}
                     that {getCurrentBet().horse_id} will finish next.
+                    {/* Prove them wrong by finishing next and receive ! */}
                 </div>
             ) : (
-                <div></div>
+                <div>{/* The crown is up for grabs! 👑 */}</div>
             )}
             {user.id === attendee.attendee_id &&
             attendee.attendee_page < book.page_count ? (
@@ -453,6 +510,10 @@ export default function MeetingPage() {
                         {sortedUsers.map((u, index) => (
                             <tr key={u.id}>
                                 <td>
+                                    {/* {index === 0 &&
+                                !attendees.some((a) => a.finished === true)
+                                    ? '👑'
+                                    : null} */}
                                     {index + 1}
                                 </td>
                                 <td style={{ textAlign: 'left' }}>
