@@ -17,6 +17,7 @@ COPY queries queries
 COPY routers routers
 COPY models models
 COPY tests tests
+COPY utils utils
 
 # Installs all the python packages listed in our requirements.txt file
 RUN python -m pip install -r requirements.txt
