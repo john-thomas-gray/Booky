@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'

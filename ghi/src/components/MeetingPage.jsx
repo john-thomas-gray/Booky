@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { NavLink, useParams, useOutletContext } from 'react-router-dom'
