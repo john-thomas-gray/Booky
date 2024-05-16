@@ -25,7 +25,7 @@ tests:
     variables:
         DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
         SIGNING_KEY: "305749480eaabb889374b793b40c597f0d2e7ef6f773c300a6bdd41066f34c2d"
-        GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY}
+        GOOGLE_BOOKS_API_KEY: "${GOOGLE_BOOKS_API_KEY}"
 # # Build API Image:
 # # This job builds the API docker image and pushes it to the GitLab docker registry
 # # When this job finishes you will need to use the glv-cloud-cli reset command
