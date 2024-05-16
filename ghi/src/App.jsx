@@ -7,10 +7,10 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import './App.css'
 
-
 // When using environment variables, you should do a check to see if
 // they are defined or not and throw an appropriate error message
-const API_HOST = import.meta.env.VITE_API_HOST
+// const API_HOST = import.meta.env.VITE_API_HOST
+const API_HOST = 'https://bookingforbooky.com'
 
 if (!API_HOST) {
     throw new Error('VITE_API_HOST is not defined')
@@ -28,10 +28,10 @@ function App() {
 
     return (
         <>
-            <div className="nav" >
+            <div className="nav">
                 <Nav />
             </div>
-            <div className="App" >
+            <div className="App">
                 <header className="App-header"></header>
                 <Outlet context={{ deleteSuccess, setDeleteSuccess }} />
             </div>

@@ -1,7 +1,7 @@
 // @ts-check
 import { tryFetch } from '../utils'
 
-export const baseUrl = import.meta.env.VITE_API_HOST
+export const baseUrl = 'https://bookingforbooky.com'
 if (!baseUrl) {
     throw new Error('VITE_API_HOST was not defined')
 }
@@ -16,7 +16,7 @@ if (!baseUrl) {
     The pattern used in these functions is called Errors as values.
     You can see these functions do not *throw* new errors, but instead
     return them.  This means instead of using try catch when we call them
-    we can instead use `instanceof`. 
+    we can instead use `instanceof`.
 
     This allows you to keep the happy path to the left, which makes
     the code more readable than try catch
