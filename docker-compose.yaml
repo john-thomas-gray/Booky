@@ -38,7 +38,7 @@ services:
         volumes:
             - ./ghi:/app
         environment:
-            VITE_API_HOST: http://localhost:8000
+            VITE_API_HOST: ${VITE_API_HOST}
             BASE_URL: http://localhost:5173
         ports:
             - "5173:5173"
