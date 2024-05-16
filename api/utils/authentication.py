@@ -1,7 +1,7 @@
 """
 Helper functions for implementing authentication
 """
-import os
+# import os
 import bcrypt
 from calendar import timegm
 from datetime import datetime, timedelta
@@ -17,9 +17,9 @@ from queries.user_queries import UserWithPw
 ALGORITHM = ALGORITHMS.HS256
 
 # We pull this from the environment
-SIGNING_KEY = os.environ.get("SIGNING_KEY")
-if not SIGNING_KEY:
-    raise ValueError("SIGNING_KEY environment variable not set")
+SIGNING_KEY = "305749480eaabb889374b793b40c597f0d2e7ef6f773c300a6bdd41066f34c2d"
+# if not SIGNING_KEY:
+#     raise ValueError("SIGNING_KEY environment variable not set")
 
 
 async def decode_jwt(token: str) -> Optional[JWTPayload]:
