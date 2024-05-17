@@ -6,13 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import (
     auth_router, club_router, meeting_router, book_router, user_router, user_club_router, bet_router, attendee_router,
     friend_router, friend_request_router)
-import os
+# import os
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
+    # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
