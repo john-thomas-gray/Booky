@@ -82,6 +82,7 @@ pages:
         - build-front-end-job
     script:
         - ls -la dist
+        - mkdir public
         - mv ghi/dist/ public
         - ls -la public
     artifacts:
