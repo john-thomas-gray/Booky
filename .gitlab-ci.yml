@@ -52,18 +52,18 @@ build-front-end-job:
     image: node:lts-bullseye
     needs:
         - tests
-    variables:
-        # If either of these variables is defined in the GitLab
-        # CI/CD variables, that value will override the value here.
-        # You need to substitute in your real values for
-        # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
-        # Don't forget to also replace PROJECT NAME in the npm run build line as well
-        # VITE_API_HOST: https://bookingforbooky.com
+    # variables:
+    # If either of these variables is defined in the GitLab
+    # CI/CD variables, that value will override the value here.
+    # You need to substitute in your real values for
+    # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
+    # Don't forget to also replace PROJECT NAME in the npm run build line as well
+    # VITE_API_HOST: https://bookingforbooky.com
     script:
         - cd ghi
         - npm install
         - npm run lint
-        - VITE_API_HOST=https://bookingforbooky.com npm run build -- --base=/Booky/
+        - VITE_API_HOST=https://bookingforbooky.com npm run build -- --base=/booky/
         # The following line creates a _redirects file to redirect all URLs to index.html
         # Documentation: https://docs.gitlab.com/ee/user/project/pages/redirects.html#rewrite-all-requests-to-a-root-indexhtml
         - echo "/* /index.html 200" > dist/_redirects
@@ -85,6 +85,8 @@ pages:
     artifacts:
         paths:
             - public
+    variables:
+        GITLAB_PAGES_HTTP: "true"
 
 deploy-to-ec2:
     stage: deploy
