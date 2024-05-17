@@ -58,12 +58,12 @@ build-front-end-job:
         # You need to substitute in your real values for
         # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
         # Don't forget to also replace PROJECT NAME in the npm run build line as well
-        VITE_API_HOST: https://bookingforbooky.com
+        # VITE_API_HOST: https://bookingforbooky.com
     script:
         - cd ghi
         - npm install
         - npm run lint
-        - npm run build -- --base=/Booky/
+        - VITE_API_HOST=https://bookingforbooky.com npm run build -- --base=/Booky/
         # The following line creates a _redirects file to redirect all URLs to index.html
         # Documentation: https://docs.gitlab.com/ee/user/project/pages/redirects.html#rewrite-all-requests-to-a-root-indexhtml
         - echo "/* /index.html 200" > dist/_redirects
