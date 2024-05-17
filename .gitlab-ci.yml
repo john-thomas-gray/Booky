@@ -81,7 +81,9 @@ pages:
     needs:
         - build-front-end-job
     script:
+        - ls -la dist
         - mv ghi/dist/ public
+        - ls -la public
     artifacts:
         paths:
             - public
