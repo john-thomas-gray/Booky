@@ -23,11 +23,10 @@ import ExplorePage from './components/ExplorePage'
 import GoogleBooksApp from './components/GoogleBooksApp'
 import Betting from './components/Betting'
 
-// // const BASE_URL = import.meta.env.BASE_URL
-// const BASE_URL = 'https://bookingforbooky.com'
-// if (!BASE_URL) {
-//     throw new Error('BASE_URL is not defined')
-// }
+const BASE_URL = import.meta.env.BASE_URL
+if (!BASE_URL) {
+    throw new Error('BASE_URL is not defined')
+}
 
 const router = createBrowserRouter(
     [
@@ -105,10 +104,10 @@ const router = createBrowserRouter(
                 },
             ],
         },
-    ]
-    // {
-    //      basename: BASE_URL,
-    // }
+    ],
+    {
+        basename: BASE_URL,
+    }
 )
 
 const rootElement = document.getElementById('root')
