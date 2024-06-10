@@ -7,7 +7,7 @@ stages:
     - deploy
 
 variables:
-    EC2_HOST: "54.193.11.46"
+    EC2_HOST: "54.177.7.40"
 
 # Run flake8 to check for code quality
 # And also optionally run unit tests
