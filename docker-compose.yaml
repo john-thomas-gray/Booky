@@ -38,7 +38,7 @@ services:
         volumes:
             - ./ghi:/app
         environment:
-            VITE_API_HOST: bookingforbooky.com
+            VITE_API_HOST: www.bookingforbooky.com
             BASE_URL: http://localhost:5173
         ports:
             - "5173:5173"
