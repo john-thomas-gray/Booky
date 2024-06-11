@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import ExplorePage from './ExplorePage';
+import { useState, useEffect } from 'react'
+import ExplorePage from './ExplorePage'
 
 export default function ListBooks() {
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState([])
 
     const fetchData = async () => {
-        const bookUrl = `http://localhost:8000/books/`
-        const response = await fetch(bookUrl);
+        const bookUrl = `https://www.bookingforbooky.com/books/`
+        const response = await fetch(bookUrl)
         if (response.ok) {
-            const data = await response.json();
+            const data = await response.json()
             setBooks(data)
         }
     }
@@ -19,7 +19,9 @@ export default function ListBooks() {
 
     return (
         <>
-                <div><ExplorePage></ExplorePage></div>
+            <div>
+                <ExplorePage></ExplorePage>
+            </div>
             <h1 className="mb-3 mt-3">Book List</h1>
             <table className="table table-striped">
                 <thead>
@@ -60,5 +62,5 @@ export default function ListBooks() {
                 </tbody>
             </table>
         </>
-    );
+    )
 }

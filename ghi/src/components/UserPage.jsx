@@ -20,7 +20,7 @@ export default function UserPage() {
     }
 
     const fetchRequests = async () => {
-        const url = 'http://localhost:8000/api/friend/requests'
+        const url = 'https://www.bookingforbooky.com/api/friend/requests'
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -28,7 +28,7 @@ export default function UserPage() {
         }
     }
     const removeFriend = async (val) => {
-        const url = `http://localhost:8000/api/friend/${user.id}/${val}`
+        const url = `https://www.bookingforbooky.com/api/friend/${user.id}/${val}`
         const fetchOptions = {
             method: 'delete',
             body: JSON.stringify({}),
@@ -43,7 +43,7 @@ export default function UserPage() {
         }
     }
     const removeOtherFriend = async (val) => {
-        const url = `http://localhost:8000/api/friend/${val}/${user.id}`
+        const url = `https://www.bookingforbooky.com/api/friend/${val}/${user.id}`
         const fetchOptions = {
             method: 'delete',
             body: JSON.stringify({}),
@@ -59,7 +59,7 @@ export default function UserPage() {
     }
 
     const fetchPageOwnerData = async () => {
-        const url = `http://localhost:8000/api/users/${pageOwnerID}`
+        const url = `https://www.bookingforbooky.com/api/users/${pageOwnerID}`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()
@@ -68,7 +68,7 @@ export default function UserPage() {
     }
 
     const fetchClubData = async () => {
-        const url = `http://localhost:8000/api/clubs/user/${pageOwnerID}`
+        const url = `https://www.bookingforbooky.com/api/clubs/user/${pageOwnerID}`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()
@@ -78,7 +78,7 @@ export default function UserPage() {
     }
 
     const fetchMeetingData = async () => {
-        const url = `http://localhost:8000/api/meeting/${pageOwnerID}/user`
+        const url = `https://www.bookingforbooky.com/api/meeting/${pageOwnerID}/user`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -87,7 +87,7 @@ export default function UserPage() {
     }
 
     const fetchFriends = async () => {
-        const url = `http://localhost:8000/api/${pageOwnerID}/friends`
+        const url = `https://www.bookingforbooky.com/api/${pageOwnerID}/friends`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

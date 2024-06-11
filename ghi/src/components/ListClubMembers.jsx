@@ -4,7 +4,7 @@ export default function ListClubMembers() {
     const [clubMembers, setClubMembers] = useState([])
 
     const fetchData = async () => {
-        const url = 'http://localhost:8000/api/users/club/${club_id}/'
+        const url = 'https://www.bookingforbooky.com/api/users/club/${club_id}/'
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

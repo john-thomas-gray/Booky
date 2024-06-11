@@ -2,11 +2,11 @@ import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 
-export default function Betting(){
+export default function Betting() {
     const { meetingID } = useParams()
     // Bets
     const [selectedAttendeeId, setSelectedAttendeeId] = useState('')
-    const [betPlaced, setBetPlaced] = useState(false);
+    const [betPlaced, setBetPlaced] = useState(false)
     const [betAmount, setBetAmount] = useState(0)
     const [attendees, setAttendees] = useState([])
     const [users, setUsers] = useState([])
@@ -14,22 +14,22 @@ export default function Betting(){
 
     const handleBetSubmit = async (e) => {
         e.preventDefault()
-        const url = `http://localhost:8000/api/bets/place`
+        const url = `https://www.bookingforbooky.com/api/bets/place`
         const data = {
             meeting_id: parseInt(meetingID),
             better_id: parseInt(user.id),
             horse_id: parseInt(selectedAttendeeId),
             amount: parseInt(betAmount),
-            paid: false
+            paid: false,
         }
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
-            'Content-Type': 'application/json',
-          }
+                'Content-Type': 'application/json',
+            },
         }
-        const response = await fetch(url, fetchConfig);
+        const response = await fetch(url, fetchConfig)
 
         if (response.ok) {
             setSelectedAttendeeId('')
@@ -39,7 +39,7 @@ export default function Betting(){
     }
 
     // const fetchAttendee = async () => {
-    //     const url = `http://localhost:8000/api/attendees/page/${meetingID}/${user.id}`
+    //     const url = `https://www.bookingforbooky.com/api/attendees/page/${meetingID}/${user.id}`
     //     const response = await fetch(url, { credentials: 'include' })
     //     if (response.ok) {
     //         const data = await response.json()
@@ -48,7 +48,7 @@ export default function Betting(){
     // }
 
     const fetchAttendees = async () => {
-        const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`
+        const url = `https://www.bookingforbooky.com/api/attendees/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -57,7 +57,7 @@ export default function Betting(){
     }
 
     const fetchUsers = async () => {
-        const url = `http://localhost:8000/api/meeting/${meetingID}/users`
+        const url = `https://www.bookingforbooky.com/api/meeting/${meetingID}/users`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -78,10 +78,9 @@ export default function Betting(){
     }
 
     useEffect(() => {
-        fetchUsers();
-        fetchAttendees();
-
-    }, []);
+        fetchUsers()
+        fetchAttendees()
+    }, [])
 
     return (
         <main style={{ backgroundColor: '#8A807E' }}>

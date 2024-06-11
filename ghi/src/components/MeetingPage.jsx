@@ -25,7 +25,7 @@ export default function MeetingPage() {
     const [bets, setBets] = useState([])
 
     const fetchMeetingData = () => {
-        const url = `http://localhost:8000/api/meeting/${meetingID}`
+        const url = `https://www.bookingforbooky.com/api/meeting/${meetingID}`
         const fetchPromise = fetch(url, { credentials: 'include' })
         fetchPromise
             .then((response) => {
@@ -50,7 +50,7 @@ export default function MeetingPage() {
         data.attendee_id = user.id
         data.meeting_id = val
 
-        const url = `http://localhost:8000/api/attendees/${meetingID}`
+        const url = `https://www.bookingforbooky.com/api/attendees/${meetingID}`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
@@ -68,7 +68,7 @@ export default function MeetingPage() {
     }
 
     const leaveMeeting = async (id) => {
-        const url = `http://localhost:8000/api/attendees/${id}/leave`
+        const url = `https://www.bookingforbooky.com/api/attendees/${id}/leave`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -87,7 +87,7 @@ export default function MeetingPage() {
     }
 
     const deleteMeeting = async (id) => {
-        const url = `http://localhost:8000/api/meeting/${id}/`
+        const url = `https://www.bookingforbooky.com/api/meeting/${id}/`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -106,7 +106,7 @@ export default function MeetingPage() {
     }
 
     const fetchUsers = async () => {
-        const url = `http://localhost:8000/api/meeting/${meetingID}/users`
+        const url = `https://www.bookingforbooky.com/api/meeting/${meetingID}/users`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -115,7 +115,7 @@ export default function MeetingPage() {
     }
 
     const fetchAttendees = async () => {
-        const url = `http://localhost:8000/api/attendees/${meetingID}/attendees`
+        const url = `https://www.bookingforbooky.com/api/attendees/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -124,7 +124,7 @@ export default function MeetingPage() {
     }
 
     const fetchBets = async () => {
-        const url = `http://localhost:8000/api/bets/${meetingID}`
+        const url = `https://www.bookingforbooky.com/api/bets/${meetingID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -133,7 +133,7 @@ export default function MeetingPage() {
     }
 
     const fetchClubData = async (data) => {
-        const url = `http://localhost:8000/api/clubs/${data.club_id}`
+        const url = `https://www.bookingforbooky.com/api/clubs/${data.club_id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -143,7 +143,7 @@ export default function MeetingPage() {
 
     const fetchBookData = async (data) => {
         const url = new URL(
-            `http://localhost:8000/books/title/${encodeURIComponent(
+            `https://www.bookingforbooky.com/books/title/${encodeURIComponent(
                 data.book_title
             )}`
         ).href
@@ -158,7 +158,7 @@ export default function MeetingPage() {
     }
 
     const fetchAttendee = async () => {
-        const url = `http://localhost:8000/api/attendees/page/${meetingID}/${user.id}`
+        const url = `https://www.bookingforbooky.com/api/attendees/page/${meetingID}/${user.id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -167,7 +167,7 @@ export default function MeetingPage() {
     }
 
     const fetchAuthUserData = async () => {
-        const url = `http://localhost:8000/api/users/${user.id}`
+        const url = `https://www.bookingforbooky.com/api/users/${user.id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -196,7 +196,7 @@ export default function MeetingPage() {
                     if (user.id === b.horse_id) {
                         // Pay the user who just finished, that the better bet on.
                         // Update user information
-                        // let url = `http://localhost:8000/api/users/${user.id}`
+                        // let url = `https://www.bookingforbooky.com/api/users/${user.id}`
                         // const updated_score_horse = authUser.score + b.amount
                         // console.log(
                         //     'update',
@@ -218,7 +218,7 @@ export default function MeetingPage() {
                         //     }),
                         // })
                         fetch(
-                            `http://localhost:8000/api/users/${b.better_id}`,
+                            `https://www.bookingforbooky.com/api/users/${b.better_id}`,
                             {
                                 credentials: 'include',
                                 method: 'get',
@@ -247,7 +247,7 @@ export default function MeetingPage() {
                                     b.amount
                                 )
                                 let response = fetch(
-                                    `http://localhost:8000/api/users/${b.better_id}`,
+                                    `https://www.bookingforbooky.com/api/users/${b.better_id}`,
                                     {
                                         method: 'PATCH',
                                         credentials: 'include',
@@ -268,7 +268,7 @@ export default function MeetingPage() {
                     }
                     // else {
                     //     // Pay only the user who just finished
-                    //     const url = `http://localhost:8000/api/users/${user.id}`
+                    //     const url = `https://www.bookingforbooky.com/api/users/${user.id}`
                     //     const updated_score = authUser.score + b.amount
                     //     console.log(updated_score)
                     //     // console.log(updated_score)
@@ -286,7 +286,7 @@ export default function MeetingPage() {
                     //     })
                     // }
                     // Set bet.paid to true
-                    const bet_url = `http://localhost:8000/api/bets/${meetingID}/${b.better_id}`
+                    const bet_url = `https://www.bookingforbooky.com/api/bets/${meetingID}/${b.better_id}`
                     fetch(bet_url, {
                         method: 'PATCH',
                         credentials: 'include',
@@ -328,7 +328,7 @@ export default function MeetingPage() {
     }
 
     const updateAttendee = async (attendeeId, placeAtLastFinish, Finished) => {
-        const url = `http://localhost:8000/api/finish/${meetingID}/${attendeeId}`
+        const url = `https://www.bookingforbooky.com/api/finish/${meetingID}/${attendeeId}`
         let response = await fetch(url, {
             method: 'PATCH',
             credentials: 'include',
@@ -341,7 +341,7 @@ export default function MeetingPage() {
     }
 
     const updateAttendeePage = async (attendeeID) => {
-        const url = `http://localhost:8000/api/attendees/page`
+        const url = `https://www.bookingforbooky.com/api/attendees/page`
         const bodyData = JSON.stringify({
             meeting_id: meetingID,
             attendee_id: attendeeID,
@@ -369,7 +369,7 @@ export default function MeetingPage() {
     }
 
     const updateUserScore = async (input) => {
-        const url = `http://localhost:8000/api/users/${user.id}`
+        const url = `https://www.bookingforbooky.com/api/users/${user.id}`
         const updated_score = authUser.score + (input - attendee.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',
@@ -386,7 +386,7 @@ export default function MeetingPage() {
     }
 
     const updateClubScore = async (input) => {
-        const url = `http://localhost:8000/api/clubs/${club.club_id}`
+        const url = `https://www.bookingforbooky.com/api/clubs/${club.club_id}`
         const updated_score = club.score + (input - attendee.attendee_page)
         const response = await fetch(url, {
             method: 'PATCH',

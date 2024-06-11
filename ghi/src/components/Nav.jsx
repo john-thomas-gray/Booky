@@ -6,10 +6,13 @@ export default function Nav() {
 
     const signOut = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/auth/signout', {
-                method: 'DELETE',
-                credentials: 'include',
-            })
+            const response = await fetch(
+                'https://www.bookingforbooky.com/api/auth/signout',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                }
+            )
             // Check if the response indicates successful signout
             if (response.ok) {
                 // Redirect to the home page
