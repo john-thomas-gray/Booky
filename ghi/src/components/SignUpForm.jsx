@@ -9,7 +9,6 @@ export default function SignUpForm() {
     const [email, setEmail] = useState('')
     const { signup, user, error } = useAuthService()
 
-
     async function handleFormSubmit(e) {
         e.preventDefault()
         await signup({
@@ -28,39 +27,42 @@ export default function SignUpForm() {
 
     return (
         <>
-        Sign Up
-        <form onSubmit={handleFormSubmit}>
-            {error && <div className="error">{error.message}</div>}
-            <input
-                type="text"
-                name="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter Username"
-                required
-            />
-            <input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter Password"
-                required
-            />
-            <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter Email"
-                required
-                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                title="Please enter a valid email address."
-            />
-            <button type="submit" disabled={!username || !password || !email}>
-                Sign Up
-            </button>
-        </form>
+            Sign Up
+            <form onSubmit={handleFormSubmit}>
+                {error && <div className="error">{error.message}</div>}
+                <input
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter Username"
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter Password"
+                    required
+                />
+                <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter Email"
+                    required
+                    // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Please enter a valid email address."
+                />
+                <button
+                    type="submit"
+                    disabled={!username || !password || !email}
+                >
+                    Sign Up
+                </button>
+            </form>
         </>
     )
 }
