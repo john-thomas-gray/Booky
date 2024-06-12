@@ -6,7 +6,7 @@ export default function ListMeetings() {
     const [club, setClub] = useState('')
     const { deleteSuccess } = useOutletContext()
     const fetchData = async () => {
-        const url = 'http://54.177.7.40/api/meeting/'
+        const url = 'https://54.177.7.40/api/meeting/'
 
         const response = await fetch(url)
         if (response.ok) {
@@ -18,7 +18,7 @@ export default function ListMeetings() {
     }
 
     const fetchClub = async (club_id) => {
-        const url = `http://54.177.7.40/api/clubs/${club_id}`
+        const url = `https://54.177.7.40/api/clubs/${club_id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
