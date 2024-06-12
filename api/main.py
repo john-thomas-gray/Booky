@@ -13,7 +13,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
-    allow_origins=["https://www.bookingforbooky.com"],
+    allow_origins=["https://bookingforbooky.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
