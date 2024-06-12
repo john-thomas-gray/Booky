@@ -23,7 +23,7 @@ import ExplorePage from './components/ExplorePage'
 import GoogleBooksApp from './components/GoogleBooksApp'
 import Betting from './components/Betting'
 
-const BASE_URL = 'https://www.bookingforbooky.com'
+const BASE_URL = 'bookingforbooky.com'
 if (!BASE_URL) {
     throw new Error('BASE_URL is not defined')
 }
