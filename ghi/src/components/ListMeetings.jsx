@@ -6,7 +6,7 @@ export default function ListMeetings() {
     const [club, setClub] = useState('')
     const { deleteSuccess } = useOutletContext()
     const fetchData = async () => {
-        const url = 'http://54.177.7.40/api/meeting/'
+        const url = 'https://bookingforbooky.com/api/meeting/'
 
         const response = await fetch(url)
         if (response.ok) {
