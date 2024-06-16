@@ -14,7 +14,7 @@ allowed_origins = ["https://bookingforbooky.com", "https://booky7.gitlab.io"]
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
-    allow_origins=["https://52.53.170.162"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
