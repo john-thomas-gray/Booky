@@ -12,10 +12,11 @@ app = FastAPI()
 
 allowed_origins = ["https://bookingforbooky.com", "https://booky7.gitlab.io"]
 
+
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
-    allow_origins=["https://bookingforbooky.com"],
+    allow_origins=["https://booky7.gitlab.io/booky"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
