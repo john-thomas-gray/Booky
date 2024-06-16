@@ -23,7 +23,7 @@ function CreateMeetingForm() {
     const test = location.state
 
     const getData = async () => {
-        const url = 'https://www.bookingforbooky.com/api/clubs'
+        const url = 'https://bookingforbooky.com/api/clubs'
         const response = await fetch(url, { credentials: 'include' })
 
         if (response.ok) {
@@ -47,7 +47,7 @@ function CreateMeetingForm() {
         data.book_title = test.volumeInfo.title
         data.active = active
 
-        const meetingUrl = 'https://www.bookingforbooky.com/api/meeting/create/'
+        const meetingUrl = 'https://bookingforbooky.com/api/meeting/create/'
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),

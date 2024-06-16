@@ -20,7 +20,7 @@ export default function CreateClubForm() {
     async function handleFormSubmit(e) {
         e.preventDefault()
 
-        const clubUrl = `https://www.bookingforbooky.com/api/clubs/`
+        const clubUrl = `https://bookingforbooky.com/api/clubs/`
         const fetchOptions = {
             method: 'post',
             body: JSON.stringify(formData),

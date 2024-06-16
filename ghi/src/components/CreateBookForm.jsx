@@ -21,7 +21,7 @@ function CreateBookForm() {
             (data.synopsis = synopsis),
             (data.cover_img_url = coverImgUrl)
 
-        const bookUrl = 'https://www.bookingforbooky.com/book'
+        const bookUrl = 'https://bookingforbooky.com/book'
         const fetchConfig = {
             method: 'POST',
             body: JSON.stringify(data),

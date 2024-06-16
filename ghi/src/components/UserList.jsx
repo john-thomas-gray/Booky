@@ -15,7 +15,7 @@ export default function UserList() {
         data.user_id = val
         data.friend_id = user.id
         data.friend_name = user.username
-        const url = `https://www.bookingforbooky.com/api/friend/request`
+        const url = `https://bookingforbooky.com/api/friend/request`
 
         const fetchConfig = {
             method: 'post',
@@ -32,7 +32,7 @@ export default function UserList() {
     }
 
     const fetchData = async () => {
-        const url = 'https://www.bookingforbooky.com/api/users/'
+        const url = 'https://bookingforbooky.com/api/users/'
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

@@ -18,7 +18,7 @@ export default function FriendRequestPage() {
     }
 
     const deleteRequest = async (val) => {
-        const url = `https://www.bookingforbooky.com/api/friend/request/${user.id}/${val}`
+        const url = `https://bookingforbooky.com/api/friend/request/${user.id}/${val}`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -36,7 +36,7 @@ export default function FriendRequestPage() {
     }
 
     const deleteOtherRequest = async (val) => {
-        const url = `https://www.bookingforbooky.com/api/friend/request/${val}/${user.id}`
+        const url = `https://bookingforbooky.com/api/friend/request/${val}/${user.id}`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -57,7 +57,7 @@ export default function FriendRequestPage() {
         const data = {}
         data.member_id = user.id
         data.friend_id = val
-        const url = 'https://www.bookingforbooky.com/api/friend/'
+        const url = 'https://bookingforbooky.com/api/friend/'
         const fetchOptions = {
             method: 'post',
             body: JSON.stringify(data),
@@ -75,7 +75,7 @@ export default function FriendRequestPage() {
         const data = {}
         data.member_id = val
         data.friend_id = user.id
-        const url = 'https://www.bookingforbooky.com/api/friend/'
+        const url = 'https://bookingforbooky.com/api/friend/'
         const fetchOptions = {
             method: 'post',
             body: JSON.stringify(data),
@@ -91,7 +91,7 @@ export default function FriendRequestPage() {
     }
 
     const fetchRequests = async () => {
-        const url = 'https://www.bookingforbooky.com/api/friend/requests'
+        const url = 'https://bookingforbooky.com/api/friend/requests'
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()

@@ -7,7 +7,7 @@ export default function Nav() {
     const signOut = async () => {
         try {
             const response = await fetch(
-                'https://www.bookingforbooky.com/api/auth/signout',
+                'https://bookingforbooky.com/api/auth/signout',
                 {
                     method: 'DELETE',
                     credentials: 'include',

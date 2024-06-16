@@ -10,7 +10,7 @@ export default function ListClubs() {
     const [filteredClubs, setFilteredClubs] = useState('')
 
     const fetchData = async () => {
-        const url = 'https://www.bookingforbooky.com/api/clubs/'
+        const url = 'https://bookingforbooky.com/api/clubs/'
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()

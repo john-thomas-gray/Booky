@@ -10,7 +10,7 @@ function GoogleBooksApp() {
     // const [error, setError] = useState(null)
     const { user } = useAuthService()
     const searchBooks = async (title) => {
-        const url = `https://www.bookingforbooky.com/getbooks/${title}`
+        const url = `https://bookingforbooky.com/getbooks/${title}`
         try {
             const response = await fetch(url)
             if (!response.ok) {
@@ -33,7 +33,7 @@ function GoogleBooksApp() {
             (data.genre = book.volumeInfo.categories[0]),
             (data.synopsis = book.volumeInfo.description),
             (data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail)
-        const bookUrl = 'https://www.bookingforbooky.com/book'
+        const bookUrl = 'https://bookingforbooky.com/book'
         const fetchConfig = {
             method: 'POST',
             body: JSON.stringify(data),

@@ -12,19 +12,19 @@ export default function ListMeetings() {
         if (response.ok) {
             const data = await response.json()
             setMeetings(data)
-            const club_id = data.club_id
-            await fetchClub(club_id)
+            // const club_id = data.club_id
+            // await fetchClub(club_id)
         }
     }
 
-    const fetchClub = async (club_id) => {
-        const url = `https://bookingforbooky.com/api/clubs/${club_id}`
-        const response = await fetch(url, { credentials: 'include' })
-        if (response.ok) {
-            const data = await response.json()
-            setClub(data)
-        }
-    }
+    // const fetchClub = async (club_id) => {
+    //     const url = `https://bookingforbooky.com/api/clubs/${club_id}`
+    //     const response = await fetch(url, { credentials: 'include' })
+    //     if (response.ok) {
+    //         const data = await response.json()
+    //         setClub(data)
+    //     }
+    // }
 
     useEffect(() => {
         fetchData()
@@ -39,7 +39,7 @@ export default function ListMeetings() {
                         <th>Book Title</th>
                         <th>Active Date</th>
                         <th>Club ID</th>
-                        <th>{club.owner_id}</th>
+                        {/* <th>{club.owner_id}</th> */}
                     </tr>
                 </thead>
                 <tbody>

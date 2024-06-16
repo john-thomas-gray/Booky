@@ -14,7 +14,7 @@ export default function Betting() {
 
     const handleBetSubmit = async (e) => {
         e.preventDefault()
-        const url = `https://www.bookingforbooky.com/api/bets/place`
+        const url = `https://bookingforbooky.com/api/bets/place`
         const data = {
             meeting_id: parseInt(meetingID),
             better_id: parseInt(user.id),
@@ -39,7 +39,7 @@ export default function Betting() {
     }
 
     // const fetchAttendee = async () => {
-    //     const url = `https://www.bookingforbooky.com/api/attendees/page/${meetingID}/${user.id}`
+    //     const url = `https://bookingforbooky.com/api/attendees/page/${meetingID}/${user.id}`
     //     const response = await fetch(url, { credentials: 'include' })
     //     if (response.ok) {
     //         const data = await response.json()
@@ -48,7 +48,7 @@ export default function Betting() {
     // }
 
     const fetchAttendees = async () => {
-        const url = `https://www.bookingforbooky.com/api/attendees/${meetingID}/attendees`
+        const url = `https://bookingforbooky.com/api/attendees/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -57,7 +57,7 @@ export default function Betting() {
     }
 
     const fetchUsers = async () => {
-        const url = `https://www.bookingforbooky.com/api/meeting/${meetingID}/users`
+        const url = `https://bookingforbooky.com/api/meeting/${meetingID}/users`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()

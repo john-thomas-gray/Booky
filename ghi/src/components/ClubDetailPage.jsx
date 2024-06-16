@@ -24,7 +24,7 @@ export default function ClubDetailPage() {
         const data = {}
         data.member_id = user.id
         data.club_id = val
-        const membersUrl = `https://www.bookingforbooky.com/api/users/club/${val}/`
+        const membersUrl = `https://bookingforbooky.com/api/users/club/${val}/`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
@@ -42,7 +42,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchMembers = async () => {
-        const url = `https://www.bookingforbooky.com/api/users/club/${clubID}`
+        const url = `https://bookingforbooky.com/api/users/club/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -51,7 +51,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchMeetings = async () => {
-        const url = `https://www.bookingforbooky.com/api/meeting/club/${clubID}`
+        const url = `https://bookingforbooky.com/api/meeting/club/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -60,7 +60,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchClub = async () => {
-        const url = `https://www.bookingforbooky.com/api/clubs/${clubID}`
+        const url = `https://bookingforbooky.com/api/clubs/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
