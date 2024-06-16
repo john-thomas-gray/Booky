@@ -10,10 +10,11 @@ from routers import (
 
 app = FastAPI()
 
+allowed_origins = ["http://localhost:5173", "https://booky7.gitlab.io", "https://bookingforbooky.com"]
+
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
-    allow_origins=["https://booky7.gitlab.io"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
