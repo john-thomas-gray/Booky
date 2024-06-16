@@ -18,7 +18,7 @@ export default function ListMeetings() {
     }
 
     const fetchClub = async (club_id) => {
-        const url = `http://54.177.7.40/api/clubs/${club_id}`
+        const url = `https://bookingforbooky.com/api/clubs/${club_id}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
