@@ -127,7 +127,7 @@ function CreateMeetingForm() {
                     <h4>Create a meeting for your club</h4>
                     <div>
                         Don't own a club? Make one
-                        <a href="http://localhost:5173/clubs"> here</a>
+                        <a href="https://bookingforbooky.com/clubs"> here</a>
                     </div>
                 </div>
             </form>
