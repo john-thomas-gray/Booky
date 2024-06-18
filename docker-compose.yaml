@@ -38,7 +38,7 @@ services:
         volumes:
             - ./ghi:/app
         environment:
-            VITE_API_HOST: https://booksforbooky.com
-            BASE_URL: https://booksforbooky.com
+            VITE_API_HOST: https://bookingforbooky.com
+            BASE_URL: https://bookingforbooky.com
         ports:
             - "5173:5173"
