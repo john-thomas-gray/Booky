@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import ExplorePage from './ExplorePage'
+import { API_HOST } from '../config'
 
 export default function ListBooks() {
     const [books, setBooks] = useState([])
 
     const fetchData = async () => {
-        const bookUrl = `https://bookingforbooky.com/books/`
+        const bookUrl = `${API_HOST}/books/`
         const response = await fetch(bookUrl)
         if (response.ok) {
             const data = await response.json()

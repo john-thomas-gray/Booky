@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 function CreateMeetingForm() {
     const [clubId, setClubId] = useState('')
@@ -23,7 +24,7 @@ function CreateMeetingForm() {
     const test = location.state
 
     const getData = async () => {
-        const url = 'https://bookingforbooky.com/api/clubs'
+        const url = `${API_HOST}/api/clubs`
         const response = await fetch(url, { credentials: 'include' })
 
         if (response.ok) {
@@ -47,7 +48,7 @@ function CreateMeetingForm() {
         data.book_title = test.volumeInfo.title
         data.active = active
 
-        const meetingUrl = 'https://bookingforbooky.com/api/meeting/create/'
+        const meetingUrl = `${API_HOST}/api/meeting/create`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
@@ -57,11 +58,9 @@ function CreateMeetingForm() {
             credentials: 'include',
         }
         const response = await fetch(meetingUrl, fetchConfig)
-        const responseData = await response.json()
-
-        navigate(`/meetings/${responseData.id}`)
-
         if (response.ok) {
+            const responseData = await response.json()
+            navigate(`/meetings/${responseData.id}`)
             setClubId('')
             setActive('')
         } else {
@@ -119,6 +118,7 @@ function CreateMeetingForm() {
                     value={active}
                     onChange={(event) => setActive(event.target.value)}
                     placeholder="active date"
+                    required
                 />
 
                 <button type="submit">Create Meeting</button>
@@ -127,7 +127,7 @@ function CreateMeetingForm() {
                     <h4>Create a meeting for your club</h4>
                     <div>
                         Don't own a club? Make one
-                        <a href="https://bookingforbooky.com/clubs"> here</a>
+                        <a href="/clubs"> here</a>
                     </div>
                 </div>
             </form>

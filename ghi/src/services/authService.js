@@ -1,7 +1,8 @@
 // @ts-check
 import { tryFetch } from '../utils'
+import { API_HOST } from '../config'
 
-export const baseUrl = 'https://bookingforbooky.com'
+export const baseUrl = API_HOST
 if (!baseUrl) {
     throw new Error('VITE_API_HOST was not defined')
 }

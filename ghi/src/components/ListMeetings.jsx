@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useOutletContext } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 export default function ListMeetings() {
     const [meetings, setMeetings] = useState([])
     const [club, setClub] = useState('')
     const { deleteSuccess } = useOutletContext()
     const fetchData = async () => {
-        const url = 'https://bookingforbooky.com/api/meeting/'
+        const url = `${API_HOST}/api/meeting/`
 
         const response = await fetch(url)
         if (response.ok) {
@@ -18,7 +19,7 @@ export default function ListMeetings() {
     }
 
     // const fetchClub = async (club_id) => {
-    //     const url = `https://bookingforbooky.com/api/clubs/${club_id}`
+    //     const url = `${API_HOST}/api/clubs/${club_id}`
     //     const response = await fetch(url, { credentials: 'include' })
     //     if (response.ok) {
     //         const data = await response.json()

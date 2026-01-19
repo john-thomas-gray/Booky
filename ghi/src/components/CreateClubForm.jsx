@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useNavigate } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 export default function CreateClubForm() {
     const { user } = useAuthService()
@@ -20,7 +21,7 @@ export default function CreateClubForm() {
     async function handleFormSubmit(e) {
         e.preventDefault()
 
-        const clubUrl = `https://bookingforbooky.com/api/clubs/`
+        const clubUrl = `${API_HOST}/api/clubs/`
         const fetchOptions = {
             method: 'post',
             body: JSON.stringify(formData),

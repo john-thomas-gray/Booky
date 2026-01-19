@@ -3,6 +3,7 @@ import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { NavLink, Link } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 export default function UserPage() {
     const { pageOwnerID } = useParams()
@@ -20,7 +21,7 @@ export default function UserPage() {
     }
 
     const fetchRequests = async () => {
-        const url = 'https://bookingforbooky.com/api/friend/requests'
+        const url = `${API_HOST}/api/friend/requests`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -28,7 +29,7 @@ export default function UserPage() {
         }
     }
     const removeFriend = async (val) => {
-        const url = `https://bookingforbooky.com/api/friend/${user.id}/${val}`
+        const url = `${API_HOST}/api/friend/${user.id}/${val}`
         const fetchOptions = {
             method: 'delete',
             body: JSON.stringify({}),
@@ -43,7 +44,7 @@ export default function UserPage() {
         }
     }
     const removeOtherFriend = async (val) => {
-        const url = `https://bookingforbooky.com/api/friend/${val}/${user.id}`
+        const url = `${API_HOST}/api/friend/${val}/${user.id}`
         const fetchOptions = {
             method: 'delete',
             body: JSON.stringify({}),
@@ -59,7 +60,7 @@ export default function UserPage() {
     }
 
     const fetchPageOwnerData = async () => {
-        const url = `https://bookingforbooky.com/api/users/${pageOwnerID}`
+        const url = `${API_HOST}/api/users/${pageOwnerID}`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()
@@ -68,7 +69,7 @@ export default function UserPage() {
     }
 
     const fetchClubData = async () => {
-        const url = `https://bookingforbooky.com/api/clubs/user/${pageOwnerID}`
+        const url = `${API_HOST}/api/clubs/user/${pageOwnerID}`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()
@@ -78,7 +79,7 @@ export default function UserPage() {
     }
 
     const fetchMeetingData = async () => {
-        const url = `https://bookingforbooky.com/api/meeting/${pageOwnerID}/user`
+        const url = `${API_HOST}/api/meeting/${pageOwnerID}/user`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -87,7 +88,7 @@ export default function UserPage() {
     }
 
     const fetchFriends = async () => {
-        const url = `https://bookingforbooky.com/api/${pageOwnerID}/friends`
+        const url = `${API_HOST}/api/${pageOwnerID}/friends`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

@@ -1,18 +1,16 @@
 import { NavLink } from 'react-router-dom'
 import useAuthService from '../hooks/useAuthService'
+import { API_HOST } from '../config'
 
 export default function Nav() {
     const { user, isLoggedIn } = useAuthService()
 
     const signOut = async () => {
         try {
-            const response = await fetch(
-                'https://bookingforbooky.com/api/auth/signout',
-                {
-                    method: 'DELETE',
-                    credentials: 'include',
-                }
-            )
+            const response = await fetch(`${API_HOST}/api/auth/signout`, {
+                method: 'DELETE',
+                credentials: 'include',
+            })
             // Check if the response indicates successful signout
             if (response.ok) {
                 // Redirect to the home page

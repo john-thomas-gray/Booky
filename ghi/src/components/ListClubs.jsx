@@ -3,6 +3,7 @@ import useAuthService from '../hooks/useAuthService'
 import { NavLink } from 'react-router-dom'
 import ExplorePage from './ExplorePage'
 import '../App.css'
+import { API_HOST } from '../config'
 
 export default function ListClubs() {
     const [clubs, setClubs] = useState([])
@@ -10,7 +11,7 @@ export default function ListClubs() {
     const [filteredClubs, setFilteredClubs] = useState('')
 
     const fetchData = async () => {
-        const url = 'https://bookingforbooky.com/api/clubs/'
+        const url = `${API_HOST}/api/clubs/`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()

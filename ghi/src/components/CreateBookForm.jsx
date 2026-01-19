@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import GoogleBooksApp from './GoogleBooksApp'
+import { API_HOST } from '../config'
 
 function CreateBookForm() {
     const [title, setTitle] = useState('')
@@ -21,7 +22,7 @@ function CreateBookForm() {
             (data.synopsis = synopsis),
             (data.cover_img_url = coverImgUrl)
 
-        const bookUrl = 'https://bookingforbooky.com/book'
+        const bookUrl = `${API_HOST}/book`
         const fetchConfig = {
             method: 'POST',
             body: JSON.stringify(data),

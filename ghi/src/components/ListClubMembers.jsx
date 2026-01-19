@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
+import { API_HOST } from '../config'
 
 export default function ListClubMembers() {
     const [clubMembers, setClubMembers] = useState([])
 
     const fetchData = async () => {
-        const url = 'https://bookingforbooky.com/api/users/club/${club_id}/'
+        const url = `${API_HOST}/api/users/club/${club_id}/`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

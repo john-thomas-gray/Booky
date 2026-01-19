@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ExplorePage from './ExplorePage'
 import useAuthService from '../hooks/useAuthService'
+import { API_HOST } from '../config'
 
 export default function UserList() {
     const [users, setUsers] = useState([])
@@ -15,7 +16,7 @@ export default function UserList() {
         data.user_id = val
         data.friend_id = user.id
         data.friend_name = user.username
-        const url = `https://bookingforbooky.com/api/friend/request`
+        const url = `${API_HOST}/api/friend/request`
 
         const fetchConfig = {
             method: 'post',
@@ -32,7 +33,7 @@ export default function UserList() {
     }
 
     const fetchData = async () => {
-        const url = 'https://bookingforbooky.com/api/users/'
+        const url = `${API_HOST}/api/users/`
         const response = await fetch(url)
         if (response.ok) {
             const data = await response.json()

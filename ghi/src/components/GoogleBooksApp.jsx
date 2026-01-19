@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import ExplorePage from './ExplorePage'
 import '../App.css'
 import useAuthService from '../hooks/useAuthService'
+import { API_HOST } from '../config'
 function GoogleBooksApp() {
     const [query, setQuery] = useState('')
     const [books, setBooks] = useState('')
@@ -10,7 +11,7 @@ function GoogleBooksApp() {
     // const [error, setError] = useState(null)
     const { user } = useAuthService()
     const searchBooks = async (title) => {
-        const url = `https://bookingforbooky.com/getbooks/${title}`
+        const url = `${API_HOST}/getbooks/${title}`
         try {
             const response = await fetch(url)
             if (!response.ok) {
@@ -33,7 +34,7 @@ function GoogleBooksApp() {
             (data.genre = book.volumeInfo.categories[0]),
             (data.synopsis = book.volumeInfo.description),
             (data.cover_img_url = book.volumeInfo.imageLinks.smallThumbnail)
-        const bookUrl = 'https://bookingforbooky.com/book'
+        const bookUrl = `${API_HOST}/book`
         const fetchConfig = {
             method: 'POST',
             body: JSON.stringify(data),

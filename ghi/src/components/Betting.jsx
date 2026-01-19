@@ -1,6 +1,7 @@
 import useAuthService from '../hooks/useAuthService'
 import { useState, useEffect } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 export default function Betting() {
     const { meetingID } = useParams()
@@ -14,7 +15,7 @@ export default function Betting() {
 
     const handleBetSubmit = async (e) => {
         e.preventDefault()
-        const url = `https://bookingforbooky.com/api/bets/place`
+        const url = `${API_HOST}/api/bets/place`
         const data = {
             meeting_id: parseInt(meetingID),
             better_id: parseInt(user.id),
@@ -39,7 +40,7 @@ export default function Betting() {
     }
 
     // const fetchAttendee = async () => {
-    //     const url = `https://bookingforbooky.com/api/attendees/page/${meetingID}/${user.id}`
+    //     const url = `${API_HOST}/api/attendees/page/${meetingID}/${user.id}`
     //     const response = await fetch(url, { credentials: 'include' })
     //     if (response.ok) {
     //         const data = await response.json()
@@ -48,7 +49,7 @@ export default function Betting() {
     // }
 
     const fetchAttendees = async () => {
-        const url = `https://bookingforbooky.com/api/attendees/${meetingID}/attendees`
+        const url = `${API_HOST}/api/attendees/${meetingID}/attendees`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -57,7 +58,7 @@ export default function Betting() {
     }
 
     const fetchUsers = async () => {
-        const url = `https://bookingforbooky.com/api/meeting/${meetingID}/users`
+        const url = `${API_HOST}/api/meeting/${meetingID}/users`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -97,6 +98,7 @@ export default function Betting() {
                             onChange={(e) =>
                                 setSelectedAttendeeId(e.target.value)
                             }
+                            required
                         >
                             {getDisplayAttendees().map((a) => (
                                 <option
@@ -116,6 +118,8 @@ export default function Betting() {
                             value={betAmount}
                             onChange={(e) => setBetAmount(e.target.value)}
                             placeholder="What will you risk?"
+                            min={1}
+                            required
                         />
                     </div>
                     <button type="submit">Place Bet</button>

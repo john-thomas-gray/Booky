@@ -1,20 +1,19 @@
 """
 Entry point for the FastAPI Application
 """
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import (
     auth_router, club_router, meeting_router, book_router, user_router, user_club_router, bet_router, attendee_router,
     friend_router, friend_request_router)
-# import os
 
 app = FastAPI()
 
-allowed_origins = ["https://bookingforbooky.com", "https://booky7.gitlab.io", "https://booksforbooky.com"]
+allowed_origins = [os.environ.get("CORS_HOST", "http://localhost:5173")]
 
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=[os.environ.get("CORS_HOST", "http://localhost:5173")],
     allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],

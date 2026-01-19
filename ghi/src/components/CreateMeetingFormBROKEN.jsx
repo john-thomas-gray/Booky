@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
+import { API_HOST } from '../config'
 
 function CreateMeetingForm() {
     const [clubId, setClubId] = useState('')
@@ -17,7 +18,7 @@ function CreateMeetingForm() {
      */
 
     const getData = async () => {
-        const url = 'https://bookingforbooky.com/api/clubs'
+        const url = `${API_HOST}/api/clubs`
         const response = await fetch(url, { credentials: 'include' })
 
         if (response.ok) {
@@ -45,7 +46,7 @@ function CreateMeetingForm() {
         data.current_page = currentPage
         data.active = active
 
-        const meetingUrl = 'https://bookingforbooky.com/api/meeting/create/'
+        const meetingUrl = `${API_HOST}/api/meeting/create/`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),

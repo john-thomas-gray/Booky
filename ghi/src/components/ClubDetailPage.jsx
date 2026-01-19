@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import useAuthService from '../hooks/useAuthService'
 import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
+import { API_HOST } from '../config'
 
 export default function ClubDetailPage() {
     const [club, setClub] = useState('')
@@ -24,7 +25,7 @@ export default function ClubDetailPage() {
         const data = {}
         data.member_id = user.id
         data.club_id = val
-        const membersUrl = `https://bookingforbooky.com/api/users/club/${val}/`
+        const membersUrl = `${API_HOST}/api/users/club/${val}/`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
@@ -42,7 +43,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchMembers = async () => {
-        const url = `https://bookingforbooky.com/api/users/club/${clubID}`
+        const url = `${API_HOST}/api/users/club/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -51,7 +52,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchMeetings = async () => {
-        const url = `https://bookingforbooky.com/api/meeting/club/${clubID}`
+        const url = `${API_HOST}/api/meeting/club/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()
@@ -60,7 +61,7 @@ export default function ClubDetailPage() {
     }
 
     const fetchClub = async () => {
-        const url = `https://bookingforbooky.com/api/clubs/${clubID}`
+        const url = `${API_HOST}/api/clubs/${clubID}`
         const response = await fetch(url, { credentials: 'include' })
         if (response.ok) {
             const data = await response.json()

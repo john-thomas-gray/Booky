@@ -8,18 +8,20 @@ services:
         volumes:
             - database_volume:/var/lib/postgresql/data
         environment:
-            - POSTGRES_DB=${POSTGRES_DB}
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB:-booky}
+            - POSTGRES_USER=${POSTGRES_USER:-booky}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-booky}
+            - POSTGRES_HOST_AUTH_METHOD=trust
         ports:
             - 15432:5432
 
     api:
         environment:
             CORS_HOST: http://localhost:5173
-            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
+            DATABASE_URL: postgresql://${POSTGRES_USER:-booky}:${POSTGRES_PASSWORD:-booky}@db/${POSTGRES_DB:-booky}
             SIGNING_KEY: 305749480eaabb889374b793b40c597f0d2e7ef6f773c300a6bdd41066f34c2d
             GOOGLE_BOOKS_API_KEY: "${GOOGLE_BOOKS_API_KEY}"
+            WAIT_HOSTS: db:5432
 
         build:
             context: api
@@ -38,7 +40,7 @@ services:
         volumes:
             - ./ghi:/app
         environment:
-            VITE_API_HOST: https://bookingforbooky.com
-            BASE_URL: https://bookingforbooky.com
+            VITE_API_HOST: http://localhost:8000
+            BASE_URL: /
         ports:
             - "5173:5173"
