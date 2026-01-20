@@ -15,7 +15,6 @@ export default function UserList() {
         const data = {}
         data.user_id = val
         data.friend_id = user.id
-        data.friend_name = user.username
         const url = `${API_HOST}/api/friend/request`
 
         const fetchConfig = {

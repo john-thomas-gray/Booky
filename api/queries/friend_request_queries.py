@@ -26,7 +26,7 @@ class FriendRequestQueries:
         # Here you can call any of the functions to query the DB
     """
 
-    def send_request(self, user_id: int, friend_id: int, friend_name: str):
+    def send_request(self, user_id: int, friend_id: int):
         """
         Creates a new friend request in the database
 
@@ -37,18 +37,25 @@ class FriendRequestQueries:
                 with conn.cursor(row_factory=class_row(FriendRequestResponse)) as cur:
                     cur.execute(
                         """
-
-                        INSERT INTO request (
-                        user_id, friend_id, friend_name
-                        ) VALUES (
-                        %s, %s, %s
+                        WITH inserted AS (
+                          INSERT INTO request (
+                            user_id, friend_id
+                          ) VALUES (
+                            %s, %s
+                          )
+                          RETURNING user_id, friend_id, approved
                         )
-                        RETURNING *;
+                        SELECT
+                          inserted.user_id,
+                          inserted.friend_id,
+                          users.username AS friend_name,
+                          inserted.approved
+                        FROM inserted
+                        JOIN users ON users.id = inserted.friend_id;
                         """,
                         [
                             user_id,
                             friend_id,
-                            friend_name
                         ],
                     )
                     request = cur.fetchone()
@@ -95,8 +102,12 @@ class FriendRequestQueries:
                     cur.execute(
                       """
                         SELECT
-                          *
+                          request.user_id,
+                          request.friend_id,
+                          users.username AS friend_name,
+                          request.approved
                         FROM request
+                        JOIN users ON users.id = request.friend_id
                         ORDER BY user_id;
 
                       """,

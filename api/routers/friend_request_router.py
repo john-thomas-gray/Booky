@@ -30,7 +30,7 @@ async def send_request(
     if friend_request.user_id == friend_request.friend_id:
         response.status_code = 500
     else:
-        request = queries.send_request(user_id=friend_request.user_id, friend_id=user.id, friend_name=user.username)
+        request = queries.send_request(user_id=friend_request.user_id, friend_id=user.id)
         request_out = FriendRequestResponse(**request.model_dump())
         return request_out
 
