@@ -12,9 +12,27 @@ steps = [
             score int DEFAULT 0
 
         );
+
+        ALTER TABLE clubs
+            ADD CONSTRAINT clubs_owner_id_fkey
+            FOREIGN KEY (owner_id)
+            REFERENCES users(id)
+            ON DELETE RESTRICT;
+
+        ALTER TABLE meetings
+            ADD CONSTRAINT meetings_club_id_fkey
+            FOREIGN KEY (club_id)
+            REFERENCES clubs(club_id)
+            ON DELETE CASCADE;
         """,
         # "Down" SQL statement
         """
+        ALTER TABLE meetings
+            DROP CONSTRAINT IF EXISTS meetings_club_id_fkey;
+
+        ALTER TABLE clubs
+            DROP CONSTRAINT IF EXISTS clubs_owner_id_fkey;
+
         DROP TABLE clubs;
         """
     ],
@@ -25,20 +43,6 @@ steps = [
 
 
 
-        """,
-
-        """
-        DROP TABLE clubs;
-        """
-    ],
-    [
-        """
-        INSERT INTO clubs VALUES
-            (1,1, 'Read This', 'Phoenix', 'AZ', 'USA', 0),
-            (2,2, 'Oprah Book Club', 'Glendale', 'AZ', 'USA', 10000),
-            (1,3, 'Josh Elder Fan Club', 'Tokyo city', 'Tokyo', 'Japan', 1000),
-            (2,4, 'Much Ado About Something', 'Scottsdale', 'AZ', 'USA', 100);
-        ALTER SEQUENCE clubs_club_id_seq RESTART WITH 5;
         """,
 
         """

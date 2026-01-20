@@ -8,7 +8,7 @@ class BookRequest(BaseModel):
     """
     Represents the parameters needed to create a new book
     """
-
+    book_id: int
     title: str
     author: str
     page_count: int

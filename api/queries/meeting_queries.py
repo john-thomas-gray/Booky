@@ -41,9 +41,14 @@ class MeetingQueries:
                     cur.execute(
                       """
                         SELECT
-                          *
+                          meetings.id,
+                          meetings.club_id,
+                          meetings.active,
+                          books.title AS book_title
                         FROM meetings
-                        WHERE id = %s
+                        INNER JOIN books
+                          ON books.book_id = meetings.book_id
+                        WHERE meetings.id = %s
                       """,
                       [id],
                     )
@@ -70,12 +75,24 @@ class MeetingQueries:
             with conn.cursor(row_factory=class_row(MeetingResponse)) as cur:
                 cur.execute(
                   """
-                    INSERT INTO meetings (
-                      club_id, book_title, active
-                    ) VALUES (
-                      %s, %s, %s
+                    WITH inserted AS (
+                      INSERT INTO meetings (
+                        club_id, book_id, active
+                      ) VALUES (
+                        %s,
+                        (SELECT book_id FROM books WHERE title = %s),
+                        %s
+                      )
+                      RETURNING id, club_id, book_id, active
                     )
-                    RETURNING *;
+                    SELECT
+                      inserted.id,
+                      inserted.club_id,
+                      inserted.active,
+                      books.title AS book_title
+                    FROM inserted
+                    INNER JOIN books
+                      ON books.book_id = inserted.book_id;
                   """,
                   [
                     club_id,
@@ -113,11 +130,16 @@ class MeetingQueries:
                 with conn.cursor(row_factory=class_row(MeetingClubResponse)) as cur:
                     cur.execute(
                       """
-                      SELECT clubs.club_id, meetings.active, meetings.id, meetings.book_title
+                      SELECT
+                        clubs.club_id,
+                        meetings.active,
+                        meetings.id,
+                        books.title AS book_title
                       FROM meetings
+                      INNER JOIN books
+                        ON books.book_id = meetings.book_id
                       LEFT JOIN clubs
-                      ON clubs.club_id = meetings.club_id
-
+                        ON clubs.club_id = meetings.club_id
                       WHERE clubs.club_id = %s;
                       """,
                       [club_id],
@@ -139,9 +161,14 @@ class MeetingQueries:
                         cur.execute(
                           """
                           SELECT
-                              *
+                            meetings.id,
+                            meetings.club_id,
+                            meetings.active,
+                            books.title AS book_title
                           FROM meetings
-                          WHERE club_id = %s
+                          INNER JOIN books
+                            ON books.book_id = meetings.book_id
+                          WHERE meetings.club_id = %s
                           """,
                           (club_id,)
                         )
@@ -149,8 +176,13 @@ class MeetingQueries:
                         cur.execute(
                           """
                           SELECT
-                              *
+                            meetings.id,
+                            meetings.club_id,
+                            meetings.active,
+                            books.title AS book_title
                           FROM meetings
+                          INNER JOIN books
+                            ON books.book_id = meetings.book_id
                           """
                         )
                     meetings = cur.fetchall()
@@ -192,9 +224,16 @@ class MeetingQueries:
                 with conn.cursor(row_factory=class_row(MeetingResponse)) as cur:
                     cur.execute(
                       """
-                      SELECT m.*
+                      SELECT
+                        m.id,
+                        m.club_id,
+                        m.active,
+                        b.title AS book_title
                       FROM meetings m
-                      INNER JOIN meetings_attendees ma ON m.id = ma.meeting_id
+                      INNER JOIN books b
+                        ON b.book_id = m.book_id
+                      INNER JOIN meetings_attendees ma
+                        ON m.id = ma.meeting_id
                       WHERE ma.attendee_id = %s;
                       """,
                       [user_id],

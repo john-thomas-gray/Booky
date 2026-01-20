@@ -109,6 +109,9 @@ export default function UserPage() {
     const currentMeetings = meetings.filter(
         (meeting) => new Date(meeting.active) > new Date()
     )
+    const pastMeetings = meetings.filter(
+        (meeting) => new Date(meeting.active) < new Date()
+    )
 
     const handleNextMeeting = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % currentMeetings.length)
@@ -123,183 +126,182 @@ export default function UserPage() {
     }
 
     return (
-        <main style={{ backgroundColor: '#8A807E' }}>
-            <div className="userPage">
-                <div className="userInfo">
-                    <img
-                        src={pageOwner.picture_url}
-                        alt="User avatar"
-                        style={{
-                            maxWidth: '250px',
-                            maxHeight: '250px',
-                        }}
-                    />
-                    <div>{pageOwner.username}</div>
-                </div>
-
-                <div className="scoreDisplay">
-                    <div>SCORE: {pageOwner.score}</div>
-                </div>
-
-                <div className="clubList">
-                    <table
-                        style={{
-                            overflowY: 'auto',
-                            maxHeight: '400px',
-                            width: '100%',
-                        }}
-                    >
-                        <thead>
-                            <tr>
-                                <th style={{ textAlign: 'center' }}>Clubs</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {clubs.length > 0 &&
-                            user.id === Number(pageOwnerID) ? (
-                                <>
-                                    {clubs.map((club) => (
-                                        <tr key={club.club_id}>
-                                            <td style={{ textAlign: 'center' }}>
-                                                <NavLink
-                                                    to={`/clubs/${club.club_id}`}
-                                                    className="link"
-                                                >
-                                                    {club.name}
-                                                </NavLink>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <NavLink
-                                                aria-current="page"
-                                                to="/clubs"
-                                                exact={true}
-                                                className="link button"
-                                                style={{
-                                                    display: 'inline-block',
-                                                    padding: '10px 20px',
-                                                    borderRadius: '5px',
-                                                    backgroundColor: 'white',
-                                                    color: '#fff',
-                                                    textDecoration: 'none',
-                                                    border: 'none',
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                Create a club
-                                            </NavLink>
-                                        </td>
-                                    </tr>
-                                </>
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan="1"
-                                        style={{ textAlign: 'center' }}
-                                    >
-                                        No clubs...
-                                        <div>
-                                            <NavLink
-                                                to="/clubs/list"
-                                                className="link"
-                                            >
-                                                Join a club
-                                            </NavLink>{' '}
-                                            or{' '}
-                                            <NavLink
-                                                to="/clubs"
-                                                className="link"
-                                            >
-                                                create your own!
-                                            </NavLink>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="friend-list">
-                    {user && user.id == pageOwnerID && (
-                        <Link to={'/requests'} exact="true" className="link">
-                            <h4>Friend Requests ({requests.length})</h4>
-                        </Link>
-                    )}
-                    <h3>{pageOwner.username}'s Friends</h3>
-                    {friends.length > 0 ? (
-                        <list>
-                            {friends.map((friend) => (
-                                <li key={friend.friend_id}>
-                                    {user && user.id == pageOwnerID && (
-                                        <button
-                                            onClick={() =>
-                                                handleRemoveFriend(
-                                                    friend.friend_id
-                                                )
-                                            }
-                                        >
-                                            Remove Friend
-                                        </button>
-                                    )}
-                                </li>
-                            ))}
-                        </list>
-                    ) : (
-                        <div>No friends...</div>
-                    )}
-                </div>
-                <div className="currentMeetings">
-                    <h2>Current Meetings</h2>
-                    {currentMeetings.length > 0 ? (
-                        <>
-                            <a
-                                href={`/meetings/${currentMeetings[currentIndex].id}`}
+        <main className="user-page">
+            <div className="user-page__grid">
+                <aside className="user-page__sidebar">
+                    <div className="user-card user-profile">
+                        <img
+                            src={pageOwner.picture_url}
+                            alt="User avatar"
+                            className="user-avatar"
+                        />
+                        <div className="user-name">{pageOwner.username}</div>
+                    </div>
+                    <div className="user-card user-bio">
+                        <h4>Bio</h4>
+                        <p>{pageOwner.bio || 'No bio yet.'}</p>
+                    </div>
+                    <div className="user-card user-friends">
+                        {user && user.id == pageOwnerID && (
+                            <Link
+                                to={'/requests'}
+                                exact="true"
+                                className="link"
                             >
-                                <div>
-                                    {currentMeetings[currentIndex].book_title}
+                                Friend Requests ({requests.length})
+                            </Link>
+                        )}
+                        <h4>Friends</h4>
+                        {friends.length > 0 ? (
+                            <ul className="user-list">
+                                {friends.map((friend) => (
+                                    <li
+                                        key={friend.friend_id}
+                                        className="user-list__item"
+                                    >
+                                        <span>
+                                            {friend.friend_username ||
+                                                friend.username ||
+                                                `User ${friend.friend_id}`}
+                                        </span>
+                                        {user && user.id == pageOwnerID && (
+                                            <button
+                                                className="user-action"
+                                                onClick={() =>
+                                                    handleRemoveFriend(
+                                                        friend.friend_id
+                                                    )
+                                                }
+                                            >
+                                                Remove
+                                            </button>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="user-muted">No friends yet.</div>
+                        )}
+                    </div>
+                </aside>
+
+                <section className="user-page__center">
+                    <div className="user-score">
+                        Score: {pageOwner.score}
+                    </div>
+                    <div className="user-card">
+                        <h3>Books you've read</h3>
+                        {pastMeetings.length > 0 ? (
+                            <ul className="user-list">
+                                {pastMeetings.map((meeting) => (
+                                    <li
+                                        key={meeting.id}
+                                        className="user-list__item"
+                                    >
+                                        <a
+                                            href={`/meetings/${meeting.id}`}
+                                            className="link"
+                                        >
+                                            {meeting.book_title}
+                                        </a>
+                                        <span className="user-muted">
+                                            {meeting.active}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="user-muted">No books yet.</div>
+                        )}
+                    </div>
+                    <div className="user-card">
+                        <h3>Upcoming meetings</h3>
+                        {currentMeetings.length > 0 ? (
+                            <>
+                                <a
+                                    href={`/meetings/${currentMeetings[currentIndex].id}`}
+                                    className="meeting-card"
+                                >
+                                    <div className="meeting-title">
+                                        {currentMeetings[currentIndex].book_title}
+                                    </div>
+                                    <div className="user-muted">
+                                        {currentMeetings[currentIndex].active}
+                                    </div>
+                                </a>
+                                <div className="meeting-actions">
+                                    <button
+                                        className="user-action"
+                                        onClick={handlePrevMeeting}
+                                    >
+                                        Previous
+                                    </button>
+                                    <button
+                                        className="user-action"
+                                        onClick={handleNextMeeting}
+                                    >
+                                        Next
+                                    </button>
                                 </div>
-                                <div>
-                                    {currentMeetings[currentIndex].active}
-                                </div>
-                            </a>
-                            <div>
-                                <button onClick={handlePrevMeeting}>
-                                    Previous
-                                </button>
-                                <button onClick={handleNextMeeting}>
-                                    Next
-                                </button>
+                            </>
+                        ) : (
+                            <div className="user-muted">
+                                No meetings scheduled.
                             </div>
-                        </>
-                    ) : (
-                        <div>No meetings scheduled...</div>
+                        )}
+                    </div>
+                </section>
+
+                <aside className="user-page__aside">
+                    <div className="user-card">
+                        <h4>Clubs</h4>
+                        {clubs.length > 0 &&
+                        user.id === Number(pageOwnerID) ? (
+                            <ul className="user-list">
+                                {clubs.map((club) => (
+                                    <li
+                                        key={club.club_id}
+                                        className="user-list__item"
+                                    >
+                                        <NavLink
+                                            to={`/clubs/${club.club_id}`}
+                                            className="link"
+                                        >
+                                            {club.name}
+                                        </NavLink>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="user-muted">
+                                No clubs yet.
+                                <div className="user-inline-links">
+                                    <NavLink to="/clubs/list" className="link">
+                                        Join a club
+                                    </NavLink>
+                                    <span> or </span>
+                                    <NavLink to="/clubs" className="link">
+                                        create your own
+                                    </NavLink>
+                                    <span>.</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {user && user.id === Number(pageOwnerID) && (
+                        <div className="user-card user-actions">
+                            <NavLink to="/clubs" className="user-primary">
+                                Create a club
+                            </NavLink>
+                            <NavLink
+                                to="/requests"
+                                className="user-secondary"
+                            >
+                                Friend requests ({requests.length})
+                            </NavLink>
+                        </div>
                     )}
-                </div>
-                <div className="pastMeetings">
-                    <h2>Past Meetings</h2>
-                    {meetings.some(
-                        (meeting) => new Date(meeting.active) < new Date()
-                    ) ? (
-                        <list>
-                            {meetings.map((meeting) => {
-                                if (new Date(meeting.active) < new Date()) {
-                                    return (
-                                        <div key={meeting.id}>
-                                            <a href={`/meetings/${meeting.id}`}>
-                                                {meeting.book_title}{' '}
-                                                {meeting.active}
-                                            </a>
-                                        </div>
-                                    )
-                                }
-                            })}
-                        </list>
-                    ) : (
-                        <div>No past meetings...</div>
-                    )}
-                </div>
+                </aside>
             </div>
         </main>
     )

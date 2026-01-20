@@ -18,7 +18,7 @@ pool = ConnectionPool(DATABASE_URL)
 
 class FriendQueries:
     """
-    Class containing queries for the Friends table
+    Class containing queries for the Friendships table
 
     Can be dependency injected into a route like so
 
@@ -38,16 +38,27 @@ class FriendQueries:
                     cur.execute(
                         """
 
-                        INSERT INTO friends (
-                        member_id, friend_id
+                        INSERT INTO friendships (
+                            user_id,
+                            friend_id,
+                            status,
+                            requested_by
                         ) VALUES (
-                        %s, %s
+                            LEAST(%s, %s),
+                            GREATEST(%s, %s),
+                            'accepted',
+                            %s
                         )
-                        RETURNING *;
+                        ON CONFLICT (user_id, friend_id)
+                        DO UPDATE SET status = 'accepted'
+                        RETURNING user_id AS member_id, friend_id;
                         """,
                         [
                             member_id,
-                            friend_id
+                            friend_id,
+                            member_id,
+                            friend_id,
+                            member_id,
                         ],
                     )
                     friend = cur.fetchone()
@@ -65,10 +76,23 @@ class FriendQueries:
                     cur.execute(
                         """
 
-                        SELECT m.username as username, f.username as friend_username
-                        FROM friends
-                        JOIN users m on friends.member_id = m.id
-                        JOIN users f on friends.friend_id = f.id;
+                        SELECT
+                            u1.username as username,
+                            u2.id as friend_id,
+                            u2.username as friend_username
+                        FROM friendships
+                        JOIN users u1 on friendships.user_id = u1.id
+                        JOIN users u2 on friendships.friend_id = u2.id
+                        WHERE friendships.status = 'accepted'
+                        UNION ALL
+                        SELECT
+                            u2.username as username,
+                            u1.id as friend_id,
+                            u1.username as friend_username
+                        FROM friendships
+                        JOIN users u1 on friendships.user_id = u1.id
+                        JOIN users u2 on friendships.friend_id = u2.id
+                        WHERE friendships.status = 'accepted';
 
                         """,
                     )
@@ -87,14 +111,33 @@ class FriendQueries:
                     cur.execute(
                         """
 
-                        SELECT m.username as username, f.username as friend_username, f.id as friend_id
-                        FROM friends
-                        JOIN users f on friends.friend_id = f.id
-                        JOIN users m on friends.member_id = m.id
-                        WHERE friends.member_id = %s;
+                        SELECT
+                            m.username as username,
+                            CASE
+                                WHEN friendships.user_id = %s
+                                    THEN friendships.friend_id
+                                ELSE friendships.user_id
+                            END AS friend_id,
+                            f.username as friend_username
+                        FROM friendships
+                        JOIN users m on m.id = %s
+                        JOIN users f
+                            ON f.id = CASE
+                                WHEN friendships.user_id = %s
+                                    THEN friendships.friend_id
+                                ELSE friendships.user_id
+                            END
+                        WHERE (friendships.user_id = %s OR friendships.friend_id = %s)
+                        AND friendships.status = 'accepted';
 
                         """,
-                        [member_id]
+                        [
+                            member_id,
+                            member_id,
+                            member_id,
+                            member_id,
+                            member_id,
+                        ]
                     ),
 
                     friend = cur.fetchall()
@@ -114,11 +157,12 @@ class FriendQueries:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        DELETE FROM friends
-                        WHERE member_id = %s AND friend_id = %s;
+                        DELETE FROM friendships
+                        WHERE user_id = LEAST(%s, %s)
+                        AND friend_id = GREATEST(%s, %s);
 
                         """,
-                        [member_id, friend_id]
+                        [member_id, friend_id, member_id, friend_id]
                     ),
         except psycopg.Error as e:
             print(e)

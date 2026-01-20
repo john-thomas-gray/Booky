@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import bookyLogo from '../../images/booky-logo.png'
 import { Navigate } from 'react-router-dom'
 import useAuthService from '../hooks/useAuthService'
 import SignInForm from './SignInForm'
@@ -16,39 +17,41 @@ export default function Home() {
         return <Navigate to={`/user/${user.id}`} />
     }
     return (
-        <>
+        <section className="home">
             <img
-                src="https://i.postimg.cc/qpzNXTt4/image.png"
+                className="home-logo"
+                src={bookyLogo}
                 alt="In a logo, books and a racetrack surround the name 'Booky'."
-                style={{ width: '400px', height: '400px' }}
             />
-            <h2>Raise the stakes of your book club!</h2>
-            <div>
+            <h2 className="home-title">Raise the stakes of your book club!</h2>
+            <div className="home-card">
                 {showSignUp ? <SignUpForm /> : <SignInForm />}
-                <div>
+                <div className="home-toggle">
                     {showSignUp ? (
                         <div>
                             Already have an account?{' '}
-                            <span
+                            <button
+                                type="button"
                                 onClick={toggleForm}
-                                style={{ cursor: 'pointer', color: 'blue' }}
+                                className="home-link"
                             >
                                 Log In
-                            </span>
+                            </button>
                         </div>
                     ) : (
                         <div>
                             Need an account?{' '}
-                            <span
+                            <button
+                                type="button"
                                 onClick={toggleForm}
-                                style={{ cursor: 'pointer', color: 'blue' }}
+                                className="home-link"
                             >
                                 Sign Up
-                            </span>
+                            </button>
                         </div>
                     )}
                 </div>
             </div>
-        </>
+        </section>
     )
 }

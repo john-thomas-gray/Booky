@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import bookyLogo from '../../images/booky-logo.png'
 import useAuthService from '../hooks/useAuthService'
 import { API_HOST } from '../config'
 
@@ -28,7 +29,7 @@ export default function Nav() {
             <div className="flexbox-container align-items-center">
                 <div>
                     <img
-                        src="https://i.postimg.cc/qpzNXTt4/image.png"
+                        src={bookyLogo}
                         alt="Logo"
                         style={{ width: '60px', height: '60px' }}
                         className="logo"
