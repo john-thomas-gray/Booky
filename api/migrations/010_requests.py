@@ -3,9 +3,12 @@ steps = [
       # "Up" SQL statement
       """
       CREATE TABLE request (
-          user_id INT NOT NULL,
-          friend_id INT NOT NULL,
-          friend_name VARCHAR(100) NOT NULL,
+          user_id INT NOT NULL
+              REFERENCES users(id)
+              ON DELETE CASCADE,
+          friend_id INT NOT NULL
+              REFERENCES users(id)
+              ON DELETE CASCADE,
           approved BOOL default false,
           PRIMARY KEY (user_id, friend_id)
       );
@@ -14,16 +17,5 @@ steps = [
       """
       DROP TABLE request;
       """
-  ],
-  [
-        """
-        INSERT INTO request VALUES
-            (1, 2, 'John93')
-
-        """,
-
-        """
-        DROP TABLE friends;
-        """
   ]
 ]

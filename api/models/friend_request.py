@@ -10,7 +10,6 @@ class FriendRequestRequest(BaseModel):
     """
     user_id: int
     friend_id: int
-    friend_name: str
 
 
 class FriendRequestResponse(BaseModel):
@@ -20,4 +19,4 @@ class FriendRequestResponse(BaseModel):
     user_id: int
     friend_id: int
     friend_name: str
-    approved: bool
+    status: str

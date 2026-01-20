@@ -38,23 +38,40 @@ class FriendRequestQueries:
                     cur.execute(
                         """
                         WITH inserted AS (
-                          INSERT INTO request (
-                            user_id, friend_id
+                          INSERT INTO friendships (
+                            user_id,
+                            friend_id,
+                            status,
+                            requested_by
                           ) VALUES (
-                            %s, %s
+                            LEAST(%s, %s),
+                            GREATEST(%s, %s),
+                            'pending',
+                            %s
                           )
-                          RETURNING user_id, friend_id, approved
+                          ON CONFLICT (user_id, friend_id)
+                          DO UPDATE SET
+                            status = 'pending',
+                            requested_by = EXCLUDED.requested_by
+                          RETURNING user_id, friend_id, requested_by, status
                         )
                         SELECT
-                          inserted.user_id,
-                          inserted.friend_id,
+                          CASE
+                            WHEN inserted.requested_by = inserted.user_id
+                              THEN inserted.friend_id
+                            ELSE inserted.user_id
+                          END AS user_id,
+                          inserted.requested_by AS friend_id,
                           users.username AS friend_name,
-                          inserted.approved
+                          inserted.status
                         FROM inserted
-                        JOIN users ON users.id = inserted.friend_id;
+                        JOIN users ON users.id = inserted.requested_by;
                         """,
                         [
                             user_id,
+                            friend_id,
+                            user_id,
+                            friend_id,
                             friend_id,
                         ],
                     )
@@ -75,14 +92,17 @@ class FriendRequestQueries:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        DELETE FROM request
-                        WHERE user_id = %s
-                        AND friend_id = %s;
+                        DELETE FROM friendships
+                        WHERE user_id = LEAST(%s, %s)
+                        AND friend_id = GREATEST(%s, %s)
+                        AND status = 'pending';
 
                         """,
                         [
                             user_id,
-                            friend_id
+                            friend_id,
+                            user_id,
+                            friend_id,
                         ],
                     )
 
@@ -102,12 +122,17 @@ class FriendRequestQueries:
                     cur.execute(
                       """
                         SELECT
-                          request.user_id,
-                          request.friend_id,
+                          CASE
+                            WHEN friendships.requested_by = friendships.user_id
+                              THEN friendships.friend_id
+                            ELSE friendships.user_id
+                          END AS user_id,
+                          friendships.requested_by AS friend_id,
                           users.username AS friend_name,
-                          request.approved
-                        FROM request
-                        JOIN users ON users.id = request.friend_id
+                          friendships.status
+                        FROM friendships
+                        JOIN users ON users.id = friendships.requested_by
+                        WHERE friendships.status = 'pending'
                         ORDER BY user_id;
 
                       """,
