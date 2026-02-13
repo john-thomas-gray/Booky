@@ -244,7 +244,7 @@ async function getRaceStandings(clubId: string, bookId: string) {
   }));
 }
 
-async function getPointBalance(clubId: string, userId: string): Promise<number> {
+async function _getPointBalance(clubId: string, userId: string): Promise<number> {
   const result = await prisma.pointTransaction.aggregate({
     where: { clubId, userId },
     _sum: { amount: true },
@@ -316,7 +316,7 @@ const resolvers = {
     ) => {
       if (!ctx.user) throw new Error("Not authenticated");
 
-      const where: any = { userId: ctx.user.userId };
+      const where: { userId: string; clubId?: string } = { userId: ctx.user.userId };
       if (args.clubId) {
         where.clubId = args.clubId;
       }
@@ -366,7 +366,7 @@ const resolvers = {
 
       if (!member) throw new Error("Not a member of this club");
 
-      const where: any = { clubId: args.clubId };
+      const where: { clubId: string; bookId?: string } = { clubId: args.clubId };
       if (args.bookId) {
         where.bookId = args.bookId;
       }
@@ -1196,7 +1196,7 @@ const resolvers = {
         throw new Error("Not authorized to update this reading");
       }
 
-      const updateData: any = { status: args.status };
+      const updateData: { status: string; startedAt?: Date; finishedAt?: Date } = { status: args.status };
 
       // Set timestamps based on status transitions
       if (args.status === "READING" && !reading.startedAt) {
@@ -1364,24 +1364,24 @@ const resolvers = {
     },
   },
   Reading: {
-    book: async (parent: any, _: unknown, ctx: GraphQLContext) => {
+    book: async (parent: { bookId: string }, _: unknown, ctx: GraphQLContext) => {
       return ctx.prisma.book.findUnique({
         where: { id: parent.bookId },
       });
     },
-    progress: async (parent: any, _: unknown, ctx: GraphQLContext) => {
+    progress: async (parent: { id: string }, _: unknown, ctx: GraphQLContext) => {
       return ctx.prisma.readingProgress.findUnique({
         where: { readingId: parent.id },
       });
     },
   },
   Bet: {
-    bettor: async (parent: any, _: unknown, ctx: GraphQLContext) => {
+    bettor: async (parent: { bettorId: string }, _: unknown, ctx: GraphQLContext) => {
       return ctx.prisma.user.findUnique({
         where: { id: parent.bettorId },
       });
     },
-    predictedUser: async (parent: any, _: unknown, ctx: GraphQLContext) => {
+    predictedUser: async (parent: { predictedUserId: string }, _: unknown, ctx: GraphQLContext) => {
       return ctx.prisma.user.findUnique({
         where: { id: parent.predictedUserId },
       });
@@ -1420,7 +1420,7 @@ async function startServer() {
         const decoded = jwt.verify(token, jwtSecret);
         if (typeof decoded === "string") return { prisma, user: null };
 
-        const userId = (decoded as any).userId;
+        const userId = (decoded as { userId: string }).userId;
         if (typeof userId !== "string") return { prisma, user: null };
 
         return { prisma, user: { userId } };

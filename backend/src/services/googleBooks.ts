@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GoogleVolume = any;
 
 function pickThumbnail(volume: GoogleVolume): string | null {

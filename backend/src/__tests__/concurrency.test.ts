@@ -3,9 +3,13 @@ import { prisma } from '../db/prisma.js';
 import bcrypt from 'bcrypt';
 
 // Concurrency and race condition tests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testClub: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testBook: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testMeeting: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let user1: any, user2: any, user3: any;
 
 describe('Concurrency and Race Condition Tests', () => {
@@ -191,7 +195,7 @@ describe('Concurrency and Race Condition Tests', () => {
   describe('Test: Turn-taking enforcement', () => {
     it('should enforce that only currentBettorId can place a bet', async () => {
       // Setup: User1 finishes and becomes currentBettor
-      const reading1 = await prisma.reading.create({
+      const _reading1 = await prisma.reading.create({
         data: {
           clubId: testClub.id,
           bookId: testBook.id,
@@ -480,7 +484,7 @@ describe('Concurrency and Race Condition Tests', () => {
       // This test verifies the transaction would rollback if it got past validation
 
       // Simulate what would happen if transaction started but failed mid-way
-      let betCreated = false;
+      let _betCreated = false;
       try {
         await prisma.$transaction(async (tx) => {
           // This would succeed
@@ -496,7 +500,7 @@ describe('Concurrency and Race Condition Tests', () => {
           // Force an error before bet creation
           throw new Error('Simulated error');
         });
-      } catch (e) {
+      } catch {
         // Expected to fail
       }
 

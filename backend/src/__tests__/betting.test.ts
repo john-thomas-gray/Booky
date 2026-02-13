@@ -11,11 +11,15 @@ function createToken(userId: string): string {
 }
 
 // Test data setup
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testClub: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testBook: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let testMeeting: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let user1: any, user2: any, user3: any, user4: any;
-let user1Token: string, user2Token: string, user3Token: string, user4Token: string;
+let _user1Token: string, _user2Token: string, _user3Token: string, _user4Token: string;
 
 describe('Betting System Tests', () => {
   beforeAll(async () => {
@@ -29,7 +33,7 @@ describe('Betting System Tests', () => {
         displayName: 'User One',
       },
     });
-    user1Token = createToken(user1.id);
+    _user1Token = createToken(user1.id);
 
     user2 = await prisma.user.create({
       data: {
@@ -38,7 +42,7 @@ describe('Betting System Tests', () => {
         displayName: 'User Two',
       },
     });
-    user2Token = createToken(user2.id);
+    _user2Token = createToken(user2.id);
 
     user3 = await prisma.user.create({
       data: {
@@ -47,7 +51,7 @@ describe('Betting System Tests', () => {
         displayName: 'User Three',
       },
     });
-    user3Token = createToken(user3.id);
+    _user3Token = createToken(user3.id);
 
     user4 = await prisma.user.create({
       data: {
@@ -56,7 +60,7 @@ describe('Betting System Tests', () => {
         displayName: 'User Four',
       },
     });
-    user4Token = createToken(user4.id);
+    _user4Token = createToken(user4.id);
 
     // Create test club
     testClub = await prisma.club.create({
@@ -255,7 +259,7 @@ describe('Betting System Tests', () => {
   describe('Test 2: Correct prediction - both users get payout', () => {
     it('should award both bettor and finisher when prediction is correct', async () => {
       // Setup: User1 and User2 reading, User1 finishes first
-      const reading1 = await prisma.reading.create({
+      const _reading1 = await prisma.reading.create({
         data: {
           clubId: testClub.id,
           bookId: testBook.id,
@@ -535,7 +539,7 @@ describe('Betting System Tests', () => {
       });
 
       // User3 finishes last (before deadline)
-      const finishedReading = await prisma.reading.update({
+      const _finishedReading = await prisma.reading.update({
         where: { id: lastReading.id },
         data: {
           status: 'FINISHED',
